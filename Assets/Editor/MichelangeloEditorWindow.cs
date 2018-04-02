@@ -28,6 +28,13 @@ namespace Michelangelo.Editor {
 					errorMessage = ex.Message;
 				}
 			}
+			if (GUILayout.Button("Get User Info")) {
+				try {
+					Michelangelo.Session.WebAPI.GetUserInfo();
+				} catch (Michelangelo.Utility.ResponseParseException ex) {
+					errorMessage = ex.Message;
+				}
+			}
 			if (GUILayout.Button("Get Main Page")) {
 				try {
 					Michelangelo.Session.WebAPI.GetMainPage();
@@ -35,9 +42,30 @@ namespace Michelangelo.Editor {
 					errorMessage = ex.Message;
 				}
 			}
-			if (GUILayout.Button("Create grammar")) {
+			if (GUILayout.Button("Create Grammar")) {
 				try {
 					Michelangelo.Session.WebAPI.CreateGrammar();
+				} catch (Michelangelo.Utility.ResponseParseException ex) {
+					errorMessage = ex.Message;
+				}
+			}
+			if (GUILayout.Button("Get Grammar")) {
+				try {
+					Michelangelo.Session.WebAPI.GetGrammar();
+				} catch (Michelangelo.Utility.ResponseParseException ex) {
+					errorMessage = ex.Message;
+				}
+			}
+			if (GUILayout.Button("Get Shared")) {
+				try {
+					Michelangelo.Session.WebAPI.GetShared();
+				} catch (Michelangelo.Utility.ResponseParseException ex) {
+					errorMessage = ex.Message;
+				}
+			}
+			if (GUILayout.Button("Get Tutorial")) {
+				try {
+					Michelangelo.Session.WebAPI.GetTutorials();
 				} catch (Michelangelo.Utility.ResponseParseException ex) {
 					errorMessage = ex.Message;
 				}

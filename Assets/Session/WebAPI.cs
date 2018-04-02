@@ -16,7 +16,6 @@ namespace Michelangelo.Session {
 		private static readonly string RequestTokenName = "__RequestVerificationToken";
 		private static readonly string VerificationTokenName = ".AspNet.ApplicationCookie";
 
-		[SerializeField]
 		private static StringStringDictionary cookies = new StringStringDictionary();
 
 		private static string cookiesString {
@@ -33,7 +32,11 @@ namespace Michelangelo.Session {
 			}
 		}
 
-		public static bool IsLoggedIn { get { return cookies.ContainsKey(VerificationTokenName) && cookies[VerificationTokenName] != null; } }
+		public static bool IsLoggedIn {
+			get {
+				return cookies.ContainsKey(VerificationTokenName) && cookies[VerificationTokenName] != null;
+			}
+		}
 
 		public static void Login(string email, string password) {
 			if (email == null || password == null) {
@@ -66,6 +69,7 @@ namespace Michelangelo.Session {
 						return;
 					}
 					Debug.Log(postRequest.String());
+					SetCookie(VerificationTokenName, postRequest);
 					PageFromResponse(postRequest.GetResponseBody());
 				});
 			});
@@ -92,8 +96,8 @@ namespace Michelangelo.Session {
 						return;
 					}
 					Debug.Log(postRequest.String());
-					SetCookie(RequestTokenName, postRequest);
 					PageFromResponse(postRequest.GetResponseBody());
+					cookies = new StringStringDictionary();
 				});
 			});
 		}
@@ -109,8 +113,8 @@ namespace Michelangelo.Session {
 			});
 		}
 
-		public static void CreateGrammar() {
-			UnityWebRequest.Put(URLConstants.OwnGrammarAPI, "a").WithCookies(cookiesString).Then(getRequest => {
+		public static void GetUserInfo() {
+			UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
 					Debug.Log(getRequest.error);
 					return;
@@ -120,6 +124,51 @@ namespace Michelangelo.Session {
 			});
 		}
 
+		public static void GetGrammar() {
+			UnityWebRequest.Get(URLConstants.GrammarAPI).WithCookies(cookiesString).Then(getRequest => {
+				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.Log(getRequest.error);
+					return;
+				}
+				Debug.Log(getRequest.String());
+				JSONFromResponse(getRequest.GetResponseBody());
+			});
+		}
+
+		public static void CreateGrammar() {
+			UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(cookiesString).Then(putRequest => {
+				if (putRequest.isNetworkError || putRequest.isHttpError) {
+					Debug.Log(putRequest.error);
+					return;
+				}
+				Debug.Log(putRequest.String());
+				JSONFromResponse(putRequest.GetResponseBody());
+			});
+		}
+
+		public static void GetShared() {
+			UnityWebRequest.Get(URLConstants.SharedAPI).WithCookies(cookiesString).Then(getRequest => {
+				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.Log(getRequest.error);
+					return;
+				}
+				Debug.Log(getRequest.String());
+				JSONFromResponse(getRequest.GetResponseBody());
+			});
+		}
+
+		public static void GetTutorials() {
+			UnityWebRequest.Get(URLConstants.TutorialAPI).WithCookies(cookiesString).Then(getRequest => {
+				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.Log(getRequest.error);
+					return;
+				}
+				Debug.Log(getRequest.String());
+				JSONFromResponse(getRequest.GetResponseBody());
+			});
+		}
+
+		#region Helper methods
 		private static string GetRequestToken(string source) {
 			return CheckNonEmpty(RequestTokenRegex
 				.Match(source)
@@ -149,5 +198,6 @@ namespace Michelangelo.Session {
 		private static void JSONFromResponse(string response) {
 			System.IO.File.WriteAllText(System.IO.Path.Combine(Application.dataPath, "response.json"), response);
 		}
+		#endregion
 	}
 }
