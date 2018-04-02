@@ -17,7 +17,7 @@ namespace Michelangelo.Session {
 		private static readonly string VerificationTokenName = ".AspNet.ApplicationCookie";
 
 		[SerializeField]
-		private static Dictionary<string, string> cookies = new Dictionary<string, string>();
+		private static StringStringDictionary cookies = new StringStringDictionary();
 
 		private static string cookiesString {
 			get {
@@ -66,7 +66,6 @@ namespace Michelangelo.Session {
 						return;
 					}
 					Debug.Log(postRequest.String());
-					SetCookie(VerificationTokenName, postRequest);
 					PageFromResponse(postRequest.GetResponseBody());
 				});
 			});

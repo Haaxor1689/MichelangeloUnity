@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Michelangelo</title>
+<link rel="icon" type="image/png" href="/Content/images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/Content/images/favicon-16x16.png" sizes="16x16" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<link href="/Content/bootstrap.css" rel="stylesheet" />
+<link href="/Content/bt-overrides.css" rel="stylesheet" />
+<link href="/Content/Site.css" rel="stylesheet" />
+<link href="/Content/themes/base/accordion.css" rel="stylesheet" />
+<link href="/Content/themes/base/all.css" rel="stylesheet" />
+<link href="/Content/themes/base/autocomplete.css" rel="stylesheet" />
+<link href="/Content/themes/base/base.css" rel="stylesheet" />
+<link href="/Content/themes/base/button.css" rel="stylesheet" />
+<link href="/Content/themes/base/core.css" rel="stylesheet" />
+<link href="/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="/Content/themes/base/dialog.css" rel="stylesheet" />
+<link href="/Content/themes/base/draggable.css" rel="stylesheet" />
+<link href="/Content/themes/base/menu.css" rel="stylesheet" />
+<link href="/Content/themes/base/progressbar.css" rel="stylesheet" />
+<link href="/Content/themes/base/resizable.css" rel="stylesheet" />
+<link href="/Content/themes/base/selectable.css" rel="stylesheet" />
+<link href="/Content/themes/base/selectmenu.css" rel="stylesheet" />
+<link href="/Content/themes/base/slider.css" rel="stylesheet" />
+<link href="/Content/themes/base/sortable.css" rel="stylesheet" />
+<link href="/Content/themes/base/spinner.css" rel="stylesheet" />
+<link href="/Content/themes/base/tabs.css" rel="stylesheet" />
+<link href="/Content/themes/base/theme.css" rel="stylesheet" />
+<link href="/Content/themes/base/tooltip.css" rel="stylesheet" />
+<script src="/Scripts/modernizr-2.8.3.js"></script>
+<script src="/Scripts/jquery-2.1.3.js"></script>
+<link href="/Content/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand text-capitalize text-century title-michelangelo" href="/">.</a>
+</div>
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav">
+<li><a href="/">Home</a></li>
+<li><a href="/Docs">Docs</a></li>
+<li><a href="/Jobs">Jobs</a></li>
+<li><a href="/About">Team</a></li>
+</ul>
+<form action="/Account/LogOff" class="navbar-right" id="logoutForm" method="post"><input name="__RequestVerificationToken" type="hidden" value="1bMV9jk2oHBrKdQpZYFczjPefSQPpXDdKEcclWb2yTiuXjbhJCWA27DFtjSejqx1SBsID3ID34BfCfcpdbPwmmI0oXUP8y5QiuV-DuQW4Zdp4V1XwIxwa0DatmoYc5P63BsAiuebToQDgtb9KwOmqg2" /> <ul class="nav navbar-nav navbar-right">
+<li>
+<div class="navbar-text">
+<a href="#" data-toggle="tooltip" data-placement="bottom" title="Available energy. Recharges slowly. Each command consumes up to one unit.">
+<i class="fa fa-flash fa-lg"></i>
+</a>
+<span id="energyState">
+<a href="#" data-toggle="tooltip" data-placement="bottom" id="energyCapacity" title="100000 / 100000">
+100000
+</a>
+</span>
+</div>
+</li>
+<li>
+<a href="/Manage" title="Manage">Haaxor</a>
+</li>
+<li><a href="javascript:sessionStorage.removeItem('accessToken');$('#logoutForm').submit();">Log off</a></li>
+</ul>
+</form>
+</div>
+</div>
+</div>
+<div class="container body-content">
+<!-- ko with: home -->
+<div class="jumbotron">
+<h1>Michelangelo</h1>
+<p class="lead">Generates virtual worlds.</p>
+</div>
+<div class="row">
+<div class="col-md-4">
+<h2>News</h2>
+<dl><dt>25.03.2018 Announcement of updates</dt><dd>The 4<sup>th</sup> generation of Michelangelo's grammar called the <i>Declarative Ontology Grammar</i> is almost ready to be published, packed with many new features. At the same time we will also clean inactive accounts and shut down all functionality from the previous versions. We will be notified by email soon enough to backup your data. Th eestimated timeframe for the switch is short before summer.</dd></dl>
+</div>
+<div class="col-md-4">
+<h2>Getting started</h2>
+<p>
+Scroll down to start with the tutorials. Detailed documentation can be found in the upper menu. Feel free to <b><a href="/cdn-cgi/l/email-protection#99f8eaf2d9f4f0faf1fcf5f8f7fefcf5f6b7feebf8e9f1f0faea">ask</a></b> any questions. Free Skype/Hangout consultations for eCAADe attendes are available!
+</p>
+</div>
+</div>
+<div class="jumbotron">
+<h2>Your designs</h2>
+<table class="table" id="grammars-table">
+<tr><td>Loading, please wait ...</td></tr>
+</table>
+<p><button class="btn btn-primary btn-lg" id="create-grammar-button">Create &raquo;</button></p>
+</div>
+<div class="jumbotron">
+<h2>Shared by others</h2>
+<table class="table" id="shared-table"><tr><td>Loading, please wait ...</td></tr></table>
+</div>
+<div class="jumbotron">
+<h2>Tutorials and Reference</h2>
+<table class="table" id="tutorials-table"><tr><td>Loading, please wait ...</td></tr></table>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/d07b1474/cloudflare-static/email-decode.min.js"></script><script>
+        function DTfunc(id) { return ""; }
+        function MTfunc(id) { return ""; }
+    </script>
+<!-- /ko -->
+</div>
+<script src="/Scripts/jquery-ui-1.11.3.js"></script>
+<script src="/Scripts/bootstrap.js"></script>
+<script src="/Scripts/respond.js"></script>
+<script src="/Scripts/knockout-3.2.0.debug.js"></script>
+<script src="/Scripts/knockout.validation.debug.js"></script>
+<script src="/Scripts/sammy-0.7.5.js"></script>
+<script src="/Scripts/app/common.js"></script>
+<script src="/Scripts/app/app.datamodel.js"></script>
+<script src="/Scripts/app/app.viewmodel.js"></script>
+<script src="/Scripts/app/home.viewmodel.js"></script>
+<script src="/Scripts/app/_run.js"></script>
+</body>
+</html>
