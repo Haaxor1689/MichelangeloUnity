@@ -29,7 +29,7 @@ namespace Michelangelo.Utility {
             return request.downloadHandler.text;
         }
 
-        public static string String(this UnityWebRequest request) {
+        public static string Info(this UnityWebRequest request) {
             var builder = new System.Text.StringBuilder();
             builder.Append("Request URL: ");
             builder.Append(request.url);

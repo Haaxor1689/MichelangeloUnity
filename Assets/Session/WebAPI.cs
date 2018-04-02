@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Michelangelo;
+using Michelangelo.Model;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using ErrorMessage = System.String;
 
 namespace Michelangelo.Session {
 	public static class WebAPI {
@@ -38,26 +40,31 @@ namespace Michelangelo.Session {
 			}
 		}
 
-		public static void Login(string email, string password) {
+		public static void Login(string email, string password, Action<ErrorMessage> completion = null) {
 			if (email == null || password == null) {
-				Debug.LogError("Fill out both email and password before logging in.");
+				if (completion != null) completion("Fill out both email and password before logging in.");
 				return;
 			}
 
 			UnityWebRequest.Get(URLConstants.LogInAPI).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
+					if (completion != null) completion(getRequest.error);
 					return;
 				}
-
-				SetCookie(RequestTokenName, getRequest);
-				Debug.Log(getRequest.String());
+				try {
+					SetCookie(RequestTokenName, getRequest);
+				} catch (ResponseParseException) {
+					if (completion != null) completion("Failed to get request verification token.");
+					return;
+				}
+				Debug.Log(getRequest.Info());
 
 				var form = new WWWForm();
 				try {
 					form.AddField(RequestTokenName, GetRequestToken(getRequest.GetResponseBody()));
-				} catch (ResponseParseException ex) {
-					throw new ResponseParseException("Failed to get login request token.", ex);
+				} catch (ResponseParseException) {
+					if (completion != null) completion("Failed to get login request token.");
+					return;
 				}
 				form.AddField("Email", email);
 				form.AddField("Password", password);
@@ -65,106 +72,113 @@ namespace Michelangelo.Session {
 
 				UnityWebRequest.Post(URLConstants.LogInAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
 					if ((postRequest.isNetworkError || postRequest.isHttpError) && postRequest.error != "Redirect limit exceeded") {
-						Debug.LogError("Login request error: " + postRequest.error);
+						if (completion != null) completion("Login request error: " + postRequest.error);
 						return;
 					}
-					Debug.Log(postRequest.String());
-					SetCookie(VerificationTokenName, postRequest);
-					PageFromResponse(postRequest.GetResponseBody());
+					Debug.Log(postRequest.Info());
+					try {
+						SetCookie(VerificationTokenName, postRequest);
+					} catch (ResponseParseException) {
+						if (completion != null) completion("Authentication failed.");
+						return;
+					}
+					if (completion != null) completion(null);
 				});
 			});
 		}
 
-		public static void Logout() {
+		public static void Logout(Action<ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
+					if (completion != null) completion(getRequest.error);
 					return;
 				}
-				Debug.Log(getRequest.String());
+				Debug.Log(getRequest.Info());
 
 				var form = new WWWForm();
 				try {
 					form.AddField(RequestTokenName, GetRequestToken(getRequest.GetResponseBody()));
-				} catch (ResponseParseException ex) {
-					throw new ResponseParseException("Failed to get logout request token.", ex);
+				} catch (ResponseParseException) {
+					if (completion != null) completion("Failed to get logout request token.");
+					return;
 				}
 
 				UnityWebRequest.Post(URLConstants.LogOutAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
 					if ((postRequest.isNetworkError || postRequest.isHttpError) && postRequest.error != "Redirect limit exceeded") {
-						Debug.LogError("Logout request error: " + postRequest.error);
+						if (completion != null) completion("Logout request error: " + postRequest.error);
 						return;
 					}
-					Debug.Log(postRequest.String());
-					PageFromResponse(postRequest.GetResponseBody());
+					Debug.Log(postRequest.Info());
 					cookies = new StringStringDictionary();
+					if (completion != null) completion(null);
 				});
 			});
 		}
 
-		public static void GetMainPage() {
+		public static void GetMainPage(Action<ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
+					if (completion != null) completion(getRequest.error);
 					return;
 				}
-				Debug.Log(getRequest.String());
+				Debug.Log(getRequest.Info());
 				PageFromResponse(getRequest.GetResponseBody());
+				if (completion != null) completion(null);
 			});
 		}
 
-		public static void GetUserInfo() {
+		public static void GetUserInfo(Action<UserInfo, ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
+					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
-				Debug.Log(getRequest.String());
-				JSONFromResponse(getRequest.GetResponseBody());
+				Debug.Log(getRequest.Info());
+				if (completion != null) completion(UserInfo.FromJson(getRequest.GetResponseBody()), null);
 			});
 		}
 
-		public static void GetGrammar() {
-			UnityWebRequest.Get(URLConstants.GrammarAPI).WithCookies(cookiesString).Then(getRequest => {
-				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
-					return;
-				}
-				Debug.Log(getRequest.String());
-				JSONFromResponse(getRequest.GetResponseBody());
-			});
-		}
-
-		public static void CreateGrammar() {
+		public static void CreateGrammar(Action<Grammar, ErrorMessage> completion = null) {
 			UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(cookiesString).Then(putRequest => {
 				if (putRequest.isNetworkError || putRequest.isHttpError) {
-					Debug.Log(putRequest.error);
+					if (completion != null) completion(null, putRequest.error);
 					return;
 				}
-				Debug.Log(putRequest.String());
-				JSONFromResponse(putRequest.GetResponseBody());
+				Debug.Log(putRequest.Info());
+				if (completion != null) completion(Grammar.FromJson(putRequest.GetResponseBody()), null);
 			});
 		}
 
-		public static void GetShared() {
+		public static void GetGrammar(Action<Grammar[], ErrorMessage> completion = null) {
+			UnityWebRequest.Get(URLConstants.GrammarAPI).WithCookies(cookiesString).Then(getRequest => {
+				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					if (completion != null) completion(null, getRequest.error);
+					return;
+				}
+				Debug.Log(getRequest.Info());
+				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
+			});
+		}
+
+		public static void GetShared(Action<Grammar[], ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.SharedAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
+					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
-				Debug.Log(getRequest.String());
-				JSONFromResponse(getRequest.GetResponseBody());
+				Debug.Log(getRequest.Info());
+				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
 			});
 		}
 
-		public static void GetTutorials() {
+		public static void GetTutorials(Action<Grammar[], ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.TutorialAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
-					Debug.Log(getRequest.error);
+					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
-				Debug.Log(getRequest.String());
-				JSONFromResponse(getRequest.GetResponseBody());
+				Debug.Log(getRequest.Info());
+				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
 			});
 		}
 

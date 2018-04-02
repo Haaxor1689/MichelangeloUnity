@@ -3,8 +3,13 @@ using UnityEngine;
 
 namespace Michelangelo.Editor {
 	public class MichelangeloEditorWindow : EditorWindow {
-		private static string email;
-		private static string password;
+		private static bool isLoading = false;
+
+		private static string loginEmail;
+		private static string loginPassword;
+
+		private static Model.UserInfo user;
+
 		private static string errorMessage;
 
 		[MenuItem("Window/Michelangelo")]
@@ -13,78 +18,112 @@ namespace Michelangelo.Editor {
 		}
 
 		private void OnGUI() {
+			if (isLoading) {
+				EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
+				return;
+			}
 			if (Michelangelo.Session.WebAPI.IsLoggedIn) {
 				LoggedIn();
 			} else {
 				NotLoggedIn();
 			}
+			if (errorMessage != null) {
+				GUILayout.Label(errorMessage);
+			}
 		}
 
 		private void LoggedIn() {
+			EditorGUILayout.LabelField("User:", user.username, EditorStyles.boldLabel);
+			EditorGUILayout.LabelField("Energy:", user.energyAvailable + "/" + user.energyCapacity, EditorStyles.boldLabel);
 			if (GUILayout.Button("Log Out")) {
-				try {
-					Michelangelo.Session.WebAPI.Logout();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+				isLoading = true;
+				Repaint();
+				Michelangelo.Session.WebAPI.Logout(error => {
+					if (error != null) {
+						errorMessage = error;
+						isLoading = false;
+						Repaint();
+						return;
+					}
+					isLoading = false;
+					Repaint();
+				});
 			}
-			if (GUILayout.Button("Get User Info")) {
-				try {
-					Michelangelo.Session.WebAPI.GetUserInfo();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+			if (GUILayout.Button("Update User Info")) {
+				Michelangelo.Session.WebAPI.GetUserInfo((response, error) => {
+					if (error != null) {
+						errorMessage = error;
+						return;
+					}
+					user = response;
+				});
 			}
 			if (GUILayout.Button("Get Main Page")) {
-				try {
-					Michelangelo.Session.WebAPI.GetMainPage();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+				Michelangelo.Session.WebAPI.GetMainPage(error => {
+					if (error != null) {
+						errorMessage = error;
+						return;
+					}
+				});
 			}
 			if (GUILayout.Button("Create Grammar")) {
-				try {
-					Michelangelo.Session.WebAPI.CreateGrammar();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+				Michelangelo.Session.WebAPI.CreateGrammar((response, error) => {
+					if (error != null) {
+						errorMessage = error;
+						return;
+					}
+				});
 			}
 			if (GUILayout.Button("Get Grammar")) {
-				try {
-					Michelangelo.Session.WebAPI.GetGrammar();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+				Michelangelo.Session.WebAPI.GetGrammar((response, error) => {
+					if (error != null) {
+						errorMessage = error;
+						return;
+					}
+				});
 			}
 			if (GUILayout.Button("Get Shared")) {
-				try {
-					Michelangelo.Session.WebAPI.GetShared();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+				Michelangelo.Session.WebAPI.GetShared((response, error) => {
+					if (error != null) {
+						errorMessage = error;
+						return;
+					}
+				});
 			}
 			if (GUILayout.Button("Get Tutorial")) {
-				try {
-					Michelangelo.Session.WebAPI.GetTutorials();
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
+				Michelangelo.Session.WebAPI.GetTutorials((response, error) => {
+					if (error != null) {
+						errorMessage = error;
+						return;
+					}
+
+				});
 			}
 		}
 
 		private void NotLoggedIn() {
 			EditorGUILayout.LabelField("Log In", EditorStyles.boldLabel);
-			email = EditorGUILayout.TextField("User name or Email", email);
-			password = EditorGUILayout.PasswordField("Password", password);
+			loginEmail = EditorGUILayout.TextField("User name or Email", loginEmail);
+			loginPassword = EditorGUILayout.PasswordField("Password", loginPassword);
 			if (GUILayout.Button("Log In")) {
-				try {
-					Michelangelo.Session.WebAPI.Login(email, password);
-				} catch (Michelangelo.Utility.ResponseParseException ex) {
-					errorMessage = ex.Message;
-				}
-			}
-			if (errorMessage != null) {
-				GUILayout.Label(errorMessage);
+				isLoading = true;
+				Repaint();
+				Michelangelo.Session.WebAPI.Login(loginEmail, loginPassword, error => {
+					loginEmail = null;
+					loginPassword = null;
+					if (error != null) {
+						errorMessage = error;
+						isLoading = false;
+						Repaint();
+						return;
+					}
+
+					Michelangelo.Session.WebAPI.GetUserInfo((response, _) => {
+						user = response;
+						isLoading = false;
+						Repaint();
+					});
+				});
 			}
 		}
 	}
