@@ -17,6 +17,7 @@ namespace Michelangelo.Session {
 		private static readonly string SetCookieName = "Set-Cookie";
 		private static readonly string RequestTokenName = "__RequestVerificationToken";
 		private static readonly string VerificationTokenName = ".AspNet.ApplicationCookie";
+		private static readonly string MichelangeloLoginCookie = "Michelangelo" + VerificationTokenName;
 
 		private static StringStringDictionary cookies = new StringStringDictionary();
 
@@ -34,10 +35,21 @@ namespace Michelangelo.Session {
 			}
 		}
 
-		public static bool IsLoggedIn {
+		public static bool IsAuthenticated {
 			get {
-				return cookies.ContainsKey(VerificationTokenName) && cookies[VerificationTokenName] != null;
+				if (cookies.ContainsKey(VerificationTokenName))
+					return cookies[VerificationTokenName] != null;
+				var cookieFromEditor = EditorPrefs.GetString(MichelangeloLoginCookie);
+
+				if (cookieFromEditor == "")
+					return false;
+				cookies.Add(VerificationTokenName, cookieFromEditor);
+				return true;
 			}
+		}
+
+		public static void LoginFromPrefs(Action<ErrorMessage> completion = null) {
+
 		}
 
 		public static void Login(string email, string password, Action<ErrorMessage> completion = null) {
@@ -48,6 +60,7 @@ namespace Michelangelo.Session {
 
 			UnityWebRequest.Get(URLConstants.LogInAPI).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(getRequest.error);
 					return;
 				}
@@ -72,12 +85,14 @@ namespace Michelangelo.Session {
 
 				UnityWebRequest.Post(URLConstants.LogInAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
 					if ((postRequest.isNetworkError || postRequest.isHttpError) && postRequest.error != "Redirect limit exceeded") {
+						Debug.LogError(postRequest.error);
 						if (completion != null) completion("Login request error: " + postRequest.error);
 						return;
 					}
 					Debug.Log(postRequest.Info());
 					try {
 						SetCookie(VerificationTokenName, postRequest);
+						EditorPrefs.SetString(MichelangeloLoginCookie, cookies[VerificationTokenName]);
 					} catch (ResponseParseException) {
 						if (completion != null) completion("Authentication failed.");
 						return;
@@ -90,6 +105,7 @@ namespace Michelangelo.Session {
 		public static void Logout(Action<ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(getRequest.error);
 					return;
 				}
@@ -105,11 +121,13 @@ namespace Michelangelo.Session {
 
 				UnityWebRequest.Post(URLConstants.LogOutAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
 					if ((postRequest.isNetworkError || postRequest.isHttpError) && postRequest.error != "Redirect limit exceeded") {
+						Debug.LogError(postRequest.error);
 						if (completion != null) completion("Logout request error: " + postRequest.error);
 						return;
 					}
 					Debug.Log(postRequest.Info());
 					cookies = new StringStringDictionary();
+					EditorPrefs.DeleteKey(MichelangeloLoginCookie);
 					if (completion != null) completion(null);
 				});
 			});
@@ -118,6 +136,7 @@ namespace Michelangelo.Session {
 		public static void GetMainPage(Action<ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(getRequest.error);
 					return;
 				}
@@ -130,6 +149,7 @@ namespace Michelangelo.Session {
 		public static void GetUserInfo(Action<UserInfo, ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
@@ -141,10 +161,12 @@ namespace Michelangelo.Session {
 		public static void CreateGrammar(Action<Grammar, ErrorMessage> completion = null) {
 			UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(cookiesString).Then(putRequest => {
 				if (putRequest.isNetworkError || putRequest.isHttpError) {
+					Debug.LogError(putRequest.error);
 					if (completion != null) completion(null, putRequest.error);
 					return;
 				}
 				Debug.Log(putRequest.Info());
+				JSONFromResponse("newGrammar", putRequest.GetResponseBody());
 				if (completion != null) completion(Grammar.FromJson(putRequest.GetResponseBody()), null);
 			});
 		}
@@ -152,10 +174,12 @@ namespace Michelangelo.Session {
 		public static void GetGrammar(Action<Grammar[], ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.GrammarAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
 				Debug.Log(getRequest.Info());
+				JSONFromResponse("grammars", getRequest.GetResponseBody());
 				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
 			});
 		}
@@ -163,10 +187,12 @@ namespace Michelangelo.Session {
 		public static void GetShared(Action<Grammar[], ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.SharedAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
 				Debug.Log(getRequest.Info());
+				JSONFromResponse("shared", getRequest.GetResponseBody());
 				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
 			});
 		}
@@ -174,10 +200,12 @@ namespace Michelangelo.Session {
 		public static void GetTutorials(Action<Grammar[], ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.TutorialAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (getRequest.isNetworkError || getRequest.isHttpError) {
+					Debug.LogError(getRequest.error);
 					if (completion != null) completion(null, getRequest.error);
 					return;
 				}
 				Debug.Log(getRequest.Info());
+				JSONFromResponse("tutorials", getRequest.GetResponseBody());
 				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
 			});
 		}
@@ -209,8 +237,8 @@ namespace Michelangelo.Session {
 			System.IO.File.WriteAllText(System.IO.Path.Combine(Application.dataPath, "page.html"), response);
 		}
 
-		private static void JSONFromResponse(string response) {
-			System.IO.File.WriteAllText(System.IO.Path.Combine(Application.dataPath, "response.json"), response);
+		private static void JSONFromResponse(string filename, string response) {
+			System.IO.File.WriteAllText(System.IO.Path.Combine(Application.dataPath, filename + ".json"), response);
 		}
 		#endregion
 	}
