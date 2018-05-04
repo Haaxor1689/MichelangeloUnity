@@ -36,7 +36,7 @@ namespace Michelangelo.Editor {
 				return;
 			}
 			if (Michelangelo.Session.WebAPI.IsAuthenticated) {
-				if (!isLoggedIn) {
+				if (!isLoggedIn || user == null) {
 					isLoading = true;
 					UpdateUserInfo();
 					return;
