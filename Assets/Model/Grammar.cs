@@ -13,6 +13,8 @@ namespace Michelangelo.Model {
         public bool isOwner;
         public bool shared;
 
+        public static Grammar Placeholder = new Grammar { name = "..." };
+
         public static Grammar FromJson(string json) {
             return JsonUtility.FromJson<Grammar>(json);
         }

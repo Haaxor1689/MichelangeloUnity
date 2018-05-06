@@ -39,6 +39,7 @@ namespace Michelangelo.Editor {
 					MichelangeloSession.UpdateUserInfo();
 					return;
 				}
+
 				LoggedIn();
 			} else {
 				NotLoggedIn();
@@ -62,11 +63,11 @@ namespace Michelangelo.Editor {
 				MichelangeloSession.CreateGrammar();
 			}
 			GUILayout.Space(20.0f);
-			PrintOwnGrammarArray(MichelangeloSession.grammar, "Your designs", ref grammarScrollPos);
+			PrintGrammarArray(MichelangeloSession.myGrammar, "Your designs", ref grammarScrollPos);
 			GUILayout.Space(20.0f);
-			PrintGrammarArray(MichelangeloSession.shared, "Shared by others", ref sharedScrollPos);
+			PrintGrammarArray(MichelangeloSession.sharedGrammar, "Shared by others", ref sharedScrollPos);
 			GUILayout.Space(20.0f);
-			PrintGrammarArray(MichelangeloSession.tutorial, "Tutorials and Reference", ref tutorialScrollPos);
+			PrintGrammarArray(MichelangeloSession.tutorialGrammar, "Tutorials and Reference", ref tutorialScrollPos);
 			GUILayout.Space(20.0f);
 			if (GUILayout.Button("Refresh")) {
 				MichelangeloSession.UpdateUserInfo();
@@ -83,31 +84,19 @@ namespace Michelangelo.Editor {
 		}
 
 		private void PrintGrammarArray(List<Grammar> grammarArray, string title, ref Vector2 scrollPos) {
-			if (grammarArray == null) {
+			EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+			if (grammarArray == null || grammarArray.Count == 0) {
+				EditorGUILayout.LabelField("Loading...");
 				return;
 			}
-
-			EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(100));
+			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(Mathf.Min(90, 23 * grammarArray.Count)));
 			foreach (var item in grammarArray) {
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(item.name, item.type + " " + item.lastModified);
-				EditorGUILayout.EndHorizontal();
-			}
-			EditorGUILayout.EndScrollView();
-		}
-
-		private void PrintOwnGrammarArray(List<Grammar> grammarArray, string title, ref Vector2 scrollPos) {
-			if (grammarArray == null) {
-				return;
-			}
-
-			EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(100));
-			foreach (var item in grammarArray) {
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(item.name, item.type + " " + item.lastModified);
-				if (GUILayout.Button("X")) {
+				EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+				EditorGUILayout.LabelField(item.name);
+				if (GUILayout.Button("Instantiate")) {
+					MichelangeloSession.InstantiateGrammar(item.id);
+				}
+				if (item.isOwner && GUILayout.Button("X")) {
 					MichelangeloSession.DeleteGrammar(item.id);
 				}
 				EditorGUILayout.EndHorizontal();

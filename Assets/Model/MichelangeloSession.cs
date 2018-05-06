@@ -1,21 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Michelangelo.Model.Render;
+using Michelangelo.Scripts;
 using UnityEngine;
 
 namespace Michelangelo.Model {
-    [Serializable]
     public static class MichelangeloSession {
         public static bool isLoading { get; private set; }
         public static bool isLoggedIn { get; private set; }
 
         public static UserInfo user { get; private set; }
 
-        public static List<Grammar> grammar { get; private set; }
-        public static List<Grammar> shared { get; private set; }
-        public static List<Grammar> tutorial { get; private set; }
+        public static List<Grammar> myGrammar { get; private set; }
+        public static List<Grammar> sharedGrammar { get; private set; }
+        public static List<Grammar> tutorialGrammar { get; private set; }
+
+        public static IEnumerable<Grammar> allGrammars {
+            get {
+                return myGrammar.Union(sharedGrammar).Union(tutorialGrammar);
+            }
+        }
 
         public static event Action<string> taskDone;
+        public static event Action<ModelMesh> modelGenerated;
 
         public static void LogIn(string loginEmail, string loginPassword) {
             isLoading = true;
@@ -47,16 +55,17 @@ namespace Michelangelo.Model {
                     TaskDone(error);
                     return;
                 }
-                if (grammar != null) {
-                    grammar.Add(response);
+                if (myGrammar != null) {
+                    myGrammar.Add(response);
                 } else {
-                    grammar = new List<Grammar> { response };
+                    myGrammar = new List<Grammar> { response };
                 }
                 TaskDone(null);
             });
         }
 
         public static void UpdateUserInfo() {
+            isLoading = true;
             Michelangelo.Session.WebAPI.GetUserInfo((response, error) => {
                 if (error != null) {
                     TaskDone(error);
@@ -65,20 +74,20 @@ namespace Michelangelo.Model {
 
                 user = response;
                 isLoggedIn = true;
-                TaskDone(null);
-                UpdateGrammarArray();
+                UpdateMyGrammarArray();
                 UpdateSharedArray();
                 UpdateTutorialArray();
+                TaskDone(null);
             });
         }
 
-        public static void UpdateGrammarArray() {
-            Michelangelo.Session.WebAPI.GetGrammar((response, error) => {
+        public static void UpdateMyGrammarArray() {
+            Michelangelo.Session.WebAPI.GetMyGrammar((response, error) => {
                 if (error != null) {
                     TaskDone(error);
                     return;
                 }
-                grammar = response.ToList();
+                myGrammar = response.ToList();
                 TaskDone(null);
             });
         }
@@ -89,7 +98,7 @@ namespace Michelangelo.Model {
                     TaskDone(error);
                     return;
                 }
-                shared = response.ToList();
+                sharedGrammar = response.ToList();
                 TaskDone(null);
             });
         }
@@ -100,25 +109,124 @@ namespace Michelangelo.Model {
                     TaskDone(error);
                     return;
                 }
-                tutorial = response.ToList();
+                tutorialGrammar = response.ToList();
                 TaskDone(null);
             });
         }
 
-        public static void DeleteGrammar(string id) {
-            Michelangelo.Session.WebAPI.DeleteGrammar(id, (error) => {
+        public static void InstantiateGrammar(string grammarId) {
+            var g = allGrammars.First(x => x.id == grammarId);
+            if (g == null) {
+                TaskDone("Requested grammar not found.");
+                return;
+            }
+
+            var newObject = new GameObject("Michelangelo Object");
+            var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
+            michelangeloObject.SetGrammar(g);
+        }
+
+        public static void GenerateGrammar(string grammarId) {
+            var g = allGrammars.First(x => x.id == grammarId);
+            if (g == null) {
+                TaskDone("Requested grammar not found.");
+                return;
+            }
+
+            isLoading = true;
+            Michelangelo.Session.WebAPI.GenerateGrammar(g, (model, error) => {
                 if (error != null) {
                     TaskDone(error);
                     return;
                 }
-                grammar.Remove(grammar.First(x => x.id == id));
+                modelGenerated(model);
                 TaskDone(null);
             });
         }
 
+        public static Grammar GetGrammar(string grammarId) {
+            Grammar ret = null;
+            if (myGrammar != null && (ret = myGrammar.FirstOrDefault(x => x.id == grammarId)) != null)
+                return ret;
+            if (sharedGrammar != null && (ret = sharedGrammar.FirstOrDefault(x => x.id == grammarId)) != null)
+                return ret;
+            if (tutorialGrammar != null && (ret = tutorialGrammar.FirstOrDefault(x => x.id == grammarId)) != null)
+                return ret;
+
+            return Grammar.Placeholder;
+        }
+
+        public static void DeleteGrammar(string grammarId) {
+            isLoading = true;
+            Michelangelo.Session.WebAPI.DeleteGrammar(grammarId, (error) => {
+                if (error != null) {
+                    TaskDone(error);
+                    return;
+                }
+                myGrammar.Remove(myGrammar.First(x => x.id == grammarId));
+                TaskDone(null);
+            });
+        }
+
+        public static void UpdateGrammar(string grammarId) {
+            Grammar grammar;
+            if (myGrammar != null && (grammar = myGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
+                updateMyGrammar(grammarId, myGrammar.IndexOf(grammar));
+            } else if (sharedGrammar != null && (grammar = sharedGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
+                updateSharedGrammar(grammarId, sharedGrammar.IndexOf(grammar));
+            } else if (tutorialGrammar != null && (grammar = tutorialGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
+                updateTutorialGrammar(grammarId, tutorialGrammar.IndexOf(grammar));
+            }
+        }
+
+        #region UpdateGrammarHelpers
+        private static void updateMyGrammar(string grammarId, int index) {
+            isLoading = true;
+            Michelangelo.Session.WebAPI.GetGrammar(grammarId, (grammar, error) => {
+                if (error != null) {
+                    TaskDone(error);
+                    return;
+                }
+                myGrammar[index] = grammar;
+                TaskDone(null);
+            });
+        }
+
+        private static void updateSharedGrammar(string grammarId, int index) {
+            isLoading = true;
+            Michelangelo.Session.WebAPI.GetGrammar(grammarId, (grammar, error) => {
+                if (error != null) {
+                    TaskDone(error);
+                    return;
+                }
+                sharedGrammar[index] = grammar;
+                TaskDone(null);
+            });
+        }
+
+        private static void updateTutorialGrammar(string grammarId, int index) {
+            isLoading = true;
+            Michelangelo.Session.WebAPI.GetTutorial(grammarId, (grammar, error) => {
+                if (error != null) {
+                    TaskDone(error);
+                    return;
+                }
+                tutorialGrammar[index] = grammar;
+                TaskDone(null);
+            });
+        }
+        #endregion
+
         private static void TaskDone(string error) {
             isLoading = false;
             taskDone(error);
+        }
+
+        [UnityEditor.Callbacks.DidReloadScripts]
+        private static void OnScriptsReloaded() {
+            if (Michelangelo.Session.WebAPI.IsAuthenticated) {
+                UpdateUserInfo();
+            }
         }
     }
 }

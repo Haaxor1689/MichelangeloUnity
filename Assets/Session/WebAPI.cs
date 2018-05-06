@@ -5,11 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Michelangelo;
 using Michelangelo.Model;
+using Michelangelo.Model.Render;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using ErrorMessage = System.String;
+using SimpleJSON;
 
 namespace Michelangelo.Session {
 	public static class WebAPI {
@@ -165,7 +167,7 @@ namespace Michelangelo.Session {
 			});
 		}
 
-		public static void GetGrammar(Action<Grammar[], ErrorMessage> completion = null) {
+		public static void GetMyGrammar(Action<Grammar[], ErrorMessage> completion = null) {
 			UnityWebRequest.Get(URLConstants.GrammarAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (CheckAndLogError(getRequest)) {
 					if (completion != null) completion(null, getRequest.error);
@@ -201,6 +203,72 @@ namespace Michelangelo.Session {
 			});
 		}
 
+		public static void GetGrammar(string grammarId, Action<Grammar, ErrorMessage> completion = null) {
+			UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(cookiesString).Then(getRequest => {
+				if (CheckAndLogError(getRequest)) {
+					if (completion != null) completion(null, getRequest.error);
+					return;
+				}
+				Debug.Log(getRequest.Info());
+				if (completion != null) completion(Grammar.FromJson(getRequest.GetResponseBody()), null);
+			});
+		}
+
+		public static void GenerateGrammar(Grammar grammar, Action<ModelMesh, ErrorMessage> completion = null) {
+			var form = new WWWForm();
+			form.AddField("ID", grammar.id);
+			form.AddField("Name", grammar.name);
+			form.AddField("Type", grammar.type);
+			form.AddField("Code", grammar.code);
+
+			UnityWebRequest.Post(URLConstants.GrammarAPI, form).WithCookies(cookiesString).Then(postRequest => {
+				if (CheckAndLogError(postRequest)) {
+					if (completion != null) completion(null, "Generate request error: " + postRequest.error);
+					return;
+				}
+
+				Debug.Log(postRequest.Info());
+				var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
+				UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(cookiesString).Then(getRequest => {
+					if (CheckAndLogError(getRequest)) {
+						if (completion != null) completion(null, "Generate request error: " + getRequest.error);
+						return;
+					}
+
+					Debug.Log(getRequest.Info());
+					JSONFromResponse("generated", getRequest.GetResponseBody());
+					var data = JSON.Parse(getRequest.GetResponseBody());
+					var list = new List<Primitive>();
+					foreach (var obj in data["o"]) {
+						var t = obj.Value["t"];
+						list.Add(new Primitive {
+							/* fixformat ignore:start */
+							type = (Michelangelo.Model.Render.PrimitiveType) Enum.Parse(typeof(Michelangelo.Model.Render.PrimitiveType), obj.Value["g"].Value),
+							modelMatrix = new Matrix4x4(
+								new Vector4(t[0], t[4], t[8], t[12]),
+								new Vector4(t[1], t[5], t[9], t[13]),
+								new Vector4(t[2], t[6], t[10], t[14]),
+								new Vector4(t[3], t[7], t[11], t[15])
+							)
+							/* fixformat ignore:end */
+						});
+					}
+					completion(new ModelMesh(list.ToArray()), null);
+				});
+			});
+		}
+
+		public static void GetTutorial(string grammarId, Action<Grammar, ErrorMessage> completion = null) {
+			UnityWebRequest.Get(URLConstants.TutorialAPI + "/" + grammarId).WithCookies(cookiesString).Then(getRequest => {
+				if (CheckAndLogError(getRequest)) {
+					if (completion != null) completion(null, getRequest.error);
+					return;
+				}
+				Debug.Log(getRequest.Info());
+				if (completion != null) completion(Grammar.FromJson(getRequest.GetResponseBody()), null);
+			});
+		}
+
 		public static void DeleteGrammar(string grammarId, Action<ErrorMessage> completion = null) {
 			UnityWebRequest.Delete(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(cookiesString).Then(deleteRequest => {
 				if (CheckAndLogError(deleteRequest)) {
@@ -222,11 +290,8 @@ namespace Michelangelo.Session {
 		}
 
 		private static void SetCookie(string cookie, UnityWebRequest request) {
-			cookies[cookie] = CheckNonEmpty(new Regex(cookie + "=[^;]*")
-				.Match(request.GetResponseHeader(SetCookieName))
-				.ToString()
-				.Split('=')
-				.Last());
+			cookies[cookie] = CheckNonEmpty(new Regex(cookie + "=(?<c>[^;]*)")
+				.Match(request.GetResponseHeader(SetCookieName)).Groups["c"].Value);
 		}
 
 		private static string CheckNonEmpty(string str) {
@@ -248,6 +313,7 @@ namespace Michelangelo.Session {
 				return false;
 			}
 
+			Debug.LogError(request.Info());
 			var builder = new StringBuilder();
 			builder.Append("Error ");
 			builder.Append(request.responseCode.ToString());
