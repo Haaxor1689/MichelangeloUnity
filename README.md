@@ -9,7 +9,7 @@
     - Attributes
         - Name
         - With*(Split, Translate, Rotate, Paint, !Seed, !Attr)
-        - Restrict*(Source.Mine/.This/.Team(teaNames...)/.Project)
+        - Restrict*(Source.Mine/.This/.Team(teamNames...)/.Project)
     - Required name and scale
     - Parse JSON response and create mesh from it
 - Material interpretation

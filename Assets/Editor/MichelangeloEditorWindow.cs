@@ -7,93 +7,70 @@ using UnityEngine;
 
 namespace Michelangelo.Editor {
 	public class MichelangeloEditorWindow : EditorWindow {
-		private static bool isLoading = false;
-		private static bool isLoggedIn = false;
+		private string loginEmail;
+		private string loginPassword;
 
-		private static string loginEmail;
-		private static string loginPassword;
+		private string errorMessage;
 
-		private static string errorMessage;
-
-		private static UserInfo user;
-
-		private static Grammar[] grammar;
-		private static Grammar[] shared;
-		private static Grammar[] tutorial;
-
-		private static Vector2 grammarScrollPos;
-		private static Vector2 sharedScrollPos;
-		private static Vector2 tutorialScrollPos;
+		private Vector2 grammarScrollPos;
+		private Vector2 sharedScrollPos;
+		private Vector2 tutorialScrollPos;
 
 		[MenuItem("Window/Michelangelo")]
 		public static void ShowWindow() {
 			GetWindow<MichelangeloEditorWindow>("Michelangelo");
 		}
 
+		private void OnEnable() {
+			MichelangeloSession.taskDone += TaskDone;
+		}
+
+		private void OnDisable() {
+			MichelangeloSession.taskDone -= TaskDone;
+		}
+
 		private void OnGUI() {
-			if (isLoading) {
+			if (MichelangeloSession.isLoading) {
 				EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
 				return;
 			}
 			if (Michelangelo.Session.WebAPI.IsAuthenticated) {
-				if (!isLoggedIn || user == null) {
-					isLoading = true;
-					UpdateUserInfo();
+				if (!MichelangeloSession.isLoggedIn || MichelangeloSession.user == null) {
+					MichelangeloSession.UpdateUserInfo();
 					return;
 				}
 				LoggedIn();
 			} else {
 				NotLoggedIn();
 			}
-			if (errorMessage != null) {
+			if (errorMessage != null && errorMessage != "") {
 				var style = new GUIStyle(EditorStyles.textField);
 				style.normal.textColor = Color.red;
 
+				GUILayout.Space(20.0f);
 				GUILayout.Label(errorMessage, style);
 			}
 		}
 
 		private void LoggedIn() {
-			EditorGUILayout.LabelField("User:", user.username, EditorStyles.boldLabel);
-			EditorGUILayout.LabelField("Energy:", user.energyAvailable + "/" + user.energyCapacity, EditorStyles.boldLabel);
+			EditorGUILayout.LabelField("User:", MichelangeloSession.user.username, EditorStyles.boldLabel);
+			EditorGUILayout.LabelField("Energy:", MichelangeloSession.user.energyAvailable + "/" + MichelangeloSession.user.energyCapacity, EditorStyles.boldLabel);
 			if (GUILayout.Button("Log Out")) {
-				errorMessage = null;
-				isLoading = true;
-				Repaint();
-				Michelangelo.Session.WebAPI.Logout(error => {
-					if (error != null) {
-						errorMessage = error;
-						isLoading = false;
-						Repaint();
-						return;
-					}
-					isLoading = false;
-					isLoggedIn = false;
-					Repaint();
-				});
+				MichelangeloSession.LogOut();
 			}
 			if (GUILayout.Button("Create Grammar")) {
-				errorMessage = null;
-				Michelangelo.Session.WebAPI.CreateGrammar((response, error) => {
-					if (error != null) {
-						errorMessage = error;
-						return;
-					}
-					if (grammar != null) {
-						var list = grammar.ToList();
-						list.Add(response);
-						grammar = list.ToArray();
-					} else {
-						grammar = new Grammar[] { response };
-					}
-				});
+				MichelangeloSession.CreateGrammar();
 			}
 			GUILayout.Space(20.0f);
-			PrintGrammarArray(grammar, "Your designs", ref grammarScrollPos);
+			PrintOwnGrammarArray(MichelangeloSession.grammar, "Your designs", ref grammarScrollPos);
 			GUILayout.Space(20.0f);
-			PrintGrammarArray(shared, "Shared by others", ref sharedScrollPos);
+			PrintGrammarArray(MichelangeloSession.shared, "Shared by others", ref sharedScrollPos);
 			GUILayout.Space(20.0f);
-			PrintGrammarArray(tutorial, "Tutorials and Reference", ref tutorialScrollPos);
+			PrintGrammarArray(MichelangeloSession.tutorial, "Tutorials and Reference", ref tutorialScrollPos);
+			GUILayout.Space(20.0f);
+			if (GUILayout.Button("Refresh")) {
+				MichelangeloSession.UpdateUserInfo();
+			}
 		}
 
 		private void NotLoggedIn() {
@@ -101,24 +78,11 @@ namespace Michelangelo.Editor {
 			loginEmail = EditorGUILayout.TextField("User name or Email", loginEmail);
 			loginPassword = EditorGUILayout.PasswordField("Password", loginPassword);
 			if (GUILayout.Button("Log In")) {
-				errorMessage = null;
-				isLoading = true;
-				Repaint();
-				Michelangelo.Session.WebAPI.Login(loginEmail, loginPassword, error => {
-					loginEmail = null;
-					loginPassword = null;
-					if (error != null) {
-						errorMessage = error;
-						isLoading = false;
-						Repaint();
-						return;
-					}
-					UpdateUserInfo();
-				});
+				MichelangeloSession.LogIn(loginEmail, loginPassword);
 			}
 		}
 
-		private void PrintGrammarArray(Grammar[] grammarArray, string title, ref Vector2 scrollPos) {
+		private void PrintGrammarArray(List<Grammar> grammarArray, string title, ref Vector2 scrollPos) {
 			if (grammarArray == null) {
 				return;
 			}
@@ -126,57 +90,34 @@ namespace Michelangelo.Editor {
 			EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
 			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(100));
 			foreach (var item in grammarArray) {
+				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.LabelField(item.name, item.type + " " + item.lastModified);
+				EditorGUILayout.EndHorizontal();
 			}
 			EditorGUILayout.EndScrollView();
 		}
 
-		private void UpdateUserInfo() {
-			Michelangelo.Session.WebAPI.GetUserInfo((response, _) => {
-				user = response;
-				isLoading = false;
-				isLoggedIn = true;
-				Repaint();
-				UpdateGrammarArray();
-				UpdateSharedArray();
-				UpdateTutorialArray();
-			});
+		private void PrintOwnGrammarArray(List<Grammar> grammarArray, string title, ref Vector2 scrollPos) {
+			if (grammarArray == null) {
+				return;
+			}
+
+			EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(100));
+			foreach (var item in grammarArray) {
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.LabelField(item.name, item.type + " " + item.lastModified);
+				if (GUILayout.Button("X")) {
+					MichelangeloSession.DeleteGrammar(item.id);
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayout.EndScrollView();
 		}
 
-		private void UpdateGrammarArray() {
-			errorMessage = null;
-			Michelangelo.Session.WebAPI.GetGrammar((response, error) => {
-				if (error != null) {
-					errorMessage = error;
-					return;
-				}
-				grammar = response;
-				Repaint();
-			});
-		}
-
-		private void UpdateSharedArray() {
-			errorMessage = null;
-			Michelangelo.Session.WebAPI.GetShared((response, error) => {
-				if (error != null) {
-					errorMessage = error;
-					return;
-				}
-				shared = response;
-				Repaint();
-			});
-		}
-
-		private void UpdateTutorialArray() {
-			errorMessage = null;
-			Michelangelo.Session.WebAPI.GetTutorials((response, error) => {
-				if (error != null) {
-					errorMessage = error;
-					return;
-				}
-				tutorial = response;
-				Repaint();
-			});
+		private void TaskDone(string error) {
+			errorMessage = error;
+			Repaint();
 		}
 	}
 }

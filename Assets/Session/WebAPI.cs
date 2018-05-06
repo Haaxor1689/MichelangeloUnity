@@ -17,7 +17,8 @@ namespace Michelangelo.Session {
 		private static readonly string SetCookieName = "Set-Cookie";
 		private static readonly string RequestTokenName = "__RequestVerificationToken";
 		private static readonly string VerificationTokenName = ".AspNet.ApplicationCookie";
-		private static readonly string MichelangeloLoginCookie = "Michelangelo" + VerificationTokenName;
+		private static readonly string MichelangeloRequestToken = "Michelangelo" + RequestTokenName;
+		private static readonly string MichelangeloVerificationToken = "Michelangelo" + VerificationTokenName;
 
 		private static StringStringDictionary cookies = new StringStringDictionary();
 
@@ -37,19 +38,16 @@ namespace Michelangelo.Session {
 
 		public static bool IsAuthenticated {
 			get {
-				if (cookies.ContainsKey(VerificationTokenName))
-					return cookies[VerificationTokenName] != null;
-				var cookieFromEditor = EditorPrefs.GetString(MichelangeloLoginCookie);
-
-				if (cookieFromEditor == "")
-					return false;
-				cookies.Add(VerificationTokenName, cookieFromEditor);
+				if (cookies.ContainsKey(VerificationTokenName) && cookies.ContainsKey(RequestTokenName))
+					return cookies[VerificationTokenName] != null && cookies[RequestTokenName] != null;
+				var verificationToken = EditorPrefs.GetString(MichelangeloVerificationToken);
+				if (verificationToken == "") return false;
+				var requestToken = EditorPrefs.GetString(MichelangeloRequestToken);
+				if (requestToken == "") return false;
+				cookies.Add(VerificationTokenName, verificationToken);
+				cookies.Add(RequestTokenName, requestToken);
 				return true;
 			}
-		}
-
-		public static void LoginFromPrefs(Action<ErrorMessage> completion = null) {
-
 		}
 
 		public static void Login(string email, string password, Action<ErrorMessage> completion = null) {
@@ -65,6 +63,7 @@ namespace Michelangelo.Session {
 				}
 				try {
 					SetCookie(RequestTokenName, getRequest);
+					EditorPrefs.SetString(MichelangeloRequestToken, cookies[RequestTokenName]);
 				} catch (ResponseParseException) {
 					if (completion != null) completion("Failed to get request verification token.");
 					return;
@@ -91,7 +90,7 @@ namespace Michelangelo.Session {
 					Debug.Log(postRequest.Info());
 					try {
 						SetCookie(VerificationTokenName, postRequest);
-						EditorPrefs.SetString(MichelangeloLoginCookie, cookies[VerificationTokenName]);
+						EditorPrefs.SetString(MichelangeloVerificationToken, cookies[VerificationTokenName]);
 					} catch (ResponseParseException) {
 						if (completion != null) completion("Authentication failed.");
 						return;
@@ -116,12 +115,6 @@ namespace Michelangelo.Session {
 					if (completion != null) completion("Failed to get logout request token.");
 					return;
 				}
-				try {
-					SetCookie(RequestTokenName, getRequest);
-				} catch (ResponseParseException) {
-					if (completion != null) completion("Failed to get request verification token.");
-					return;
-				}
 
 				UnityWebRequest.Post(URLConstants.LogOutAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
 					if (postRequest.error != "Redirect limit exceeded" && CheckAndLogError(postRequest)) {
@@ -130,7 +123,8 @@ namespace Michelangelo.Session {
 					}
 					Debug.Log(postRequest.Info());
 					cookies = new StringStringDictionary();
-					EditorPrefs.DeleteKey(MichelangeloLoginCookie);
+					EditorPrefs.DeleteKey(MichelangeloRequestToken);
+					EditorPrefs.DeleteKey(MichelangeloVerificationToken);
 					if (completion != null) completion(null);
 				});
 			});
@@ -207,6 +201,17 @@ namespace Michelangelo.Session {
 			});
 		}
 
+		public static void DeleteGrammar(string grammarId, Action<ErrorMessage> completion = null) {
+			UnityWebRequest.Delete(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(cookiesString).Then(deleteRequest => {
+				if (CheckAndLogError(deleteRequest)) {
+					if (completion != null) completion(deleteRequest.error);
+					return;
+				}
+				Debug.Log(deleteRequest.Info());
+				if (completion != null) completion(null);
+			});
+		}
+
 		#region Helper methods
 		private static string GetRequestToken(string source) {
 			return CheckNonEmpty(RequestTokenRegex
@@ -251,7 +256,8 @@ namespace Michelangelo.Session {
 			Debug.LogError(builder.ToString());
 			if (request.responseCode == 401) {
 				cookies = new StringStringDictionary();
-				EditorPrefs.DeleteKey(MichelangeloLoginCookie);
+				EditorPrefs.DeleteKey(MichelangeloRequestToken);
+				EditorPrefs.DeleteKey(MichelangeloVerificationToken);
 				Debug.LogError("Unauthorized response code received. Deleting cookies...");
 			}
 			return true;
