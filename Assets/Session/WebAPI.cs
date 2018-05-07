@@ -354,7 +354,7 @@ namespace Michelangelo.Session {
 		}
 		private static Mesh MeshFromJSON(JSONNode json) {
 			JSONNode v = null;
-			if (json["g"].Value != "Mesh" || (v = json["v"]) == null) {
+			if ((v = json["v"]) == null) {
 				return null;
 			}
 			var mesh = new Mesh();
