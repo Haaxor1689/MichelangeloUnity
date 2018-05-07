@@ -3,11 +3,9 @@ using UnityEngine;
 
 namespace Michelangelo.Utility {
     static class Primitives {
-        public static readonly Mesh Cube = _cube();
-
-        private static Mesh _cube() {
+        public static readonly Mesh Box = _box();
+        private static Mesh _box() {
             Mesh mesh = new Mesh();
-            mesh.Clear();
 
             float length = 1f;
             float width = 1f;
@@ -206,6 +204,419 @@ namespace Michelangelo.Utility {
                 1 + 4 * 5,
 
             };
+            #endregion
+
+            mesh.vertices = vertices;
+            mesh.normals = normales;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
+
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+        public static readonly Mesh Sphere = _sphere();
+        private static Mesh _sphere() {
+            Mesh mesh = new Mesh();
+
+            float radius = 1f;
+            // Longitude |||
+            int nbLong = 24;
+            // Latitude ---
+            int nbLat = 16;
+
+            #region Vertices
+            Vector3[] vertices = new Vector3[(nbLong + 1) * nbLat + 2];
+            float _pi = Mathf.PI;
+            float _2pi = _pi * 2f;
+
+            vertices[0] = Vector3.up * radius;
+            for (int lat = 0; lat < nbLat; lat++) {
+                float a1 = _pi * (float) (lat + 1) / (nbLat + 1);
+                float sin1 = Mathf.Sin(a1);
+                float cos1 = Mathf.Cos(a1);
+
+                for (int lon = 0; lon <= nbLong; lon++) {
+                    float a2 = _2pi * (float) (lon == nbLong ? 0 : lon) / nbLong;
+                    float sin2 = Mathf.Sin(a2);
+                    float cos2 = Mathf.Cos(a2);
+
+                    vertices[lon + lat * (nbLong + 1) + 1] = new Vector3(sin1 * cos2, cos1, sin1 * sin2) * radius;
+                }
+            }
+            vertices[vertices.Length - 1] = Vector3.up * -radius;
+            #endregion
+
+            #region Normales		
+            Vector3[] normales = new Vector3[vertices.Length];
+            for (int n = 0; n < vertices.Length; n++)
+                normales[n] = vertices[n].normalized;
+            #endregion
+
+            #region UVs
+            Vector2[] uvs = new Vector2[vertices.Length];
+            uvs[0] = Vector2.up;
+            uvs[uvs.Length - 1] = Vector2.zero;
+            for (int lat = 0; lat < nbLat; lat++)
+                for (int lon = 0; lon <= nbLong; lon++)
+                    uvs[lon + lat * (nbLong + 1) + 1] = new Vector2((float) lon / nbLong, 1f - (float) (lat + 1) / (nbLat + 1));
+            #endregion
+
+            #region Triangles
+            int nbFaces = vertices.Length;
+            int nbTriangles = nbFaces * 2;
+            int nbIndexes = nbTriangles * 3;
+            int[] triangles = new int[nbIndexes];
+
+            //Top Cap
+            int i = 0;
+            for (int lon = 0; lon < nbLong; lon++) {
+                triangles[i++] = lon + 2;
+                triangles[i++] = lon + 1;
+                triangles[i++] = 0;
+            }
+
+            //Middle
+            for (int lat = 0; lat < nbLat - 1; lat++) {
+                for (int lon = 0; lon < nbLong; lon++) {
+                    int current = lon + lat * (nbLong + 1) + 1;
+                    int next = current + nbLong + 1;
+
+                    triangles[i++] = current;
+                    triangles[i++] = current + 1;
+                    triangles[i++] = next + 1;
+
+                    triangles[i++] = current;
+                    triangles[i++] = next + 1;
+                    triangles[i++] = next;
+                }
+            }
+
+            //Bottom Cap
+            for (int lon = 0; lon < nbLong; lon++) {
+                triangles[i++] = vertices.Length - 1;
+                triangles[i++] = vertices.Length - (lon + 2) - 1;
+                triangles[i++] = vertices.Length - (lon + 1) - 1;
+            }
+            #endregion
+
+            mesh.vertices = vertices;
+            mesh.normals = normales;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
+
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+        public static readonly Mesh Torus = _torus();
+        private static Mesh _torus() {
+            var mesh = new Mesh();
+
+            float radius1 = 1f;
+            float radius2 = .3f;
+            int nbRadSeg = 24;
+            int nbSides = 18;
+
+            #region Vertices		
+            Vector3[] vertices = new Vector3[(nbRadSeg + 1) * (nbSides + 1)];
+            float _2pi = Mathf.PI * 2f;
+            for (int seg = 0; seg <= nbRadSeg; seg++) {
+                int currSeg = seg == nbRadSeg ? 0 : seg;
+
+                float t1 = (float) currSeg / nbRadSeg * _2pi;
+                Vector3 r1 = new Vector3(Mathf.Cos(t1) * radius1, 0f, Mathf.Sin(t1) * radius1);
+
+                for (int side = 0; side <= nbSides; side++) {
+                    int currSide = side == nbSides ? 0 : side;
+
+                    float t2 = (float) currSide / nbSides * _2pi;
+                    Vector3 r2 = Quaternion.AngleAxis(-t1 * Mathf.Rad2Deg, Vector3.up) * new Vector3(Mathf.Sin(t2) * radius2, Mathf.Cos(t2) * radius2);
+
+                    vertices[side + seg * (nbSides + 1)] = r1 + r2;
+                }
+            }
+            #endregion
+
+            #region Normales		
+            Vector3[] normales = new Vector3[vertices.Length];
+            for (int seg = 0; seg <= nbRadSeg; seg++) {
+                int currSeg = seg == nbRadSeg ? 0 : seg;
+
+                float t1 = (float) currSeg / nbRadSeg * _2pi;
+                Vector3 r1 = new Vector3(Mathf.Cos(t1) * radius1, 0f, Mathf.Sin(t1) * radius1);
+
+                for (int side = 0; side <= nbSides; side++) {
+                    normales[side + seg * (nbSides + 1)] = (vertices[side + seg * (nbSides + 1)] - r1).normalized;
+                }
+            }
+            #endregion
+
+            #region UVs
+            Vector2[] uvs = new Vector2[vertices.Length];
+            for (int seg = 0; seg <= nbRadSeg; seg++)
+                for (int side = 0; side <= nbSides; side++)
+                    uvs[side + seg * (nbSides + 1)] = new Vector2((float) seg / nbRadSeg, (float) side / nbSides);
+            #endregion
+
+            #region Triangles
+            int nbFaces = vertices.Length;
+            int nbTriangles = nbFaces * 2;
+            int nbIndexes = nbTriangles * 3;
+            int[] triangles = new int[nbIndexes];
+
+            int i = 0;
+            for (int seg = 0; seg <= nbRadSeg; seg++) {
+                for (int side = 0; side <= nbSides - 1; side++) {
+                    int current = side + seg * (nbSides + 1);
+                    int next = side + (seg < (nbRadSeg) ? (seg + 1) * (nbSides + 1) : 0);
+
+                    if (i < triangles.Length - 6) {
+                        triangles[i++] = current;
+                        triangles[i++] = next;
+                        triangles[i++] = next + 1;
+
+                        triangles[i++] = current;
+                        triangles[i++] = next + 1;
+                        triangles[i++] = current + 1;
+                    }
+                }
+            }
+            #endregion
+
+            mesh.vertices = vertices;
+            mesh.normals = normales;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
+
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+        public static readonly Mesh Cone = _cone();
+        public static readonly Mesh Cylinder = _cone(.25f);
+        public static readonly Mesh Pyramid = _cone(0.0f, 4);
+        private static Mesh _cone(float topRadius = 0.0f, int nbSides = 18) {
+            var mesh = new Mesh();
+
+            float height = 1f;
+            float bottomRadius = .25f;
+            int nbHeightSeg = 1; // Not implemented yet
+
+            int nbVerticesCap = nbSides + 1;
+            #region Vertices
+
+            // bottom + top + sides
+            Vector3[] vertices = new Vector3[nbVerticesCap + nbVerticesCap + nbSides * nbHeightSeg * 2 + 2];
+            int vert = 0;
+            float _2pi = Mathf.PI * 2f;
+
+            // Bottom cap
+            vertices[vert++] = new Vector3(0f, 0f, 0f);
+            while (vert <= nbSides) {
+                float rad = (float) vert / nbSides * _2pi;
+                vertices[vert] = new Vector3(Mathf.Cos(rad) * bottomRadius, 0f, Mathf.Sin(rad) * bottomRadius);
+                vert++;
+            }
+
+            // Top cap
+            vertices[vert++] = new Vector3(0f, height, 0f);
+            while (vert <= nbSides * 2 + 1) {
+                float rad = (float) (vert - nbSides - 1) / nbSides * _2pi;
+                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height, Mathf.Sin(rad) * topRadius);
+                vert++;
+            }
+
+            // Sides
+            int v = 0;
+            while (vert <= vertices.Length - 4) {
+                float rad = (float) v / nbSides * _2pi;
+                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height, Mathf.Sin(rad) * topRadius);
+                vertices[vert + 1] = new Vector3(Mathf.Cos(rad) * bottomRadius, 0, Mathf.Sin(rad) * bottomRadius);
+                vert += 2;
+                v++;
+            }
+            vertices[vert] = vertices[nbSides * 2 + 2];
+            vertices[vert + 1] = vertices[nbSides * 2 + 3];
+            #endregion
+
+            #region Normales
+
+            // bottom + top + sides
+            Vector3[] normales = new Vector3[vertices.Length];
+            vert = 0;
+
+            // Bottom cap
+            while (vert <= nbSides) {
+                normales[vert++] = Vector3.down;
+            }
+
+            // Top cap
+            while (vert <= nbSides * 2 + 1) {
+                normales[vert++] = Vector3.up;
+            }
+
+            // Sides
+            v = 0;
+            while (vert <= vertices.Length - 4) {
+                float rad = (float) v / nbSides * _2pi;
+                float cos = Mathf.Cos(rad);
+                float sin = Mathf.Sin(rad);
+
+                normales[vert] = new Vector3(cos, 0f, sin);
+                normales[vert + 1] = normales[vert];
+
+                vert += 2;
+                v++;
+            }
+            normales[vert] = normales[nbSides * 2 + 2];
+            normales[vert + 1] = normales[nbSides * 2 + 3];
+            #endregion
+
+            #region UVs
+            Vector2[] uvs = new Vector2[vertices.Length];
+
+            // Bottom cap
+            int u = 0;
+            uvs[u++] = new Vector2(0.5f, 0.5f);
+            while (u <= nbSides) {
+                float rad = (float) u / nbSides * _2pi;
+                uvs[u] = new Vector2(Mathf.Cos(rad) * .5f + .5f, Mathf.Sin(rad) * .5f + .5f);
+                u++;
+            }
+
+            // Top cap
+            uvs[u++] = new Vector2(0.5f, 0.5f);
+            while (u <= nbSides * 2 + 1) {
+                float rad = (float) u / nbSides * _2pi;
+                uvs[u] = new Vector2(Mathf.Cos(rad) * .5f + .5f, Mathf.Sin(rad) * .5f + .5f);
+                u++;
+            }
+
+            // Sides
+            int u_sides = 0;
+            while (u <= uvs.Length - 4) {
+                float t = (float) u_sides / nbSides;
+                uvs[u] = new Vector3(t, 1f);
+                uvs[u + 1] = new Vector3(t, 0f);
+                u += 2;
+                u_sides++;
+            }
+            uvs[u] = new Vector2(1f, 1f);
+            uvs[u + 1] = new Vector2(1f, 0f);
+            #endregion 
+
+            #region Triangles
+            int nbTriangles = nbSides + nbSides + nbSides * 2;
+            int[] triangles = new int[nbTriangles * 3 + 3];
+
+            // Bottom cap
+            int tri = 0;
+            int i = 0;
+            while (tri < nbSides - 1) {
+                triangles[i] = 0;
+                triangles[i + 1] = tri + 1;
+                triangles[i + 2] = tri + 2;
+                tri++;
+                i += 3;
+            }
+            triangles[i] = 0;
+            triangles[i + 1] = tri + 1;
+            triangles[i + 2] = 1;
+            tri++;
+            i += 3;
+
+            // Top cap
+            //tri++;
+            while (tri < nbSides * 2) {
+                triangles[i] = tri + 2;
+                triangles[i + 1] = tri + 1;
+                triangles[i + 2] = nbVerticesCap;
+                tri++;
+                i += 3;
+            }
+
+            triangles[i] = nbVerticesCap + 1;
+            triangles[i + 1] = tri + 1;
+            triangles[i + 2] = nbVerticesCap;
+            tri++;
+            i += 3;
+            tri++;
+
+            // Sides
+            while (tri <= nbTriangles) {
+                triangles[i] = tri + 2;
+                triangles[i + 1] = tri + 1;
+                triangles[i + 2] = tri + 0;
+                tri++;
+                i += 3;
+
+                triangles[i] = tri + 1;
+                triangles[i + 1] = tri + 2;
+                triangles[i + 2] = tri + 0;
+                tri++;
+                i += 3;
+            }
+            #endregion
+
+            mesh.vertices = vertices;
+            mesh.normals = normales;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
+
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+        public static readonly Mesh Plane = _plane();
+        private static Mesh _plane() {
+            var mesh = new Mesh();
+
+            float length = 1f;
+            float width = 1f;
+            int resX = 2; // 2 minimum
+            int resZ = 2;
+
+            #region Vertices		
+            Vector3[] vertices = new Vector3[resX * resZ];
+            for (int z = 0; z < resZ; z++) {
+                // [ -length / 2, length / 2 ]
+                float zPos = ((float) z / (resZ - 1) - .5f) * length;
+                for (int x = 0; x < resX; x++) {
+                    // [ -width / 2, width / 2 ]
+                    float xPos = ((float) x / (resX - 1) - .5f) * width;
+                    vertices[x + z * resX] = new Vector3(xPos, 0f, zPos);
+                }
+            }
+            #endregion
+
+            #region Normales
+            Vector3[] normales = new Vector3[vertices.Length];
+            for (int n = 0; n < normales.Length; n++)
+                normales[n] = Vector3.up;
+            #endregion
+
+            #region UVs		
+            Vector2[] uvs = new Vector2[vertices.Length];
+            for (int v = 0; v < resZ; v++) {
+                for (int u = 0; u < resX; u++) {
+                    uvs[u + v * resX] = new Vector2((float) u / (resX - 1), (float) v / (resZ - 1));
+                }
+            }
+            #endregion
+
+            #region Triangles
+            int nbFaces = (resX - 1) * (resZ - 1);
+            int[] triangles = new int[nbFaces * 6];
+            int t = 0;
+            for (int face = 0; face < nbFaces; face++) {
+                // Retrieve lower left corner from face ind
+                int i = face % (resX - 1) + (face / (resZ - 1) * resX);
+
+                triangles[t++] = i + resX;
+                triangles[t++] = i + 1;
+                triangles[t++] = i;
+
+                triangles[t++] = i + resX;
+                triangles[t++] = i + resX + 1;
+                triangles[t++] = i + 1;
+            }
             #endregion
 
             mesh.vertices = vertices;

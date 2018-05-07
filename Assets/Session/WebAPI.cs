@@ -238,29 +238,30 @@ namespace Michelangelo.Session {
 					Debug.Log(getRequest.Info());
 					JSONFromResponse("generated", getRequest.GetResponseBody());
 					var data = JSON.Parse(getRequest.GetResponseBody());
-					var list = new List<Primitive>();
+					var primitives = new List<Primitive>();
 					foreach (var obj in data["o"]) {
-						var t = obj.Value["t"];
-						var matrix = new Matrix4x4(
-							new Vector4(t[0], t[4], t[8], t[12]),
-							new Vector4(t[1], t[5], t[9], t[13]),
-							new Vector4(t[2], t[6], t[10], t[14]),
-							new Vector4(t[3], t[7], t[11], t[15])
-						);
-						if (matrix.HasNegativeScale()) {
-							var scaleMatrix = Matrix4x4.identity;
-							scaleMatrix.m00 = -1;
-							matrix *= scaleMatrix;
-						}
-
-						list.Add(new Primitive {
-							/* fixformat ignore:start */
-							type = (Michelangelo.Model.Render.PrimitiveType) Enum.Parse(typeof(Michelangelo.Model.Render.PrimitiveType), obj.Value["g"].Value),
-							modelMatrix = matrix
-							/* fixformat ignore:end */
-						});
+						var type = obj.Value["g"].Value;
+						primitives.Add(new Primitive(
+							obj.Value["m"].AsInt,
+							type,
+							MatrixFromJSON(obj.Value["t"]),
+							MeshFromJSON(obj.Value)
+						));
 					}
-					completion(new ModelMesh(list.ToArray()), null);
+
+					var materials = new List<Color>();
+					foreach (var obj in data["ml"]) {
+						var groups = new Regex(@"\[(?<r>[\d\.]+), (?<g>[\d\.]+), (?<b>[\d\.]+)\]").Match(obj.Value.Value).Groups;
+						float r, g, b;
+						if (!float.TryParse(groups["r"].Value, out r) ||
+							!float.TryParse(groups["g"].Value, out g) ||
+							!float.TryParse(groups["b"].Value, out b)) {
+							materials.Add(new Color(1, 1, 1));
+						} else {
+							materials.Add(new Color(r, g, b));
+						}
+					}
+					completion(new ModelMesh(primitives.ToArray(), materials.ToArray()), null);
 				});
 			});
 		}
@@ -334,6 +335,51 @@ namespace Michelangelo.Session {
 				Debug.LogError("Unauthorized response code received. Deleting cookies...");
 			}
 			return true;
+		}
+		#endregion
+		#region Generated model helpers
+		private static Matrix4x4 MatrixFromJSON(JSONNode json) {
+			var matrix = new Matrix4x4(
+				new Vector4(json[0], json[4], json[8], json[12]),
+				new Vector4(json[1], json[5], json[9], json[13]),
+				new Vector4(json[2], json[6], json[10], json[14]),
+				new Vector4(json[3], json[7], json[11], json[15])
+			);
+			if (matrix.HasNegativeScale()) {
+				var scaleMatrix = Matrix4x4.identity;
+				scaleMatrix.m00 = -1;
+				matrix *= scaleMatrix;
+			}
+			return matrix;
+		}
+		private static Mesh MeshFromJSON(JSONNode json) {
+			JSONNode v = null;
+			if (json["g"].Value != "Mesh" || (v = json["v"]) == null) {
+				return null;
+			}
+			var mesh = new Mesh();
+
+			var vertices = new List<Vector3>();
+			var iter = v["points"].Values;
+			while (iter.MoveNext()) {
+				var x = iter.Current.AsFloat;
+				iter.MoveNext();
+				var y = iter.Current.AsFloat;
+				iter.MoveNext();
+				var z = iter.Current.AsFloat;
+				vertices.Add(new Vector3(x, y, z));
+			}
+			mesh.vertices = vertices.ToArray();
+
+			var triangles = new List<int>();
+			foreach (var i in v["indices"].Values) {
+				triangles.Add(i.AsInt);
+			}
+			mesh.triangles = triangles.ToArray();
+
+			mesh.RecalculateNormals();
+			mesh.RecalculateBounds();
+			return mesh;
 		}
 		#endregion
 	}

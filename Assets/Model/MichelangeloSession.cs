@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model.Render;
 using Michelangelo.Scripts;
+using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Model {
@@ -18,7 +19,17 @@ namespace Michelangelo.Model {
 
         public static IEnumerable<Grammar> allGrammars {
             get {
-                return myGrammar.Union(sharedGrammar).Union(tutorialGrammar);
+                IEnumerable<Grammar> union = null;
+                if (myGrammar != null) {
+                    union = (union ?? myGrammar).Union(myGrammar);
+                }
+                if (sharedGrammar != null) {
+                    union = (union ?? sharedGrammar).Union(sharedGrammar);
+                }
+                if (tutorialGrammar != null) {
+                    union = (union ?? tutorialGrammar).Union(tutorialGrammar);
+                }
+                return union;
             }
         }
 
@@ -121,9 +132,11 @@ namespace Michelangelo.Model {
                 return;
             }
 
-            var newObject = new GameObject("Michelangelo Object");
+            var newObject = new GameObject(g.name);
             var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
             michelangeloObject.SetGrammar(g);
+            Selection.objects = new UnityEngine.Object[] { newObject };
+
         }
 
         public static void GenerateGrammar(string grammarId) {

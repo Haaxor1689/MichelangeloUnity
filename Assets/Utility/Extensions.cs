@@ -55,15 +55,6 @@ namespace Michelangelo.Utility {
             return builder.ToString();
         }
 
-        public static UnityEngine.Mesh Mesh(this Michelangelo.Model.Render.PrimitiveType type) {
-            switch (type) {
-                case Michelangelo.Model.Render.PrimitiveType.Box:
-                    return Utility.Primitives.Cube;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
         public static bool HasNegativeScale(this Matrix4x4 mat) {
             var X0 = new Vector3(Matrix4x4.identity.GetColumn(0).x, Matrix4x4.identity.GetColumn(0).y, Matrix4x4.identity.GetColumn(0).z);
             var Y0 = new Vector3(Matrix4x4.identity.GetColumn(1).x, Matrix4x4.identity.GetColumn(1).y, Matrix4x4.identity.GetColumn(1).z);
