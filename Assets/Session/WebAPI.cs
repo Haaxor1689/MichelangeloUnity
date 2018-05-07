@@ -241,15 +241,22 @@ namespace Michelangelo.Session {
 					var list = new List<Primitive>();
 					foreach (var obj in data["o"]) {
 						var t = obj.Value["t"];
+						var matrix = new Matrix4x4(
+							new Vector4(t[0], t[4], t[8], t[12]),
+							new Vector4(t[1], t[5], t[9], t[13]),
+							new Vector4(t[2], t[6], t[10], t[14]),
+							new Vector4(t[3], t[7], t[11], t[15])
+						);
+						if (matrix.HasNegativeScale()) {
+							var scaleMatrix = Matrix4x4.identity;
+							scaleMatrix.m00 = -1;
+							matrix *= scaleMatrix;
+						}
+
 						list.Add(new Primitive {
 							/* fixformat ignore:start */
 							type = (Michelangelo.Model.Render.PrimitiveType) Enum.Parse(typeof(Michelangelo.Model.Render.PrimitiveType), obj.Value["g"].Value),
-							modelMatrix = new Matrix4x4(
-								new Vector4(t[0], t[4], t[8], t[12]),
-								new Vector4(t[1], t[5], t[9], t[13]),
-								new Vector4(t[2], t[6], t[10], t[14]),
-								new Vector4(t[3], t[7], t[11], t[15])
-							)
+							modelMatrix = matrix
 							/* fixformat ignore:end */
 						});
 					}

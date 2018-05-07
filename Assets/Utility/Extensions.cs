@@ -1,6 +1,6 @@
 using System;
-using Michelangelo.Model.Render;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Michelangelo.Utility {
@@ -55,13 +55,33 @@ namespace Michelangelo.Utility {
             return builder.ToString();
         }
 
-        public static UnityEngine.Mesh Mesh(this PrimitiveType type) {
+        public static UnityEngine.Mesh Mesh(this Michelangelo.Model.Render.PrimitiveType type) {
             switch (type) {
-                case PrimitiveType.Box:
+                case Michelangelo.Model.Render.PrimitiveType.Box:
                     return Utility.Primitives.Cube;
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        public static bool HasNegativeScale(this Matrix4x4 mat) {
+            var X0 = new Vector3(Matrix4x4.identity.GetColumn(0).x, Matrix4x4.identity.GetColumn(0).y, Matrix4x4.identity.GetColumn(0).z);
+            var Y0 = new Vector3(Matrix4x4.identity.GetColumn(1).x, Matrix4x4.identity.GetColumn(1).y, Matrix4x4.identity.GetColumn(1).z);
+            var Z0 = new Vector3(Matrix4x4.identity.GetColumn(2).x, Matrix4x4.identity.GetColumn(2).y, Matrix4x4.identity.GetColumn(2).z);
+
+            var sz0 = Vector3.Dot(Vector3.Cross(X0, Y0), Z0);
+            var sy0 = Vector3.Dot(Vector3.Cross(Z0, X0), Y0);
+            var sx0 = Vector3.Dot(Vector3.Cross(Y0, Z0), X0);
+
+            var X1 = new Vector3(mat.GetColumn(0).x, mat.GetColumn(0).y, mat.GetColumn(0).z);
+            var Y1 = new Vector3(mat.GetColumn(1).x, mat.GetColumn(1).y, mat.GetColumn(1).z);
+            var Z1 = new Vector3(mat.GetColumn(2).x, mat.GetColumn(2).y, mat.GetColumn(2).z);
+
+            var sz1 = Vector3.Dot(Vector3.Cross(X1, Y1), Z1);
+            var sy1 = Vector3.Dot(Vector3.Cross(Z1, X1), Y1);
+            var sx1 = Vector3.Dot(Vector3.Cross(Y1, Z1), X1);
+
+            return (sx0 * sx1 < 0) || (sy0 * sy1 < 0) || (sz0 * sz1 < 0);
         }
     }
 }
