@@ -19,7 +19,7 @@ namespace Michelangelo.Scripts {
 
         private void Update() {
             if (model != null) {
-                model.Render();
+                model.Render(transform);
             }
         }
 

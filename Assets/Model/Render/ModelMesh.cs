@@ -12,12 +12,13 @@ namespace Michelangelo.Model.Render {
             this.primitives = primitives;
         }
 
-        public void Render() {
+        public void Render(Transform transform) {
             if (primitives == null) {
                 return;
             }
+            var inverse = transform.worldToLocalMatrix.inverse;
             foreach (var item in primitives) {
-                Graphics.DrawMesh(item.type.Mesh(), item.modelMatrix, new Material(Shader.Find("Diffuse")), 0);
+                Graphics.DrawMesh(item.type.Mesh(), inverse * item.modelMatrix, new Material(Shader.Find("Diffuse")), 0);
             }
         }
     }
