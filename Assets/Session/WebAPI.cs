@@ -220,6 +220,8 @@ namespace Michelangelo.Session {
 			form.AddField("Name", grammar.name);
 			form.AddField("Type", grammar.type);
 			form.AddField("Code", grammar.code);
+			form.AddField("OnlyNID", uint.MaxValue.ToString());
+			form.AddField("Render", "false");
 
 			UnityWebRequest.Post(URLConstants.GrammarAPI, form).WithCookies(cookiesString).Then(postRequest => {
 				if (CheckAndLogError(postRequest)) {

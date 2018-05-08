@@ -218,7 +218,7 @@ namespace Michelangelo.Utility {
         private static Mesh _sphere() {
             Mesh mesh = new Mesh();
 
-            float radius = 1f;
+            float radius = 0.5f;
             // Longitude |||
             int nbLong = 24;
             // Latitude ---
@@ -311,8 +311,8 @@ namespace Michelangelo.Utility {
         private static Mesh _torus() {
             var mesh = new Mesh();
 
-            float radius1 = 1f;
-            float radius2 = .3f;
+            float radius1 = 0.5f;
+            float radius2 = .2f;
             int nbRadSeg = 24;
             int nbSides = 18;
 
@@ -391,13 +391,13 @@ namespace Michelangelo.Utility {
             return mesh;
         }
         public static readonly Mesh Cone = _cone();
-        public static readonly Mesh Cylinder = _cone(.25f);
+        public static readonly Mesh Cylinder = _cone(0.5f);
         public static readonly Mesh Pyramid = _cone(0.0f, 4);
         private static Mesh _cone(float topRadius = 0.0f, int nbSides = 18) {
             var mesh = new Mesh();
 
             float height = 1f;
-            float bottomRadius = .25f;
+            float bottomRadius = 0.5f;
             int nbHeightSeg = 1; // Not implemented yet
 
             int nbVerticesCap = nbSides + 1;
