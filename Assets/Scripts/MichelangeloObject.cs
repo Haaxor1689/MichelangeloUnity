@@ -22,10 +22,5 @@ namespace Michelangelo.Scripts {
                 model.Render(transform);
             }
         }
-
-        public void ModelGenerated(ModelMesh newModel) {
-            model = newModel;
-            MichelangeloSession.modelGenerated -= ModelGenerated;
-        }
     }
 }

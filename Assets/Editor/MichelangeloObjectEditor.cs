@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Michelangelo.Model;
 using Michelangelo.Scripts;
@@ -7,16 +8,9 @@ using UnityEngine;
 [CustomEditor(typeof(MichelangeloObject))]
 public class LevelScriptEditor : Editor {
     private string errorMessage;
+    private bool isLoading;
 
     private Vector2 scrollPos;
-
-    private void OnEnable() {
-        MichelangeloSession.taskDone += TaskDone;
-    }
-
-    private void OnDisable() {
-        MichelangeloSession.taskDone -= TaskDone;
-    }
 
     public override void OnInspectorGUI() {
         if (!Michelangelo.Session.WebAPI.IsAuthenticated) {
@@ -25,8 +19,11 @@ public class LevelScriptEditor : Editor {
         }
 
         MichelangeloObject obj = target as MichelangeloObject;
-        if (obj.grammar != null && obj.grammar.code == "" && !MichelangeloSession.isLoading) {
-            MichelangeloSession.UpdateGrammar(obj.grammar.id);
+        if (obj.grammar != null &&
+            obj.grammar != Grammar.Placeholder &&
+            (obj.grammar.code == "" || obj.grammar.code == null) &&
+            !isLoading) {
+            Reload();
         }
 
         EditorGUILayout.LabelField("Name: ", obj.grammar.name);
@@ -39,25 +36,49 @@ public class LevelScriptEditor : Editor {
         EditorGUILayout.EndScrollView();
 
         GUILayout.Space(20.0f);
+        if (isLoading) {
+            EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
+            return;
+        }
+
         if (GUILayout.Button("Reload")) {
-            MichelangeloSession.UpdateGrammar(obj.grammar.id);
+            Reload();
         }
         if (obj.grammar.code != "" && GUILayout.Button("Generate")) {
-            MichelangeloSession.modelGenerated += obj.ModelGenerated;
-            MichelangeloSession.GenerateGrammar(obj.grammar.id);
+            isLoading = true;
+            MichelangeloSession.GenerateGrammar(obj.grammar.id).Then(model => {
+                obj.model = model;
+                isLoading = false;
+                Repaint();
+            }).Catch(HandleError);
         }
-        GUILayout.Space(20.0f);
         if (errorMessage != null && errorMessage != "") {
             var style = new GUIStyle(EditorStyles.textField);
             style.normal.textColor = Color.red;
 
             GUILayout.Space(20.0f);
+            EditorGUILayout.BeginHorizontal();
             GUILayout.Label(errorMessage, style);
+            if (GUILayout.Button("X")) {
+                errorMessage = null;
+            }
+            EditorGUILayout.EndHorizontal();
         }
     }
 
-    private void TaskDone(string message) {
-        errorMessage = message;
+    private void Reload() {
+        MichelangeloObject obj = target as MichelangeloObject;
+        isLoading = true;
+        MichelangeloSession.UpdateGrammar(obj.grammar.id).Then(_ => {
+            isLoading = false;
+            Repaint();
+        }).Catch(HandleError);
+    }
+
+    private void HandleError(Exception error) {
+        errorMessage = error.Message;
+        isLoading = false;
         Repaint();
+        Debug.LogError(error);
     }
 }

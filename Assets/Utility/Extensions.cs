@@ -42,16 +42,21 @@ namespace Michelangelo.Utility {
                 builder.Append(request.GetRequestHeader("Cookie").Replace(' ', '\n'));
                 builder.Append("---------------");
             }
-            builder.Append("\nResponse Headers\n---------------");
-            foreach (var pair in request.GetResponseHeaders()) {
-                builder.Append("\n");
-                builder.Append(pair.Key);
-                builder.Append(": ");
-                builder.Append(pair.Value);
+            if (request.GetResponseHeaders() != null) {
+                builder.Append("\nResponse Headers\n---------------");
+                foreach (var pair in request.GetResponseHeaders()) {
+                    builder.Append("\n");
+                    builder.Append(pair.Key);
+                    builder.Append(": ");
+                    builder.Append(pair.Value);
+                }
+                builder.Append("\n---------------");
+            }
+            if (request.GetResponseBody() != null) {
+                builder.Append("\nResponse body:");
+                builder.Append(request.GetResponseBody());
             }
             builder.Append("\n---------------");
-            builder.Append("\nResponse bode:");
-            builder.Append(request.GetResponseBody());
             return builder.ToString();
         }
 

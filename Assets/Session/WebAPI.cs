@@ -11,10 +11,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using ErrorMessage = System.String;
+using RSG;
 using SimpleJSON;
 
 namespace Michelangelo.Session {
-	public static class WebAPI {
+	public class WebAPI : MonoBehaviour {
 		private static readonly Regex RequestTokenRegex = new Regex("<form action=\"\\/Account\\/Log(in|Off)\" .*><input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"[^\"]*");
 		private static readonly string SetCookieName = "Set-Cookie";
 		private static readonly string RequestTokenName = "__RequestVerificationToken";
@@ -22,7 +23,19 @@ namespace Michelangelo.Session {
 		private static readonly string MichelangeloRequestToken = "Michelangelo" + RequestTokenName;
 		private static readonly string MichelangeloVerificationToken = "Michelangelo" + VerificationTokenName;
 
+		#region Attributes
 		private static StringStringDictionary cookies = new StringStringDictionary();
+		private static WebAPI _shared;
+		private static WebAPI shared {
+			get {
+				if (_shared == null || (_shared = FindObjectOfType(typeof(WebAPI)) as WebAPI) == null) {
+					var singleton = new GameObject("MichelangeloWebAPISingleton");
+					singleton.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector;
+					return _shared = singleton.AddComponent<WebAPI>();
+				}
+				return _shared;
+			}
+		}
 
 		private static string cookiesString {
 			get {
@@ -51,24 +64,31 @@ namespace Michelangelo.Session {
 				return true;
 			}
 		}
+		#endregion
 
-		public static void Login(string email, string password, Action<ErrorMessage> completion = null) {
+		#region Login
+		public static IPromise Login(string email, string password) {
+			return new Promise((resolve, reject) =>
+				shared.StartCoroutine(LoginCoroutine(email, password, resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> LoginCoroutine(string email, string password, Action resolve, Action<Exception> reject) {
 			if (email == null || password == null) {
-				if (completion != null) completion("Fill out both email and password before logging in.");
-				return;
+				reject(new ApplicationException("Login request error:\nFill out both email and password before logging in."));
+				yield break;
 			}
-
-			UnityWebRequest.Get(URLConstants.LogInAPI).Then(getRequest => {
+			using(var getRequest = UnityWebRequest.Get(URLConstants.LogInAPI)) {
+				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(getRequest.error);
-					return;
+					reject(new ApplicationException("Login request error:\n" + getRequest.error));
+					yield break;
 				}
 				try {
 					SetCookie(RequestTokenName, getRequest);
 					EditorPrefs.SetString(MichelangeloRequestToken, cookies[RequestTokenName]);
 				} catch (ResponseParseException) {
-					if (completion != null) completion("Failed to get request verification token.");
-					return;
+					reject(new ApplicationException("Login request error:\nFailed to get request verification token."));
+					yield break;
 				}
 				Debug.Log(getRequest.Info());
 				PageFromResponse(getRequest.GetResponseBody());
@@ -77,144 +97,205 @@ namespace Michelangelo.Session {
 				try {
 					form.AddField(RequestTokenName, GetRequestToken(getRequest.GetResponseBody()));
 				} catch (ResponseParseException) {
-					if (completion != null) completion("Failed to get login request token.");
-					return;
+					reject(new ApplicationException("Login request error:\nFailed to get login request token."));
+					yield break;
 				}
 				form.AddField("Email", email);
 				form.AddField("Password", password);
 				form.AddField("RememberMe", "false");
 
-				UnityWebRequest.Post(URLConstants.LogInAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
+				using(var postRequest = UnityWebRequest.Post(URLConstants.LogInAPI, form).NoRedirect().WithCookies(cookiesString)) {
+					yield return postRequest.SendWebRequest();
 					if (postRequest.error != "Redirect limit exceeded" && CheckAndLogError(postRequest)) {
-						if (completion != null) completion("Login request error: " + postRequest.error);
-						return;
+						reject(new ApplicationException("Login request error:\n" + postRequest.error));
+						yield break;
 					}
 					Debug.Log(postRequest.Info());
 					try {
 						SetCookie(VerificationTokenName, postRequest);
 						EditorPrefs.SetString(MichelangeloVerificationToken, cookies[VerificationTokenName]);
 					} catch (ResponseParseException) {
-						if (completion != null) completion("Authentication failed.");
-						return;
+						reject(new ApplicationException("Login request error:\nAuthentication failed."));
+						yield break;
 					}
-					if (completion != null) completion(null);
-				});
-			});
+					resolve();
+				}
+			}
+		}
+		#endregion
+		#region Logout
+		public static IPromise Logout() {
+			return new Promise((resolve, reject) =>
+				shared.StartCoroutine(LogoutCoroutine(resolve, reject))
+			);
 		}
 
-		public static void Logout(Action<ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString).Then(getRequest => {
+		private static IEnumerator<UnityWebRequestAsyncOperation> LogoutCoroutine(Action resolve, Action<Exception> reject) {
+			using(var getRequest = UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString)) {
+				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(getRequest.error);
-					return;
+					reject(new ApplicationException("Logout request error:\n" + getRequest.error));
+					yield break;
 				}
-				Debug.Log(getRequest.Info());
 
+				Debug.Log(getRequest.Info());
 				var form = new WWWForm();
 				try {
 					form.AddField(RequestTokenName, GetRequestToken(getRequest.GetResponseBody()));
 				} catch (ResponseParseException) {
-					if (completion != null) completion("Failed to get logout request token.");
-					return;
+					reject(new ApplicationException("Logout request error:\nFailed to get logout request token."));
+					yield break;
 				}
 
-				UnityWebRequest.Post(URLConstants.LogOutAPI, form).NoRedirect().WithCookies(cookiesString).Then(postRequest => {
+				using(var postRequest = UnityWebRequest.Post(URLConstants.LogOutAPI, form).NoRedirect().WithCookies(cookiesString)) {
+					yield return postRequest.SendWebRequest();
+
 					if (postRequest.error != "Redirect limit exceeded" && CheckAndLogError(postRequest)) {
-						if (completion != null) completion("Logout request error: " + postRequest.error);
-						return;
+						reject(new ApplicationException("Logout request error:\n" + postRequest.error));
+						yield break;
 					}
 					Debug.Log(postRequest.Info());
 					cookies = new StringStringDictionary();
 					EditorPrefs.DeleteKey(MichelangeloRequestToken);
 					EditorPrefs.DeleteKey(MichelangeloVerificationToken);
-					if (completion != null) completion(null);
-				});
-			});
+					resolve();
+				}
+			}
 		}
-
-		public static void GetMainPage(Action<ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString).Then(getRequest => {
+		#endregion
+		#region GetMainPage
+		public static IPromise nGetMainPage() {
+			return new Promise((resolve, reject) =>
+				shared.StartCoroutine(GetMainPageCoroutine(resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> GetMainPageCoroutine(Action resolve, Action<Exception> reject) {
+			using(var getRequest = UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString)) {
+				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(getRequest.error);
-					return;
+					reject(new ApplicationException("Main page request error:\n" + getRequest.error));
+					yield break;
 				}
 				Debug.Log(getRequest.Info());
-				PageFromResponse(getRequest.GetResponseBody());
-				if (completion != null) completion(null);
-			});
+				resolve();
+			}
 		}
-
-		public static void GetUserInfo(Action<UserInfo, ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(cookiesString).Then(getRequest => {
+		#endregion
+		#region GetUserInfo
+		public static IPromise<UserInfo> GetUserInfo() {
+			return new Promise<UserInfo>((resolve, reject) =>
+				shared.StartCoroutine(GetUserInfoCoroutine(resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> GetUserInfoCoroutine(Action<UserInfo> resolve, Action<Exception> reject) {
+			using(var getRequest = UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(cookiesString)) {
+				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(null, getRequest.error);
-					return;
+					reject(new ApplicationException("User info request error:\n" + getRequest.error));
+					yield break;
 				}
 				Debug.Log(getRequest.Info());
-				if (completion != null) completion(UserInfo.FromJson(getRequest.GetResponseBody()), null);
-			});
+				resolve(UserInfo.FromJson(getRequest.GetResponseBody()));
+			}
 		}
+		#endregion
+		#region GetGrammarArray
+		public static IPromise<Grammar[]> GetMyGrammarArray() {
+			return new Promise<Grammar[]>((resolve, reject) =>
+				shared.StartCoroutine(GetGrammarArrayCoroutine(URLConstants.GrammarAPI, resolve, reject))
+			);
+		}
+		public static IPromise<Grammar[]> GetSharedGrammarArray(Action<Grammar[], ErrorMessage> completion = null) {
+			return new Promise<Grammar[]>((resolve, reject) =>
+				shared.StartCoroutine(GetGrammarArrayCoroutine(URLConstants.SharedAPI, resolve, reject))
+			);
+		}
+		public static IPromise<Grammar[]> GetTutorialGrammarArray(Action<Grammar[], ErrorMessage> completion = null) {
+			return new Promise<Grammar[]>((resolve, reject) =>
+				shared.StartCoroutine(GetGrammarArrayCoroutine(URLConstants.TutorialAPI, resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> GetGrammarArrayCoroutine(string api, Action<Grammar[]> resolve, Action<Exception> reject) {
+			using(var getRequest = UnityWebRequest.Get(api).WithCookies(cookiesString)) {
+				yield return getRequest.SendWebRequest();
 
-		public static void CreateGrammar(Action<Grammar, ErrorMessage> completion = null) {
-			UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(cookiesString).Then(putRequest => {
+				if (CheckAndLogError(getRequest)) {
+					reject(new ApplicationException("Grammar array request error:\n" + getRequest.error));
+					yield break;
+				}
+				Debug.Log(getRequest.Info());
+				resolve(Grammar.FromJsonArray(getRequest.GetResponseBody()));
+			}
+		}
+		#endregion
+		#region CreateGrammar
+		public static IPromise<Grammar> CreateGrammar() {
+			return new Promise<Grammar>((resolve, reject) =>
+				shared.StartCoroutine(CreateGrammarCoroutine(resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> CreateGrammarCoroutine(Action<Grammar> resolve, Action<Exception> reject) {
+			using(var putRequest = UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(cookiesString)) {
+				yield return putRequest.SendWebRequest();
 				if (CheckAndLogError(putRequest)) {
-					if (completion != null) completion(null, putRequest.error);
-					return;
+					reject(new ApplicationException("Create grammar request error:\n" + putRequest.error));
+					yield break;
 				}
 				Debug.Log(putRequest.Info());
-				JSONFromResponse("newGrammar", putRequest.GetResponseBody());
-				if (completion != null) completion(Grammar.FromJson(putRequest.GetResponseBody()), null);
-			});
+				resolve(Grammar.FromJson(putRequest.GetResponseBody()));
+			}
 		}
+		#endregion
+		#region GetGrammar
+		public static IPromise<Grammar> GetGrammar(string grammarId) {
+			return new Promise<Grammar>((resolve, reject) =>
+				shared.StartCoroutine(GetGrammarCoroutine(URLConstants.GrammarAPI, grammarId, resolve, reject))
+			);
+		}
+		public static IPromise<Grammar> GetTutorial(string grammarId) {
+			return new Promise<Grammar>((resolve, reject) =>
+				shared.StartCoroutine(GetGrammarCoroutine(URLConstants.TutorialAPI, grammarId, resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> GetGrammarCoroutine(string api, string grammarId, Action<Grammar> resolve, Action<Exception> reject) {
+			using(var getRequest = UnityWebRequest.Get(api + "/" + grammarId).WithCookies(cookiesString)) {
+				yield return getRequest.SendWebRequest();
 
-		public static void GetMyGrammar(Action<Grammar[], ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.GrammarAPI).WithCookies(cookiesString).Then(getRequest => {
 				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(null, getRequest.error);
-					return;
+					reject(new ApplicationException("Get grammar request error:\n" + getRequest.error));
+					yield break;
 				}
 				Debug.Log(getRequest.Info());
-				JSONFromResponse("grammars", getRequest.GetResponseBody());
-				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
-			});
+				resolve(Grammar.FromJson(getRequest.GetResponseBody()));
+			}
 		}
+		#endregion
+		#region DeleteGrammar
+		public static IPromise DeleteGrammar(string grammarId) {
+			return new Promise((resolve, reject) =>
+				shared.StartCoroutine(DeleteGrammarCoroutine(grammarId, resolve, reject))
+			);
+		}
+		private static IEnumerator<UnityWebRequestAsyncOperation> DeleteGrammarCoroutine(string grammarId, Action resolve, Action<Exception> reject) {
+			using(var deleteRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(cookiesString)) {
+				yield return deleteRequest.SendWebRequest();
 
-		public static void GetShared(Action<Grammar[], ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.SharedAPI).WithCookies(cookiesString).Then(getRequest => {
-				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(null, getRequest.error);
-					return;
+				if (CheckAndLogError(deleteRequest)) {
+					reject(new ApplicationException("Delete grammar request error:\n" + deleteRequest.error));
+					yield break;
 				}
-				Debug.Log(getRequest.Info());
-				JSONFromResponse("shared", getRequest.GetResponseBody());
-				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
-			});
+				Debug.Log(deleteRequest.Info());
+				resolve();
+			}
 		}
-
-		public static void GetTutorials(Action<Grammar[], ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.TutorialAPI).WithCookies(cookiesString).Then(getRequest => {
-				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(null, getRequest.error);
-					return;
-				}
-				Debug.Log(getRequest.Info());
-				JSONFromResponse("tutorials", getRequest.GetResponseBody());
-				if (completion != null) completion(Grammar.FromJsonArray(getRequest.GetResponseBody()), null);
-			});
+		#endregion
+		#region GenerateGrammar
+		public static IPromise<ModelMesh> GenerateGrammar(Grammar grammar) {
+			return new Promise<ModelMesh>((resolve, reject) =>
+				shared.StartCoroutine(GenerateGrammarCoroutine(grammar, resolve, reject))
+			);
 		}
-
-		public static void GetGrammar(string grammarId, Action<Grammar, ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(cookiesString).Then(getRequest => {
-				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(null, getRequest.error);
-					return;
-				}
-				Debug.Log(getRequest.Info());
-				if (completion != null) completion(Grammar.FromJson(getRequest.GetResponseBody()), null);
-			});
-		}
-
-		public static void GenerateGrammar(Grammar grammar, Action<ModelMesh, ErrorMessage> completion = null) {
+		private static IEnumerator<UnityWebRequestAsyncOperation> GenerateGrammarCoroutine(Grammar grammar, Action<ModelMesh> resolve, Action<Exception> reject) {
 			var form = new WWWForm();
 			form.AddField("ID", grammar.id);
 			form.AddField("Name", grammar.name);
@@ -223,72 +304,29 @@ namespace Michelangelo.Session {
 			form.AddField("OnlyNID", uint.MaxValue.ToString());
 			form.AddField("Render", "false");
 
-			UnityWebRequest.Post(URLConstants.GrammarAPI, form).WithCookies(cookiesString).Then(postRequest => {
+			using(var postRequest = UnityWebRequest.Post(URLConstants.GrammarAPI, form).WithCookies(cookiesString)) {
+				yield return postRequest.SendWebRequest();
 				if (CheckAndLogError(postRequest)) {
-					if (completion != null) completion(null, "Generate request error: " + postRequest.error);
-					return;
+					reject(new ApplicationException("Generate grammar request error:\n" + postRequest.error));
+					yield break;
 				}
-
 				Debug.Log(postRequest.Info());
 				var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
-				UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(cookiesString).Then(getRequest => {
+				using(var getRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(cookiesString)) {
+					yield return getRequest.SendWebRequest();
 					if (CheckAndLogError(getRequest)) {
-						if (completion != null) completion(null, "Generate request error: " + getRequest.error);
-						return;
+						reject(new ApplicationException("Generate grammar request error:\n" + getRequest.error));
+						yield break;
 					}
 
 					Debug.Log(getRequest.Info());
 					JSONFromResponse("generated", getRequest.GetResponseBody());
 					var data = JSON.Parse(getRequest.GetResponseBody());
-					var primitives = new List<Primitive>();
-					foreach (var obj in data["o"]) {
-						var type = obj.Value["g"].Value;
-						primitives.Add(new Primitive(
-							obj.Value["m"].AsInt,
-							type,
-							MatrixFromJSON(obj.Value["t"]),
-							MeshFromJSON(obj.Value)
-						));
-					}
-
-					var materials = new List<Color>();
-					foreach (var obj in data["ml"]) {
-						var groups = new Regex(@"\[(?<r>[\d\.]+), (?<g>[\d\.]+), (?<b>[\d\.]+)\]").Match(obj.Value.Value).Groups;
-						float r, g, b;
-						if (!float.TryParse(groups["r"].Value, out r) ||
-							!float.TryParse(groups["g"].Value, out g) ||
-							!float.TryParse(groups["b"].Value, out b)) {
-							materials.Add(new Color(1, 1, 1));
-						} else {
-							materials.Add(new Color(r, g, b));
-						}
-					}
-					completion(new ModelMesh(primitives.ToArray(), materials.ToArray()), null);
-				});
-			});
-		}
-
-		public static void GetTutorial(string grammarId, Action<Grammar, ErrorMessage> completion = null) {
-			UnityWebRequest.Get(URLConstants.TutorialAPI + "/" + grammarId).WithCookies(cookiesString).Then(getRequest => {
-				if (CheckAndLogError(getRequest)) {
-					if (completion != null) completion(null, getRequest.error);
-					return;
+					resolve(new ModelMesh(PrimitivesFromJSON(data), MaterialsFromJSON(data)));
 				}
-				Debug.Log(getRequest.Info());
-				if (completion != null) completion(Grammar.FromJson(getRequest.GetResponseBody()), null);
-			});
+			}
 		}
-
-		public static void DeleteGrammar(string grammarId, Action<ErrorMessage> completion = null) {
-			UnityWebRequest.Delete(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(cookiesString).Then(deleteRequest => {
-				if (CheckAndLogError(deleteRequest)) {
-					if (completion != null) completion(deleteRequest.error);
-					return;
-				}
-				Debug.Log(deleteRequest.Info());
-				if (completion != null) completion(null);
-			});
-		}
+		#endregion
 
 		#region Helper methods
 		private static string GetRequestToken(string source) {
@@ -340,6 +378,34 @@ namespace Michelangelo.Session {
 		}
 		#endregion
 		#region Generated model helpers
+		private static Primitive[] PrimitivesFromJSON(JSONNode json) {
+			var primitives = new List<Primitive>();
+			foreach (var obj in json["o"]) {
+				var type = obj.Value["g"].Value;
+				primitives.Add(new Primitive(
+					obj.Value["m"].AsInt,
+					type,
+					MatrixFromJSON(obj.Value["t"]),
+					MeshFromJSON(obj.Value)
+				));
+			}
+			return primitives.ToArray();
+		}
+		private static Color[] MaterialsFromJSON(JSONNode json) {
+			var materials = new List<Color>();
+			foreach (var obj in json["ml"]) {
+				var groups = new Regex(@"\[(?<r>[\d\.]+), (?<g>[\d\.]+), (?<b>[\d\.]+)\]").Match(obj.Value.Value).Groups;
+				float r, g, b;
+				if (!float.TryParse(groups["r"].Value, out r) ||
+					!float.TryParse(groups["g"].Value, out g) ||
+					!float.TryParse(groups["b"].Value, out b)) {
+					materials.Add(new Color(1, 1, 1));
+				} else {
+					materials.Add(new Color(r, g, b));
+				}
+			}
+			return materials.ToArray();
+		}
 		private static Matrix4x4 MatrixFromJSON(JSONNode json) {
 			var matrix = new Matrix4x4(
 				new Vector4(json[0], json[4], json[8], json[12]),
