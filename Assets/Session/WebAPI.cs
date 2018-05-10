@@ -80,7 +80,7 @@ namespace Michelangelo.Session {
 			using(var getRequest = UnityWebRequest.Get(URLConstants.LogInAPI)) {
 				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					reject(new ApplicationException("Login request error:\n" + getRequest.error));
+					reject(GenerateException("Login request error:\n", getRequest));
 					yield break;
 				}
 				try {
@@ -107,7 +107,7 @@ namespace Michelangelo.Session {
 				using(var postRequest = UnityWebRequest.Post(URLConstants.LogInAPI, form).NoRedirect().WithCookies(cookiesString)) {
 					yield return postRequest.SendWebRequest();
 					if (postRequest.error != "Redirect limit exceeded" && CheckAndLogError(postRequest)) {
-						reject(new ApplicationException("Login request error:\n" + postRequest.error));
+						reject(GenerateException("Login request error:\n", postRequest));
 						yield break;
 					}
 					Debug.Log(postRequest.Info());
@@ -134,7 +134,7 @@ namespace Michelangelo.Session {
 			using(var getRequest = UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString)) {
 				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					reject(new ApplicationException("Logout request error:\n" + getRequest.error));
+					reject(GenerateException("Logout request error:\n", getRequest));
 					yield break;
 				}
 
@@ -151,7 +151,7 @@ namespace Michelangelo.Session {
 					yield return postRequest.SendWebRequest();
 
 					if (postRequest.error != "Redirect limit exceeded" && CheckAndLogError(postRequest)) {
-						reject(new ApplicationException("Logout request error:\n" + postRequest.error));
+						reject(GenerateException("Logout request error:\n", postRequest));
 						yield break;
 					}
 					Debug.Log(postRequest.Info());
@@ -173,7 +173,7 @@ namespace Michelangelo.Session {
 			using(var getRequest = UnityWebRequest.Get(URLConstants.MainPage).WithCookies(cookiesString)) {
 				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					reject(new ApplicationException("Main page request error:\n" + getRequest.error));
+					reject(GenerateException("Main page request error:\n", getRequest));
 					yield break;
 				}
 				Debug.Log(getRequest.Info());
@@ -191,7 +191,7 @@ namespace Michelangelo.Session {
 			using(var getRequest = UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(cookiesString)) {
 				yield return getRequest.SendWebRequest();
 				if (CheckAndLogError(getRequest)) {
-					reject(new ApplicationException("User info request error:\n" + getRequest.error));
+					reject(GenerateException("User info request error:\n", getRequest));
 					yield break;
 				}
 				Debug.Log(getRequest.Info());
@@ -220,7 +220,7 @@ namespace Michelangelo.Session {
 				yield return getRequest.SendWebRequest();
 
 				if (CheckAndLogError(getRequest)) {
-					reject(new ApplicationException("Grammar array request error:\n" + getRequest.error));
+					reject(GenerateException("Grammar array request error:\n", getRequest));
 					yield break;
 				}
 				Debug.Log(getRequest.Info());
@@ -238,7 +238,7 @@ namespace Michelangelo.Session {
 			using(var putRequest = UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(cookiesString)) {
 				yield return putRequest.SendWebRequest();
 				if (CheckAndLogError(putRequest)) {
-					reject(new ApplicationException("Create grammar request error:\n" + putRequest.error));
+					reject(GenerateException("Create grammar request error:\n", putRequest));
 					yield break;
 				}
 				Debug.Log(putRequest.Info());
@@ -262,7 +262,7 @@ namespace Michelangelo.Session {
 				yield return getRequest.SendWebRequest();
 
 				if (CheckAndLogError(getRequest)) {
-					reject(new ApplicationException("Get grammar request error:\n" + getRequest.error));
+					reject(GenerateException("Get grammar request error:\n", getRequest));
 					yield break;
 				}
 				Debug.Log(getRequest.Info());
@@ -281,7 +281,7 @@ namespace Michelangelo.Session {
 				yield return deleteRequest.SendWebRequest();
 
 				if (CheckAndLogError(deleteRequest)) {
-					reject(new ApplicationException("Delete grammar request error:\n" + deleteRequest.error));
+					reject(GenerateException("Delete grammar request error:\n", deleteRequest));
 					yield break;
 				}
 				Debug.Log(deleteRequest.Info());
@@ -307,23 +307,28 @@ namespace Michelangelo.Session {
 			using(var postRequest = UnityWebRequest.Post(URLConstants.GrammarAPI, form).WithCookies(cookiesString)) {
 				yield return postRequest.SendWebRequest();
 				if (CheckAndLogError(postRequest)) {
-					reject(new ApplicationException("Generate grammar request error:\n" + postRequest.error));
+					reject(GenerateException("Generate grammar request error:\n", postRequest));
 					yield break;
 				}
 				Debug.Log(postRequest.Info());
+				JSONNode data = null;
+				var isGenerating = true;
 				var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
-				using(var getRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(cookiesString)) {
-					yield return getRequest.SendWebRequest();
-					if (CheckAndLogError(getRequest)) {
-						reject(new ApplicationException("Generate grammar request error:\n" + getRequest.error));
-						yield break;
-					}
+				do {
+					using(var getRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(cookiesString)) {
+						yield return getRequest.SendWebRequest();
+						if (CheckAndLogError(getRequest)) {
+							reject(GenerateException("Generate grammar request error:\n", getRequest));
+							yield break;
+						}
 
-					Debug.Log(getRequest.Info());
-					JSONFromResponse("generated", getRequest.GetResponseBody());
-					var data = JSON.Parse(getRequest.GetResponseBody());
-					resolve(new ModelMesh(PrimitivesFromJSON(data), MaterialsFromJSON(data)));
-				}
+						Debug.Log(getRequest.Info());
+						JSONFromResponse("generated", getRequest.GetResponseBody());
+						data = JSON.Parse(getRequest.GetResponseBody());
+						isGenerating = data["o"].IsNull && data["ml"].IsNull;
+					}
+				} while (isGenerating);
+				resolve(new ModelMesh(PrimitivesFromJSON(data), MaterialsFromJSON(data)));
 			}
 		}
 		#endregion
@@ -362,12 +367,6 @@ namespace Michelangelo.Session {
 			}
 
 			Debug.LogError(request.Info());
-			var builder = new StringBuilder();
-			builder.Append("Error ");
-			builder.Append(request.responseCode.ToString());
-			builder.Append(": ");
-			builder.Append(request.error.ToString());
-			Debug.LogError(builder.ToString());
 			if (request.responseCode == 401) {
 				cookies = new StringStringDictionary();
 				EditorPrefs.DeleteKey(MichelangeloRequestToken);
@@ -375,6 +374,13 @@ namespace Michelangelo.Session {
 				Debug.LogError("Unauthorized response code received. Deleting cookies...");
 			}
 			return true;
+		}
+		private static Exception GenerateException(string message, UnityWebRequest request) {
+			if (request.isHttpError) {
+				return new WebRequestException(message, request.responseCode);
+			} else {
+				return new ApplicationException(message + request.error);
+			}
 		}
 		#endregion
 		#region Generated model helpers
