@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Disable warning for unused array variable
@@ -5,12 +6,12 @@ using UnityEngine;
 namespace Michelangelo.Utility {
     public class JsonArray {
         public static T[] FromJsonArray<T>(string json) {
-            string newJson = "{ \"array\": " + json + "}";
-            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
+            var newJson = "{ \"array\": " + json + "}";
+            var wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
             return wrapper.array;
         }
 
-        [System.Serializable]
+        [Serializable]
         private class Wrapper<T> {
             public T[] array;
         }

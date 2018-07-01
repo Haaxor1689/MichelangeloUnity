@@ -1,30 +1,26 @@
 using System;
+using System.Text;
+using Michelangelo.Utility;
 using UnityEngine;
 
 namespace Michelangelo.Model {
     [Serializable]
     public class Grammar {
+        public static readonly Grammar Placeholder = new Grammar { name = "..." };
+        public string code;
         public string id;
+        public bool isOwner;
+        public string lastModified;
         public string name;
+        public bool shared;
         public string[] tags;
         public string type;
-        public string code;
-        public string lastModified;
-        public bool isOwner;
-        public bool shared;
 
-        public static Grammar Placeholder = new Grammar { name = "..." };
-
-        public static Grammar FromJson(string json) {
-            return JsonUtility.FromJson<Grammar>(json);
-        }
-
-        public static Grammar[] FromJsonArray(string json) {
-            return Michelangelo.Utility.JsonArray.FromJsonArray<Grammar>(json);
-        }
+        public static Grammar FromJSON(string json) => JsonUtility.FromJson<Grammar>(json);
+        public static Grammar[] FromJSONArray(string json) => JsonArray.FromJsonArray<Grammar>(json);
 
         public new string ToString() {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("Grammar ");
             builder.Append(name);
             builder.Append("(");

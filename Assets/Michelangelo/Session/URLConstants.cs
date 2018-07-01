@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Michelangelo.Session {
     public static class URLConstants {
         public static readonly string MainPage = @"https://michelangelo.graphics";

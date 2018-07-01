@@ -1,5 +1,5 @@
 using System;
-using UnityEditor;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,7 +8,7 @@ namespace Michelangelo.Utility {
         public static void Then(this UnityWebRequest request, Action<UnityWebRequest> completion) {
             request.SendWebRequest().completed += operation => {
                 try {
-                    completion.Invoke((operation as UnityWebRequestAsyncOperation).webRequest);
+                    completion.Invoke(((UnityWebRequestAsyncOperation) operation).webRequest);
                 } finally {
                     request.Dispose();
                 }
@@ -30,7 +30,7 @@ namespace Michelangelo.Utility {
         }
 
         public static string Info(this UnityWebRequest request) {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("Request URL: ");
             builder.Append(request.url);
             builder.Append("\nRequest Method: ");
@@ -61,23 +61,23 @@ namespace Michelangelo.Utility {
         }
 
         public static bool HasNegativeScale(this Matrix4x4 mat) {
-            var X0 = new Vector3(Matrix4x4.identity.GetColumn(0).x, Matrix4x4.identity.GetColumn(0).y, Matrix4x4.identity.GetColumn(0).z);
-            var Y0 = new Vector3(Matrix4x4.identity.GetColumn(1).x, Matrix4x4.identity.GetColumn(1).y, Matrix4x4.identity.GetColumn(1).z);
-            var Z0 = new Vector3(Matrix4x4.identity.GetColumn(2).x, Matrix4x4.identity.GetColumn(2).y, Matrix4x4.identity.GetColumn(2).z);
+            var x0 = new Vector3(Matrix4x4.identity.GetColumn(0).x, Matrix4x4.identity.GetColumn(0).y, Matrix4x4.identity.GetColumn(0).z);
+            var y0 = new Vector3(Matrix4x4.identity.GetColumn(1).x, Matrix4x4.identity.GetColumn(1).y, Matrix4x4.identity.GetColumn(1).z);
+            var z0 = new Vector3(Matrix4x4.identity.GetColumn(2).x, Matrix4x4.identity.GetColumn(2).y, Matrix4x4.identity.GetColumn(2).z);
 
-            var sz0 = Vector3.Dot(Vector3.Cross(X0, Y0), Z0);
-            var sy0 = Vector3.Dot(Vector3.Cross(Z0, X0), Y0);
-            var sx0 = Vector3.Dot(Vector3.Cross(Y0, Z0), X0);
+            var sz0 = Vector3.Dot(Vector3.Cross(x0, y0), z0);
+            var sy0 = Vector3.Dot(Vector3.Cross(z0, x0), y0);
+            var sx0 = Vector3.Dot(Vector3.Cross(y0, z0), x0);
 
-            var X1 = new Vector3(mat.GetColumn(0).x, mat.GetColumn(0).y, mat.GetColumn(0).z);
-            var Y1 = new Vector3(mat.GetColumn(1).x, mat.GetColumn(1).y, mat.GetColumn(1).z);
-            var Z1 = new Vector3(mat.GetColumn(2).x, mat.GetColumn(2).y, mat.GetColumn(2).z);
+            var x1 = new Vector3(mat.GetColumn(0).x, mat.GetColumn(0).y, mat.GetColumn(0).z);
+            var y1 = new Vector3(mat.GetColumn(1).x, mat.GetColumn(1).y, mat.GetColumn(1).z);
+            var z1 = new Vector3(mat.GetColumn(2).x, mat.GetColumn(2).y, mat.GetColumn(2).z);
 
-            var sz1 = Vector3.Dot(Vector3.Cross(X1, Y1), Z1);
-            var sy1 = Vector3.Dot(Vector3.Cross(Z1, X1), Y1);
-            var sx1 = Vector3.Dot(Vector3.Cross(Y1, Z1), X1);
+            var sz1 = Vector3.Dot(Vector3.Cross(x1, y1), z1);
+            var sy1 = Vector3.Dot(Vector3.Cross(z1, x1), y1);
+            var sx1 = Vector3.Dot(Vector3.Cross(y1, z1), x1);
 
-            return (sx0 * sx1 < 0) || (sy0 * sy1 < 0) || (sz0 * sz1 < 0);
+            return sx0 * sx1 < 0 || sy0 * sy1 < 0 || sz0 * sz1 < 0;
         }
     }
 }
