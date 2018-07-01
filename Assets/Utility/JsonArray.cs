@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Disable warning for unused array variable
-#pragma warning disable CS0649
+#pragma warning disable 0649
 namespace Michelangelo.Utility {
     public class JsonArray {
         public static T[] FromJsonArray<T>(string json) {
@@ -16,4 +16,4 @@ namespace Michelangelo.Utility {
         }
     }
 }
-#pragma warning restore CS0649
+#pragma warning restore 0649

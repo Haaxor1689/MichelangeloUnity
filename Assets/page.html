@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Michelangelo</title>
+<link rel="icon" type="image/png" href="/Content/images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/Content/images/favicon-16x16.png" sizes="16x16" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/Content/bootstrap.css" rel="stylesheet" />
+<link href="/Content/bootstrap-editable.css" rel="stylesheet" />
+<link href="/Content/bt-overrides.css" rel="stylesheet" />
+<link href="/Content/Site.css" rel="stylesheet" />
+<link href="/Content/themes/base/accordion.css" rel="stylesheet" />
+<link href="/Content/themes/base/all.css" rel="stylesheet" />
+<link href="/Content/themes/base/autocomplete.css" rel="stylesheet" />
+<link href="/Content/themes/base/base.css" rel="stylesheet" />
+<link href="/Content/themes/base/button.css" rel="stylesheet" />
+<link href="/Content/themes/base/core.css" rel="stylesheet" />
+<link href="/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="/Content/themes/base/dialog.css" rel="stylesheet" />
+<link href="/Content/themes/base/draggable.css" rel="stylesheet" />
+<link href="/Content/themes/base/menu.css" rel="stylesheet" />
+<link href="/Content/themes/base/progressbar.css" rel="stylesheet" />
+<link href="/Content/themes/base/resizable.css" rel="stylesheet" />
+<link href="/Content/themes/base/selectable.css" rel="stylesheet" />
+<link href="/Content/themes/base/selectmenu.css" rel="stylesheet" />
+<link href="/Content/themes/base/slider.css" rel="stylesheet" />
+<link href="/Content/themes/base/sortable.css" rel="stylesheet" />
+<link href="/Content/themes/base/spinner.css" rel="stylesheet" />
+<link href="/Content/themes/base/tabs.css" rel="stylesheet" />
+<link href="/Content/themes/base/theme.css" rel="stylesheet" />
+<link href="/Content/themes/base/tooltip.css" rel="stylesheet" />
+<script src="/Scripts/modernizr-2.8.3.js"></script>
+<script src="/Scripts/jquery-2.1.3.js"></script>
+<link href="/Content/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand text-capitalize text-century title-michelangelo" href="/">.</a>
+</div>
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav">
+<li><a href="/">Home</a></li>
+<li><a href="/Jobs">Jobs</a></li>
+<li><a href="/About">Team</a></li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li><a href="/Account/Login" id="loginLink">Log in</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container body-content">
+<h2>Log in.</h2>
+<div class="row">
+<div class="col-md-8">
+<section id="loginForm">
+<form action="/Account/Login" class="form-horizontal" method="post" role="form"><input name="__RequestVerificationToken" type="hidden" value="Z1nDyPMkFz90neDFKX9i1mzMUw4b07veyjZdV-dVoaI6UJO_kbZ1XJQqE8bBETgWwzv5WYMzIA08Z1P9DQJgi_X3rzwAClELhh10VLZHGZ41" /> <h4>Use a local account to log in.</h4>
+<hr />
+<div class="form-group">
+<label class="col-md-2 control-label" for="Email">User name or Email</label>
+<div class="col-md-10">
+<input class="form-control" data-val="true" data-val-required="The User name or Email field is required." id="Email" name="Email" type="text" value="" />
+<span class="field-validation-valid text-danger" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+</div>
+</div>
+<div class="form-group">
+<label class="col-md-2 control-label" for="Password">Password</label>
+<div class="col-md-10">
+<input autocomplete="off" class="form-control" data-val="true" data-val-required="The Password field is required." id="Password" name="Password" type="password" />
+<span class="field-validation-valid text-danger" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+</div>
+</div>
+<div class="form-group">
+<div class="col-md-offset-2 col-md-10">
+<div class="checkbox">
+<input data-val="true" data-val-required="The Remember me? field is required." id="RememberMe" name="RememberMe" type="checkbox" value="true" /><input name="RememberMe" type="hidden" value="false" />
+<label for="RememberMe">Remember me?</label>
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-md-offset-2 col-md-10">
+<input type="submit" value="Log in" class="btn btn-default" />
+</div>
+</div>
+<h4>
+<a href="/Account/Register">Register as a new user.</a>
+</h4>
+<h4>
+<a href="/Account/ForgotPassword">Forgot your password?</a>
+</h4>
+</form> </section>
+</div>
+<div class="col-md-4">
+<section id="socialLoginForm">
+<h4>Use another service to log in.</h4>
+<hr />
+<form action="/Account/ExternalLogin" method="post"><input name="__RequestVerificationToken" type="hidden" value="1mkrwZ3QpeIJZSIASxF41X8clLh6f_-UiYa8_uhWeMYXkrE7K1oe362YacCPOhKidHbisiKXhcskI-A4u1EUfvC_D1UqOUDf8qgnrsAKxIU1" /> <div id="socialLoginList">
+<p>
+<button type="submit" class="btn btn-default" id="Google" name="provider" value="Google" title="Log in using your Google account">Google</button>
+<button type="submit" class="btn btn-default" id="Facebook" name="provider" value="Facebook" title="Log in using your Facebook account">Facebook</button>
+</p>
+</div>
+</form>
+</section>
+</div>
+</div>
+</div>
+<script src="/Scripts/jquery-ui-1.11.3.js"></script>
+<script src="/Scripts/bootstrap.js"></script>
+<script src="/Scripts/bootstrap-editable.js"></script>
+<script src="/Scripts/respond.js"></script>
+<script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-100048156-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+</body>
+</html>
