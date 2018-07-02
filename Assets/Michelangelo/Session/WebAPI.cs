@@ -212,7 +212,13 @@ namespace Michelangelo.Session {
                     yield break;
                 }
                 Debug.Log(getRequest.Info());
-                resolve(Grammar.FromJSONArray(getRequest.GetResponseBody()));
+                var grammarArray = Grammar.FromJSONArray(getRequest.GetResponseBody());
+                if (api == URLConstants.TutorialAPI) {
+                    foreach (var grammar in grammarArray) {
+                        grammar.isTutorial = true;
+                    }
+                }
+                resolve(grammarArray);
             }
         }
         #endregion

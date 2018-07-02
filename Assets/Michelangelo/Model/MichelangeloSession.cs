@@ -14,25 +14,8 @@ namespace Michelangelo.Model {
 
         public static UserInfo User { get; private set; }
 
-        public static List<Grammar> MyGrammar { get; private set; }
-        public static List<Grammar> SharedGrammar { get; private set; }
-        public static List<Grammar> TutorialGrammar { get; private set; }
-
-        public static IEnumerable<Grammar> AllGrammars {
-            get {
-                IEnumerable<Grammar> union = null;
-                if (MyGrammar != null) {
-                    union = (MyGrammar).Union(MyGrammar);
-                }
-                if (SharedGrammar != null) {
-                    union = (union ?? SharedGrammar).Union(SharedGrammar);
-                }
-                if (TutorialGrammar != null) {
-                    union = (union ?? TutorialGrammar).Union(TutorialGrammar);
-                }
-                return union;
-            }
-        }
+        private static Dictionary<string, Grammar> grammarList;
+        public static Dictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = new Dictionary<string, Grammar>());
 
         public static IPromise<UserInfo> LogIn(string loginEmail, string loginPassword) {
             return WebAPI.Login(loginEmail, loginPassword).Then(() => UpdateUserInfo());
@@ -43,13 +26,7 @@ namespace Michelangelo.Model {
         }
 
         public static IPromise<Grammar> CreateGrammar() {
-            return WebAPI.CreateGrammar()
-                         .Then(grammar => {
-                             if (MyGrammar == null) {
-                                 MyGrammar = new List<Grammar>();
-                             }
-                             MyGrammar.Add(grammar);
-                         });
+            return WebAPI.CreateGrammar().Then(grammar => { GrammarList.Add(grammar.id, grammar); });
         }
 
         public static IPromise<UserInfo> UpdateUserInfo() {
@@ -60,91 +37,51 @@ namespace Michelangelo.Model {
                          });
         }
 
-        public static IPromise<Grammar[]> UpdateMyGrammarArray() {
-            MyGrammar = new List<Grammar>();
-            return WebAPI.GetMyGrammarArray().Then(response => { MyGrammar = response.ToList(); });
-        }
-
-        public static IPromise<Grammar[]> UpdateSharedArray() {
-            SharedGrammar = new List<Grammar>();
-            return WebAPI.GetSharedGrammarArray().Then(response => { SharedGrammar = response.ToList(); });
-        }
-
-        public static IPromise<Grammar[]> UpdateTutorialArray() {
-            TutorialGrammar = new List<Grammar>();
-            return WebAPI.GetTutorialGrammarArray().Then(response => { TutorialGrammar = response.ToList(); });
+        public static IPromise<IEnumerable<Grammar[]>> RefreshGrammarList() {
+            grammarList = new Dictionary<string, Grammar>();
+            return Promise<Grammar[]>.All(WebAPI.GetMyGrammarArray(), WebAPI.GetSharedGrammarArray(), WebAPI.GetTutorialGrammarArray())
+                                     .Then(x => { grammarList = x.SelectMany(dict => dict).ToDictionary(g => g.id, g => g); });
         }
 
         public static IPromise InstantiateGrammar(string grammarId) {
-            var g = AllGrammars.First(x => x.id == grammarId);
-            if (g == null) {
+            if (!GrammarList.ContainsKey(grammarId)) {
                 return Promise.Rejected(new ApplicationException("Requested grammar not found."));
             }
+            var grammar = GrammarList[grammarId];
 
-            var newObject = new GameObject(g.name);
+            var newObject = new GameObject(grammar.name);
             var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
-            michelangeloObject.Grammar = g;
+            michelangeloObject.Grammar = grammar;
             Selection.objects = new Object[] { newObject };
             return Promise.Resolved();
         }
 
         public static IPromise<ModelMesh> GenerateGrammar(string grammarId) {
-            var g = AllGrammars.FirstOrDefault(x => x.id == grammarId);
-            if (g == null) {
+            if (!GrammarList.ContainsKey(grammarId)) {
                 return Promise<ModelMesh>.Rejected(new ApplicationException("Requested grammar not found."));
             }
-
-            return WebAPI.GenerateGrammar(g);
+            return WebAPI.GenerateGrammar(GrammarList[grammarId]);
         }
 
         public static Grammar GetGrammar(string grammarId) {
-            Grammar ret;
-            if (MyGrammar != null && (ret = MyGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
-                return ret;
-            }
-            if (SharedGrammar != null && (ret = SharedGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
-                return ret;
-            }
-            if (TutorialGrammar != null && (ret = TutorialGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
-                return ret;
-            }
-
-            return Grammar.Placeholder;
+            return GrammarList.ContainsKey(grammarId) ? GrammarList[grammarId] : Grammar.Placeholder;
         }
 
         public static IPromise DeleteGrammar(string grammarId) {
-            return WebAPI.DeleteGrammar(grammarId).Then(() => { MyGrammar.Remove(MyGrammar.First(x => x.id == grammarId)); });
+            if (!GrammarList.ContainsKey(grammarId)) {
+                return Promise.Rejected(new ApplicationException("Requested grammar not found."));
+            }
+            return WebAPI.DeleteGrammar(grammarId).Then(() => { GrammarList.Remove(grammarId); });
         }
 
         public static IPromise<Grammar> UpdateGrammar(string grammarId) {
-            Grammar grammar;
-            if (MyGrammar != null && (grammar = MyGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
-                return UpdateMyGrammar(grammarId, MyGrammar.IndexOf(grammar));
+            if (!GrammarList.ContainsKey(grammarId)) {
+                return Promise<Grammar>.Rejected(new ApplicationException("Requested grammar not found."));
             }
-            if (SharedGrammar != null && (grammar = SharedGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
-                return UpdateSharedGrammar(grammarId, SharedGrammar.IndexOf(grammar));
+            if (GrammarList[grammarId].isTutorial) {
+                return WebAPI.GetTutorial(grammarId).Then(grammar => { GrammarList[grammarId] = grammar; });
             }
-            if (TutorialGrammar != null && (grammar = TutorialGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
-                return UpdateTutorialGrammar(grammarId, TutorialGrammar.IndexOf(grammar));
-            }
-            if (MyGrammar != null && SharedGrammar != null && TutorialGrammar != null) {
-                return Promise<Grammar>.Rejected(new ApplicationException("Grammar not found."));
-            }
-            return Promise<Grammar>.Resolved(Grammar.Placeholder);
+            return WebAPI.GetGrammar(grammarId).Then(grammar => { GrammarList[grammarId] = grammar; });
         }
-
-        #region UpdateGrammarHelpers
-        private static IPromise<Grammar> UpdateMyGrammar(string grammarId, int index) {
-            return WebAPI.GetGrammar(grammarId).Then(grammar => { MyGrammar[index] = grammar; });
-        }
-
-        private static IPromise<Grammar> UpdateSharedGrammar(string grammarId, int index) {
-            return WebAPI.GetGrammar(grammarId).Then(grammar => { SharedGrammar[index] = grammar; });
-        }
-
-        private static IPromise<Grammar> UpdateTutorialGrammar(string grammarId, int index) {
-            return WebAPI.GetTutorial(grammarId).Then(grammar => { TutorialGrammar[index] = grammar; });
-        }
-        #endregion
     }
 }

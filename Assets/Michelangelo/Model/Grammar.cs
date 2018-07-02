@@ -18,6 +18,7 @@ namespace Michelangelo.Model {
         public bool shared;
         public string[] tags;
         public string type;
+        public bool isTutorial;
 
         private DateTime lastModifiedDate;
         public DateTime LastModifiedDate => lastModifiedDate != DateTime.MinValue ? lastModifiedDate : (lastModifiedDate = Convert.ToDateTime(lastModified));
