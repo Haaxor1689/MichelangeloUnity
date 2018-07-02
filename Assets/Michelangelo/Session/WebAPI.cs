@@ -74,7 +74,7 @@ namespace Michelangelo.Session {
         public static IPromise Login(string email, string password) => new Promise((resolve, reject) => Shared.StartCoroutine(LoginCoroutine(email, password, resolve, reject)));
 
         private static IEnumerator<UnityWebRequestAsyncOperation> LoginCoroutine(string email, string password, Action resolve, Action<Exception> reject) {
-            if (email == null || password == null) {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) {
                 reject(new ApplicationException("Login request error:\nFill out both email and password before logging in."));
                 yield break;
             }

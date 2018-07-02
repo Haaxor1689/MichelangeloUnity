@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model.Render;
-using Michelangelo.Scripts;
 using Michelangelo.Session;
 using RSG;
 using UnityEditor;
@@ -125,7 +124,11 @@ namespace Michelangelo.Model {
             if (TutorialGrammar != null && (grammar = TutorialGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
                 return UpdateTutorialGrammar(grammarId, TutorialGrammar.IndexOf(grammar));
             }
-            return Promise<Grammar>.Rejected(new ApplicationException("Grammar not found."));
+
+            if (MyGrammar != null && SharedGrammar != null && TutorialGrammar != null) {
+                return Promise<Grammar>.Rejected(new ApplicationException("Grammar not found."));
+            }
+            return Promise<Grammar>.Resolved(Grammar.Placeholder);
         }
 
         #region UpdateGrammarHelpers

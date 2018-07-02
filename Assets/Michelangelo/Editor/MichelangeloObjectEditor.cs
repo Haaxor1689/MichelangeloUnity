@@ -3,92 +3,93 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Michelangelo.GrammarSources;
 using Michelangelo.Model;
-using Michelangelo.Scripts;
 using Michelangelo.Session;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
-    // [CustomEditor(typeof(MichelangeloObject))]
+    [CustomEditor(typeof(MichelangeloObject))]
     public class LevelScriptEditor : UnityEditor.Editor {
         private string errorMessage;
         private bool isLoading;
+        private bool isSynced;
 
-        public GrammarSourceBase foo;
+        private MichelangeloObject Script => (MichelangeloObject) target;
 
         public override void OnInspectorGUI() {
             if (!WebAPI.IsAuthenticated) {
-                EditorGUILayout.LabelField("To use this feature, please log in to Michelangelo first, through Window -> Michelangelo.");
-                return;
+                EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first,\nthrough Window -> Michelangelo.", MessageType.Warning);
+                GUI.enabled = false;
+            } else if (isLoading) {
+                EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
+                GUI.enabled = false;
             }
 
-            var obj = (MichelangeloObject) target;
-            if (obj.Grammar != Grammar.Placeholder &&
-                string.IsNullOrEmpty(obj.Grammar?.code) &&
-                !isLoading) {
-                Reload();
-            }
+            EditorGUILayout.LabelField("Name", Script.Grammar.name ?? Constants.PlaceholderText);
+            EditorGUILayout.LabelField("Type", Script.Grammar.type ?? Constants.PlaceholderText);
+            EditorGUILayout.LabelField("Last Modified", Script.Grammar.lastModified ?? Constants.PlaceholderText);
 
-            EditorGUILayout.LabelField("Name:", obj.Grammar?.name ?? Constants.PlaceholderText);
-            EditorGUILayout.LabelField("Type:", obj.Grammar?.type ?? Constants.PlaceholderText);
-            EditorGUILayout.LabelField("Last Modified:", obj.Grammar?.lastModified ?? Constants.PlaceholderText);
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.ObjectField("Code:", obj.Grammar?.SourceFile, typeof(GrammarSourceBase), false);
-            EditorGUI.EndDisabledGroup();
+            // DrawDefaultInspector();
 
             GUILayout.Space(20.0f);
-            if (isLoading) {
-                EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
-                return;
-            }
 
             if (GUILayout.Button("Reload")) {
                 Reload();
             }
 
-            if (obj.Grammar?.code != "" && GUILayout.Button("Create code file")) {
+            if (string.IsNullOrEmpty(Script.Grammar?.code)) {
+                EditorGUILayout.HelpBox("Grammar source code missing. Please reload it first.", MessageType.Info);
+                GUI.enabled = false;
+            }
+
+            if (GUILayout.Button("Create code file")) {
                 CreateCodeFile();
             }
 
-            if (obj.Grammar?.code != "" && GUILayout.Button("Generate")) {
-                isLoading = true;
-                MichelangeloSession.GenerateGrammar(obj.Grammar?.id)
-                                   .Then(model => {
-                                       obj.Model = model;
-                                       isLoading = false;
-                                       Repaint();
-                                   })
-                                   .Catch(HandleError);
+            if (GUILayout.Button("Generate")) {
+                Generate();
             }
-            if (!string.IsNullOrEmpty(errorMessage)) {
-                var style = new GUIStyle(EditorStyles.textField) { normal = { textColor = Color.red } };
+            GUI.enabled = true;
 
+            if (!string.IsNullOrEmpty(errorMessage)) {
+                if (string.IsNullOrEmpty(errorMessage)) {
+                    return;
+                }
                 GUILayout.Space(20.0f);
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(errorMessage, style);
-                if (GUILayout.Button("X")) {
+                EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
+                if (GUILayout.Button("Clear error message")) {
                     errorMessage = null;
                 }
-                EditorGUILayout.EndHorizontal();
             }
         }
 
-        private void Reload() {
-            var obj = (MichelangeloObject) target;
+        private void Generate() {
             isLoading = true;
-            MichelangeloSession.UpdateGrammar(obj.Grammar.id)
-                               .Then(_ => {
+            MichelangeloSession.GenerateGrammar(Script.Grammar?.id)
+                               .Then(model => {
+                                   Script.Model = model;
                                    isLoading = false;
                                    Repaint();
                                })
                                .Catch(HandleError);
         }
 
-        private void CreateCodeFile() {
-            var obj = (MichelangeloObject) target;
+        private void Reload() {
+            isLoading = true;
+            MichelangeloSession.UpdateGrammar(Script.Grammar.id)
+                               .Then(grammar => {
+                                   isLoading = false;
+                                   if (grammar != Grammar.Placeholder) {
+                                       Script.Grammar = grammar;
+                                   }
+                                   Repaint();
+                               })
+                               .Catch(HandleError);
+        }
 
-            var sourceFilePath = obj.Grammar.SourceFilePath;
+        private void CreateCodeFile() {
+            var sourceFilePath = Script.Grammar.SourceFilePath;
             if (File.Exists(sourceFilePath)) {
                 HandleError(new Exception($"File with name {Path.GetFileName(sourceFilePath)} already exists."));
                 return;
@@ -96,8 +97,8 @@ namespace Michelangelo.Editor {
 
             File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), sourceFilePath);
 
-            var indentedCode = Regex.Replace(obj.Grammar.code, "\n", "\n            ");
-            File.WriteAllText(sourceFilePath, Regex.Replace(Regex.Replace(File.ReadAllText(sourceFilePath), "_empty_", obj.Grammar.ClassName), "//_codePlaceholder_", indentedCode));
+            var indentedCode = Regex.Replace(Script.Grammar.code, "\n", "\n            ");
+            File.WriteAllText(sourceFilePath, Regex.Replace(Regex.Replace(File.ReadAllText(sourceFilePath), "_empty_", Script.Grammar.ClassName), "//_codePlaceholder_", indentedCode));
             AssetDatabase.Refresh();
         }
 

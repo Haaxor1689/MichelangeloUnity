@@ -2,24 +2,12 @@ using Michelangelo.Model;
 using Michelangelo.Model.Render;
 using UnityEngine;
 
-namespace Michelangelo.Scripts {
+namespace Michelangelo {
     [ExecuteInEditMode]
     public class MichelangeloObject : MonoBehaviour {
-        [SerializeField]
-        private string grammarId;
-
-        public ModelMesh Model;
-
-        [SerializeField]
-        private Grammar grammar;
-        public Grammar Grammar {
-            get { return MichelangeloSession.GetGrammar(grammarId); }
-            set {
-                grammar = value;
-                grammarId = value.id;
-            }
-        }
-
+        [SerializeField] public Grammar Grammar;
+        [HideInInspector] public ModelMesh Model;
+        
         private void Update() {
             Model?.Render(transform);
         }

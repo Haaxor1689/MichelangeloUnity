@@ -27,18 +27,16 @@ namespace Michelangelo.Editor {
 
         private void OnGUI() {
             if (isUnreachable) {
-                EditorGUILayout.LabelField("Michelangelo web server seems to be unreachable", EditorStyles.boldLabel);
-                EditorGUILayout.LabelField("Please try again in a few minutes");
+                EditorGUILayout.HelpBox("Michelangelo web server seems to be unreachable\nPlease try again later...", MessageType.Error);
                 if (GUILayout.Button("Refresh")) {
                     isUnreachable = false;
                 }
-                DrawErrorMessage();
-                return;
+                GUI.enabled = false;
+            } else if (isLoading) {
+                EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
+                GUI.enabled = false;
             }
-            if (isLoading) {
-                EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
-                return;
-            }
+
             if (WebAPI.IsAuthenticated) {
                 if (!MichelangeloSession.IsLoggedIn || MichelangeloSession.User == null) {
                     MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(HandleException);
@@ -54,16 +52,13 @@ namespace Michelangelo.Editor {
         }
 
         private void DrawErrorMessage() {
-            if (!string.IsNullOrEmpty(errorMessage)) {
-                var style = new GUIStyle(EditorStyles.textField) { normal = { textColor = Color.red } };
-
-                GUILayout.Space(20.0f);
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(errorMessage, style);
-                if (GUILayout.Button("X")) {
-                    errorMessage = null;
-                }
-                EditorGUILayout.EndHorizontal();
+            if (string.IsNullOrEmpty(errorMessage)) {
+                return;
+            }
+            GUILayout.Space(20.0f);
+            EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
+            if (GUILayout.Button("Clear error message")) {
+                errorMessage = null;
             }
         }
 
@@ -75,6 +70,7 @@ namespace Michelangelo.Editor {
                 MichelangeloSession.LogOut()
                                    .Then(() => {
                                        isLoading = false;
+                                       errorMessage = null;
                                        Repaint();
                                    })
                                    .Catch(HandleException);
@@ -105,6 +101,7 @@ namespace Michelangelo.Editor {
                 MichelangeloSession.LogIn(loginEmail, loginPassword)
                                    .Then(_ => {
                                        isLoading = false;
+                                       errorMessage = null;
                                        Repaint();
                                        RefreshAllArrays();
                                    })
@@ -123,7 +120,7 @@ namespace Michelangelo.Editor {
         private void PrintGrammarArray(IReadOnlyCollection<Grammar> grammarArray, string sectionTitle, ref Vector2 scrollPos) {
             EditorGUILayout.LabelField(sectionTitle, EditorStyles.boldLabel);
             if (grammarArray == null || grammarArray.Count == 0) {
-                EditorGUILayout.LabelField("Loading...");
+                EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 return;
             }
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(Mathf.Min(90, 23 * grammarArray.Count)));
