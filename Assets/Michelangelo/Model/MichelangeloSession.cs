@@ -86,7 +86,7 @@ namespace Michelangelo.Model {
         }
 
         public static IPromise<ModelMesh> GenerateGrammar(string grammarId) {
-            var g = AllGrammars.First(x => x.id == grammarId);
+            var g = AllGrammars.FirstOrDefault(x => x.id == grammarId);
             if (g == null) {
                 return Promise<ModelMesh>.Rejected(new ApplicationException("Requested grammar not found."));
             }

@@ -256,7 +256,7 @@ namespace Michelangelo.Session {
         public static IPromise DeleteGrammar(string grammarId) => new Promise((resolve, reject) => Shared.StartCoroutine(DeleteGrammarCoroutine(grammarId, resolve, reject)));
 
         private static IEnumerator<UnityWebRequestAsyncOperation> DeleteGrammarCoroutine(string grammarId, Action resolve, Action<Exception> reject) {
-            using (var deleteRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(CookiesString)) {
+            using (var deleteRequest = UnityWebRequest.Delete(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(CookiesString)) {
                 yield return deleteRequest.SendWebRequest();
 
                 if (CheckAndLogError(deleteRequest)) {
@@ -288,7 +288,7 @@ namespace Michelangelo.Session {
                     yield break;
                 }
                 Debug.Log(postRequest.Info());
-                JSONNode data;
+                string rawJson;
                 bool isGenerating;
                 var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
                 do {
@@ -300,11 +300,16 @@ namespace Michelangelo.Session {
                         }
 
                         Debug.Log(getRequest.Info());
-                        data = JSON.Parse(getRequest.GetResponseBody());
-                        isGenerating = data["o"].IsNull && data["ml"].IsNull;
+                        rawJson = getRequest.GetResponseBody();
+                        var match = Regex.Match(rawJson, "\"e\":\"([^\"]+)\"");
+                        if (match.Success) {
+                            reject(new ApplicationException($"Server responded with error:\n{Regex.Replace(match.Groups[1].Value, "<br\\/>", "\n")}"));
+                            yield break;
+                        }
+                        isGenerating = Regex.IsMatch(rawJson, "\"ml\":\\{\\},\"o\":\\[\\],");
                     }
                 } while (isGenerating);
-                resolve(new ModelMesh(PrimitivesFromJSON(data), MaterialsFromJSON(data)));
+                resolve(new ModelMesh(rawJson));
             }
         }
         #endregion
@@ -346,82 +351,6 @@ namespace Michelangelo.Session {
                 return new WebRequestException(message, request.responseCode);
             }
             return new ApplicationException(message + request.error);
-        }
-        #endregion
-
-        #region Generated model helpers
-        private static Primitive[] PrimitivesFromJSON(JSONNode json) {
-            var primitives = new List<Primitive>();
-            foreach (var obj in json["o"]) {
-                var type = obj.Value["g"].Value;
-                primitives.Add(new Primitive(obj.Value["m"].AsInt,
-                    type,
-                    MatrixFromJSON(obj.Value["t"]),
-                    MeshFromJSON(obj.Value)));
-            }
-            return primitives.ToArray();
-        }
-
-        private static Color[] MaterialsFromJSON(JSONNode json) {
-            var materials = new List<Color>();
-            foreach (var obj in json["ml"]) {
-                var groups = new Regex(@"\[(?<r>[\d\.]+), (?<g>[\d\.]+), (?<b>[\d\.]+)\]").Match(obj.Value.Value).Groups;
-                float r, g, b;
-                if (!float.TryParse(groups["r"].Value, out r) ||
-                    !float.TryParse(groups["g"].Value, out g) ||
-                    !float.TryParse(groups["b"].Value, out b)) {
-                    materials.Add(new Color(1, 1, 1));
-                } else {
-                    materials.Add(new Color(r, g, b));
-                }
-            }
-            return materials.ToArray();
-        }
-
-        private static Matrix4x4 MatrixFromJSON(JSONNode json) {
-            var matrix = new Matrix4x4(
-                new Vector4(json[0], json[4], json[8], json[12]),
-                new Vector4(json[1], json[5], json[9], json[13]),
-                new Vector4(json[2], json[6], json[10], json[14]),
-                new Vector4(json[3], json[7], json[11], json[15])
-                );
-
-            if (matrix.HasNegativeScale()) {
-                var scaleMatrix = Matrix4x4.identity;
-                scaleMatrix.m00 = -1;
-                matrix *= scaleMatrix;
-            }
-            return matrix;
-        }
-
-        private static Mesh MeshFromJSON(JSONNode json) {
-            JSONNode v;
-            if ((v = json["v"]) == null) {
-                return null;
-            }
-            var mesh = new Mesh();
-
-            var vertices = new List<Vector3>();
-            var iter = v["points"].Values;
-            while (iter.MoveNext()) {
-                var x = iter.Current.AsFloat;
-                iter.MoveNext();
-                var y = iter.Current.AsFloat;
-                iter.MoveNext();
-                var z = iter.Current.AsFloat;
-                vertices.Add(new Vector3(x, y, z));
-            }
-            mesh.vertices = vertices.ToArray();
-
-            var triangles = new List<int>();
-            foreach (var i in v["indices"].Values) {
-                triangles.Add(i.AsInt);
-            }
-            mesh.triangles = triangles.ToArray();
-
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            return mesh;
         }
         #endregion
     }

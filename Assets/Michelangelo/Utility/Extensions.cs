@@ -27,7 +27,7 @@ namespace Michelangelo.Utility {
         }
 
         public static string GetResponseBody(this UnityWebRequest request) {
-            return request.downloadHandler.text;
+            return request.downloadHandler?.text;
         }
 
         public static string Info(this UnityWebRequest request) {
