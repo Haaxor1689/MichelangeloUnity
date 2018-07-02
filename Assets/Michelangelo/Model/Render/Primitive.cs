@@ -6,20 +6,16 @@ namespace Michelangelo.Model.Render {
     [Serializable]
     public class Primitive {
 
-        [SerializeField]
-        private readonly int material;
+        [SerializeField] private int material;
         public int Material => material;
 
-        [SerializeField]
-        private readonly string primitiveType;
+        [SerializeField] private string primitiveType;
         public string PrimitiveType => primitiveType;
 
-        [SerializeField]
-        private readonly Matrix4x4 modelMatrix;
+        [SerializeField] private Matrix4x4 modelMatrix;
         public Matrix4x4 ModelMatrix => modelMatrix;
 
-        [SerializeField]
-        private readonly Mesh model;
+        [SerializeField] private Mesh model;
         public Mesh Model => model;
 
         public Primitive(int material, string primitiveType, Matrix4x4 modelMatrix, Mesh model = null) {

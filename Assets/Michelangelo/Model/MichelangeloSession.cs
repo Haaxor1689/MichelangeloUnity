@@ -127,7 +127,6 @@ namespace Michelangelo.Model {
             if (TutorialGrammar != null && (grammar = TutorialGrammar.FirstOrDefault(x => x.id == grammarId)) != null) {
                 return UpdateTutorialGrammar(grammarId, TutorialGrammar.IndexOf(grammar));
             }
-
             if (MyGrammar != null && SharedGrammar != null && TutorialGrammar != null) {
                 return Promise<Grammar>.Rejected(new ApplicationException("Grammar not found."));
             }
