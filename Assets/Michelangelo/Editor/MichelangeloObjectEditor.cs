@@ -18,6 +18,8 @@ namespace Michelangelo.Editor {
         private MichelangeloObject Script => (MichelangeloObject) target;
 
         public override void OnInspectorGUI() {
+            DrawDefaultInspector();
+
             if (!WebAPI.IsAuthenticated) {
                 EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first,\nthrough Window -> Michelangelo.", MessageType.Warning);
                 GUI.enabled = false;
@@ -25,14 +27,10 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
-
-            EditorGUILayout.LabelField("Name", Script.Grammar.name ?? Constants.PlaceholderText);
+            
+            EditorGUILayout.LabelField(Script.Grammar.name ?? Constants.PlaceholderText, EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Type", Script.Grammar.type ?? Constants.PlaceholderText);
             EditorGUILayout.LabelField("Last Modified", Script.Grammar.lastModified ?? Constants.PlaceholderText);
-
-            // DrawDefaultInspector();
-
-            GUILayout.Space(20.0f);
 
             if (GUILayout.Button("Reload")) {
                 Reload();
@@ -89,6 +87,11 @@ namespace Michelangelo.Editor {
         }
 
         private void CreateCodeFile() {
+            if (Script.Grammar.type == "ACGAX") {
+                HandleError(new ApplicationException("Editing of ACGAX grammars in editor isn't supported."));
+                return;
+            }
+
             var sourceFilePath = Script.Grammar.SourceFilePath;
             if (File.Exists(sourceFilePath)) {
                 HandleError(new Exception($"File with name {Path.GetFileName(sourceFilePath)} already exists."));

@@ -12,15 +12,19 @@ using UnityEngine;
 namespace Michelangelo.Editor {
     public class MichelangeloEditorWindow : EditorWindow {
         private string errorMessage;
-
-        private Vector2 grammarScrollPos;
-
+        
         private bool isLoading;
         private bool isUnreachable;
         private string loginEmail;
         private string loginPassword;
-        private Vector2 sharedScrollPos;
-        private Vector2 tutorialScrollPos;
+
+        private int grammarPage;
+        private int sharedPage;
+        private int tutorialPage;
+
+        private Vector2 scrollPos;
+
+        private int grammarsPerPage;
 
         [MenuItem("Window/Michelangelo")]
         public static void ShowWindow() => GetWindow<MichelangeloEditorWindow>("Michelangelo");
@@ -36,14 +40,13 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
-
             if (WebAPI.IsAuthenticated) {
                 if (!MichelangeloSession.IsLoggedIn || MichelangeloSession.User == null) {
                     MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(HandleException);
                     RefreshAllArrays();
                     return;
                 }
-
+                
                 LoggedIn();
             } else {
                 NotLoggedIn();
@@ -79,12 +82,15 @@ namespace Michelangelo.Editor {
                 MichelangeloSession.CreateGrammar().Then(_ => { Repaint(); }).Catch(HandleException);
             }
             GUILayout.Space(20.0f);
-            PrintGrammarArray(MichelangeloSession.MyGrammar, "Your designs", ref grammarScrollPos);
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            PrintGrammarArray(MichelangeloSession.MyGrammar, "Your designs", ref grammarPage);
             GUILayout.Space(20.0f);
-            PrintGrammarArray(MichelangeloSession.SharedGrammar, "Shared by others", ref sharedScrollPos);
+            PrintGrammarArray(MichelangeloSession.SharedGrammar, "Shared by others", ref sharedPage);
             GUILayout.Space(20.0f);
-            PrintGrammarArray(MichelangeloSession.TutorialGrammar, "Tutorials and Reference", ref tutorialScrollPos);
+            PrintGrammarArray(MichelangeloSession.TutorialGrammar, "Tutorials and Reference", ref tutorialPage);
+            EditorGUILayout.EndScrollView();
             GUILayout.Space(20.0f);
+            grammarsPerPage = EditorGUILayout.IntField(new GUIContent("Items per page", "0 = unlimited"), grammarsPerPage);
             if (GUILayout.Button("Refresh")) {
                 isLoading = true;
                 MichelangeloSession.UpdateUserInfo().Then(_ => isLoading = false).Catch(HandleException);
@@ -117,25 +123,52 @@ namespace Michelangelo.Editor {
                               .Catch(HandleException);
         }
 
-        private void PrintGrammarArray(IReadOnlyCollection<Grammar> grammarArray, string sectionTitle, ref Vector2 scrollPos) {
+        private void PrintGrammarArray(IReadOnlyList<Grammar> grammarArray, string sectionTitle, ref int pageNumber) {
             EditorGUILayout.LabelField(sectionTitle, EditorStyles.boldLabel);
             if (grammarArray == null || grammarArray.Count == 0) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 return;
             }
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(Mathf.Min(90, 23 * grammarArray.Count)));
-            foreach (var item in grammarArray) {
-                EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
-                EditorGUILayout.LabelField(item.name);
-                if (GUILayout.Button("Instantiate")) {
-                    MichelangeloSession.InstantiateGrammar(item.id).Catch(HandleException);
+
+            if (grammarsPerPage <= 0) {
+                foreach (var grammar in grammarArray) {
+                    DrawGrammar(grammar);
                 }
-                if (item.isOwner && GUILayout.Button("Delete")) {
-                    MichelangeloSession.DeleteGrammar(item.id).Then(() => { Repaint(); }).Catch(HandleException);
+            } else {
+                for (var i = pageNumber * grammarsPerPage; i < (pageNumber + 1) * grammarsPerPage && i < grammarArray.Count; ++i) {
+                    DrawGrammar(grammarArray[i]);
+                }
+
+                var pageCount = (grammarArray.Count - 1) / grammarsPerPage;
+                if (pageCount == 0) {
+                    return;
+                }
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+                if (GUILayout.Button("Prev") && pageNumber != 0) {
+                    --pageNumber;
+                }
+                EditorGUILayout.LabelField($"{pageNumber + 1}/{pageCount + 1}", new GUIStyle(GUI.skin.label) {alignment = TextAnchor.MiddleCenter});
+                if (GUILayout.Button("Next") && pageNumber < pageCount) {
+                    ++pageNumber;
                 }
                 EditorGUILayout.EndHorizontal();
             }
-            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawGrammar(Grammar grammar) {
+            EditorGUILayout.BeginVertical("Box");
+            EditorGUILayout.LabelField(grammar.name, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Type", grammar.type);
+            EditorGUILayout.LabelField("Last Modified", grammar.lastModified);
+            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+            if (GUILayout.Button("Instantiate")) {
+                MichelangeloSession.InstantiateGrammar(grammar.id).Catch(HandleException);
+            }
+            if (grammar.isOwner && GUILayout.Button("Delete")) {
+                MichelangeloSession.DeleteGrammar(grammar.id).Then(() => { Repaint(); }).Catch(HandleException);
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
         }
 
         private void HandleException(Exception error) {
@@ -152,10 +185,14 @@ namespace Michelangelo.Editor {
 
         [DidReloadScripts]
         private static void OnScriptsReloaded() {
-            if (!WebAPI.IsAuthenticated) {
+            var window = Resources.FindObjectsOfTypeAll(typeof(MichelangeloEditorWindow)).FirstOrDefault() as MichelangeloEditorWindow;
+            if (window == null || !WebAPI.IsAuthenticated) {
                 return;
             }
-            var window = Resources.FindObjectsOfTypeAll(typeof(MichelangeloEditorWindow)).FirstOrDefault() as MichelangeloEditorWindow;
+
+            window.grammarPage = 0;
+            window.sharedPage = 0;
+            window.tutorialPage = 0;
             MichelangeloSession.UpdateUserInfo()
                                .ThenAll(_ => {
                                    if (window != null) {
