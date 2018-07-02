@@ -40,6 +40,7 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
+
             if (WebAPI.IsAuthenticated) {
                 if (!MichelangeloSession.IsLoggedIn || MichelangeloSession.User == null) {
                     MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(HandleException);

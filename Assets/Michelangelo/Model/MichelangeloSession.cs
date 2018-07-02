@@ -61,14 +61,17 @@ namespace Michelangelo.Model {
         }
 
         public static IPromise<Grammar[]> UpdateMyGrammarArray() {
+            MyGrammar = new List<Grammar>();
             return WebAPI.GetMyGrammarArray().Then(response => { MyGrammar = response.ToList(); });
         }
 
         public static IPromise<Grammar[]> UpdateSharedArray() {
+            SharedGrammar = new List<Grammar>();
             return WebAPI.GetSharedGrammarArray().Then(response => { SharedGrammar = response.ToList(); });
         }
 
         public static IPromise<Grammar[]> UpdateTutorialArray() {
+            TutorialGrammar = new List<Grammar>();
             return WebAPI.GetTutorialGrammarArray().Then(response => { TutorialGrammar = response.ToList(); });
         }
 
