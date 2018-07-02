@@ -5,24 +5,22 @@ using UnityEngine;
 namespace Michelangelo.Model.Render {
     [Serializable]
     public class Primitive {
+        
+        public int Material;
+        public string PrimitiveType;
+        public Matrix4x4 ModelMatrix;
+        public Mesh Model;
 
-        [SerializeField] private int material;
-        public int Material => material;
-
-        [SerializeField] private string primitiveType;
-        public string PrimitiveType => primitiveType;
-
-        [SerializeField] private Matrix4x4 modelMatrix;
-        public Matrix4x4 ModelMatrix => modelMatrix;
-
-        [SerializeField] private Mesh model;
-        public Mesh Model => model;
+        public CombineInstance CombineInstance => new CombineInstance() {
+            mesh = Mesh, 
+            transform = ModelMatrix
+        };
 
         public Primitive(int material, string primitiveType, Matrix4x4 modelMatrix, Mesh model = null) {
-            this.material = material;
-            this.primitiveType = primitiveType;
-            this.modelMatrix = modelMatrix;
-            this.model = model;
+            Material = material;
+            PrimitiveType = primitiveType;
+            ModelMatrix = modelMatrix;
+            Model = model;
         }
 
         public Mesh Mesh {

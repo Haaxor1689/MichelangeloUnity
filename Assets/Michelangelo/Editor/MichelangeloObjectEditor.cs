@@ -1,7 +1,7 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using Michelangelo.GrammarSources;
 using Michelangelo.Model;
 using Michelangelo.Session;
 using Michelangelo.Utility;
@@ -27,10 +27,10 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
-            
+
             EditorGUILayout.LabelField(Script.Grammar.name ?? Constants.PlaceholderText, EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Type", Script.Grammar.type ?? Constants.PlaceholderText);
-            EditorGUILayout.LabelField("Last Modified", Script.Grammar.lastModified ?? Constants.PlaceholderText);
+            EditorGUILayout.LabelField("Last Modified", Script.Grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
 
             if (GUILayout.Button("Reload")) {
                 Reload();

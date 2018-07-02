@@ -419,15 +419,15 @@ namespace Michelangelo.Utility {
             vertices[vert++] = new Vector3(0f, 0f, 0f);
             while (vert <= nbSides) {
                 var rad = (float) vert / nbSides * _2pi;
-                vertices[vert] = new Vector3(Mathf.Cos(rad) * bottomRadius, 0f, Mathf.Sin(rad) * bottomRadius);
+                vertices[vert] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
                 vert++;
             }
 
             // Top cap
-            vertices[vert++] = new Vector3(0f, height, 0f);
+            vertices[vert++] = new Vector3(0f, height / 2.0f, 0f);
             while (vert <= nbSides * 2 + 1) {
                 var rad = (float) (vert - nbSides - 1) / nbSides * _2pi;
-                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height, Mathf.Sin(rad) * topRadius);
+                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
                 vert++;
             }
 
@@ -435,8 +435,8 @@ namespace Michelangelo.Utility {
             var v = 0;
             while (vert <= vertices.Length - 4) {
                 var rad = (float) v / nbSides * _2pi;
-                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height, Mathf.Sin(rad) * topRadius);
-                vertices[vert + 1] = new Vector3(Mathf.Cos(rad) * bottomRadius, 0, Mathf.Sin(rad) * bottomRadius);
+                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
+                vertices[vert + 1] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
                 vert += 2;
                 v++;
             }

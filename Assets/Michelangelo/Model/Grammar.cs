@@ -19,6 +19,9 @@ namespace Michelangelo.Model {
         public string[] tags;
         public string type;
 
+        private DateTime lastModifiedDate;
+        public DateTime LastModifiedDate => lastModifiedDate != DateTime.MinValue ? lastModifiedDate : (lastModifiedDate = Convert.ToDateTime(lastModified));
+
         public string ClassName => name.ClassNameFriendly();
         public string SourceFilePathRelative => Path.Combine(Constants.GrammarCodeFolderRelative, $"{ClassName}Grammar.cs");
         public string SourceFilePath => Path.Combine(Constants.GrammarCodeFolder, $"{ClassName}Grammar.cs");

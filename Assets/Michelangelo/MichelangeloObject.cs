@@ -1,3 +1,4 @@
+using System.Linq;
 using Michelangelo.Model;
 using Michelangelo.Model.Render;
 using UnityEngine;
@@ -10,12 +11,13 @@ namespace Michelangelo {
         [HideInInspector] public Grammar Grammar;
         [HideInInspector] public ModelMesh Model;
 
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
+        private MeshFilter meshFilter => GetComponent<MeshFilter>();
+        private MeshRenderer meshRenderer => GetComponent<MeshRenderer>();
 
-        private void Awake() {
-            meshFilter = GetComponent<MeshFilter>();
-            meshRenderer = GetComponent<MeshRenderer>();
+        public void CreateMesh() {
+            var combineInstances = Model.Primitives.Select(x => x.CombineInstance).ToArray();
+            meshFilter.mesh = new Mesh();
+            meshFilter.mesh.CombineMeshes(combineInstances);
         }
 
         private void Update() {

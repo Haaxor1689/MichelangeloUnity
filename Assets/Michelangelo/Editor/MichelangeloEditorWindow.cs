@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Michelangelo.Model;
 using Michelangelo.Session;
@@ -160,7 +161,7 @@ namespace Michelangelo.Editor {
             EditorGUILayout.BeginVertical("Box");
             EditorGUILayout.LabelField(grammar.name, EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Type", grammar.type);
-            EditorGUILayout.LabelField("Last Modified", grammar.lastModified);
+            EditorGUILayout.LabelField("Last Modified", grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
             if (GUILayout.Button("Instantiate")) {
                 MichelangeloSession.InstantiateGrammar(grammar.id).Catch(HandleException);
