@@ -10,9 +10,14 @@ namespace Michelangelo.Scripts {
 
         public ModelMesh Model;
 
+        [SerializeField]
+        private Grammar grammar;
         public Grammar Grammar {
             get { return MichelangeloSession.GetGrammar(grammarId); }
-            set { grammarId = value.id; }
+            set {
+                grammar = value;
+                grammarId = value.id;
+            }
         }
 
         private void Update() {

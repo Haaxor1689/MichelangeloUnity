@@ -1,20 +1,21 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Michelangelo.GrammarSources;
 using Michelangelo.Model;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
+using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
-    [CustomEditor(typeof(MichelangeloObject))]
+    // [CustomEditor(typeof(MichelangeloObject))]
     public class LevelScriptEditor : UnityEditor.Editor {
-        private static readonly string GrammarCodeFolder = Path.Combine("Michelangelo", "GrammarSources");
         private string errorMessage;
         private bool isLoading;
 
-        private Vector2 scrollPos;
+        public GrammarSourceBase foo;
 
         public override void OnInspectorGUI() {
             if (!WebAPI.IsAuthenticated) {
@@ -29,14 +30,12 @@ namespace Michelangelo.Editor {
                 Reload();
             }
 
-            EditorGUILayout.LabelField("Name: ", obj.Grammar?.name);
-            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
-            EditorGUILayout.LabelField("Code: ", EditorStyles.boldLabel);
-            EditorGUILayout.EndHorizontal();
-
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.MinHeight(100), GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
-            EditorGUILayout.TextArea(obj.Grammar?.code);
-            EditorGUILayout.EndScrollView();
+            EditorGUILayout.LabelField("Name:", obj.Grammar?.name ?? Constants.PlaceholderText);
+            EditorGUILayout.LabelField("Type:", obj.Grammar?.type ?? Constants.PlaceholderText);
+            EditorGUILayout.LabelField("Last Modified:", obj.Grammar?.lastModified ?? Constants.PlaceholderText);
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.ObjectField("Code:", obj.Grammar?.SourceFile, typeof(GrammarSourceBase), false);
+            EditorGUI.EndDisabledGroup();
 
             GUILayout.Space(20.0f);
             if (isLoading) {
@@ -88,19 +87,17 @@ namespace Michelangelo.Editor {
 
         private void CreateCodeFile() {
             var obj = (MichelangeloObject) target;
-            var fullPath = Path.Combine(Application.dataPath, GrammarCodeFolder);
-            var friendlyScriptName = obj.Grammar.name;
-            var codeFileName = Path.Combine(fullPath, $"{friendlyScriptName}Grammar.cs");
 
-            if (File.Exists(codeFileName)) {
-                HandleError(new Exception($"File with name {Path.GetFileName(codeFileName)} already exists."));
+            var sourceFilePath = obj.Grammar.SourceFilePath;
+            if (File.Exists(sourceFilePath)) {
+                HandleError(new Exception($"File with name {Path.GetFileName(sourceFilePath)} already exists."));
                 return;
             }
 
-            File.Copy(Path.Combine(fullPath, "_empty_Grammar.cs"), codeFileName);
+            File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), sourceFilePath);
 
             var indentedCode = Regex.Replace(obj.Grammar.code, "\n", "\n            ");
-            File.WriteAllText(codeFileName, Regex.Replace(Regex.Replace(File.ReadAllText(codeFileName), "_empty_", friendlyScriptName), "//_codePlaceholder_", indentedCode));
+            File.WriteAllText(sourceFilePath, Regex.Replace(Regex.Replace(File.ReadAllText(sourceFilePath), "_empty_", obj.Grammar.ClassName), "//_codePlaceholder_", indentedCode));
             AssetDatabase.Refresh();
         }
 

@@ -300,7 +300,6 @@ namespace Michelangelo.Session {
                         }
 
                         Debug.Log(getRequest.Info());
-                        JSONFromResponse("generated", getRequest.GetResponseBody());
                         data = JSON.Parse(getRequest.GetResponseBody());
                         isGenerating = data["o"].IsNull && data["ml"].IsNull;
                     }

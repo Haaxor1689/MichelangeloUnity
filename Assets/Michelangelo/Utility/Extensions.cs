@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -78,6 +79,14 @@ namespace Michelangelo.Utility {
             var sx1 = Vector3.Dot(Vector3.Cross(y1, z1), x1);
 
             return sx0 * sx1 < 0 || sy0 * sy1 < 0 || sz0 * sz1 < 0;
+        }
+        
+        public static string ClassNameFriendly(this string name) {
+            var className = name.Replace(" ", "");
+            if (Regex.IsMatch(className, "^[^\\p{Lu}\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}]")) {
+                className = "_" + className;
+            }
+            return Regex.Replace(className, "[^\\p{Lu}\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\p{Nl}\\p{Mn}\\p{Mc}\\p{Nd}\\p{Pc}\\p{Cf}]", "_");
         }
     }
 }

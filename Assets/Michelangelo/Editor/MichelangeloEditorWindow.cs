@@ -133,7 +133,7 @@ namespace Michelangelo.Editor {
                 if (GUILayout.Button("Instantiate")) {
                     MichelangeloSession.InstantiateGrammar(item.id).Catch(HandleException);
                 }
-                if (item.isOwner && GUILayout.Button("X")) {
+                if (item.isOwner && GUILayout.Button("Delete")) {
                     MichelangeloSession.DeleteGrammar(item.id).Then(() => { Repaint(); }).Catch(HandleException);
                 }
                 EditorGUILayout.EndHorizontal();
