@@ -5,6 +5,7 @@ using RSG;
 using UnityEngine;
 
 namespace Michelangelo {
+    [SelectionBase]
     public class MichelangeloObject : MonoBehaviour {
 
         private string id;
