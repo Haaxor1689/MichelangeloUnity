@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Michelangelo.Model {
     [Serializable]
     public class Grammar {
-        public static readonly Grammar Placeholder = new Grammar { name = "..." };
+        public static readonly Grammar Placeholder = new Grammar { name = "...", type = "..." };
         public string code;
         public string id;
         public bool isOwner;

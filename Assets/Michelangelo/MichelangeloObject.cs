@@ -9,7 +9,7 @@ namespace Michelangelo {
 
         private string id;
 
-        public Grammar Grammar => MichelangeloSession.GetGrammar(id);
+        public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
 
         public IPromise<GenerateGrammarResponse> Generate() {
             MichelangeloSession.GrammarList[Grammar.id].code = Grammar.code;

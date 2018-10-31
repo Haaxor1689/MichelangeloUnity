@@ -21,22 +21,25 @@ namespace Michelangelo.Editor {
             DrawDefaultInspector();
 
             if (!WebAPI.IsAuthenticated) {
-                EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first,\nthrough Window -> Michelangelo.", MessageType.Warning);
+                EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first, through Window -> Michelangelo.", MessageType.Warning);
+                GUI.enabled = false;
+            } else if (Script.Grammar == Grammar.Placeholder) {
+                EditorGUILayout.HelpBox("Grammar this object is referring to no longer exists or wasn't downloaded. Try refreshing Michelangelo window.", MessageType.Warning);
                 GUI.enabled = false;
             } else if (isLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
 
-            EditorGUILayout.LabelField(Script.Grammar.name ?? Constants.PlaceholderText, EditorStyles.boldLabel);
-            EditorGUILayout.LabelField("Type", Script.Grammar.type ?? Constants.PlaceholderText);
+            EditorGUILayout.LabelField(Script.Grammar.name);
+            EditorGUILayout.LabelField("Type", Script.Grammar.type);
             EditorGUILayout.LabelField("Last Modified", Script.Grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
 
             if (GUILayout.Button("Reload")) {
                 Async(Reload);
             }
 
-            if (string.IsNullOrEmpty(Script.Grammar?.code) || MichelangeloSession.GrammarList.Count == 0 || !MichelangeloSession.GrammarList.ContainsKey(Script.Grammar?.id)) {
+            if (string.IsNullOrEmpty(Script.Grammar.code) && GUI.enabled == true) {
                 EditorGUILayout.HelpBox("Grammar source code missing. Please reload it first.", MessageType.Info);
                 GUI.enabled = false;
             }
@@ -79,7 +82,6 @@ namespace Michelangelo.Editor {
                                    Repaint();
                                })
                                .Catch(HandleError);
-            
         }
 
         private void CreateCodeFile() {
