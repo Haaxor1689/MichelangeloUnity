@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Michelangelo.Model.Render;
 using Michelangelo.Session;
 using RSG;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Michelangelo.Model {
     public static class MichelangeloSession {
@@ -59,7 +56,7 @@ namespace Michelangelo.Model {
             var newObject = new GameObject(grammar.name);
             var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
             michelangeloObject.Grammar = grammar;
-            Selection.objects = new Object[] { newObject };
+            Selection.objects = new UnityEngine.Object[] { newObject };
             return Promise.Resolved();
         }
 

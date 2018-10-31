@@ -68,8 +68,7 @@ namespace Michelangelo.Editor {
             MichelangeloSession.GrammarList[Script.Grammar.id].code = Script.Grammar.code;
             MichelangeloSession.GenerateGrammar(Script.Grammar.id)
                                .Then(response => {
-                                   Script.Model = response.Mesh;
-                                   Script.CreateMesh();
+                                   Script.CreateMesh(response.Mesh);
                                    errorMessage = response.ErrorMessage;
                                    isLoading = false;
                                    Repaint();

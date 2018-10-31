@@ -6,6 +6,8 @@ namespace Michelangelo {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
     public class MichelangeloMesh : MonoBehaviour {
+
+        public const string MichelangeloMeshObjectName = "MichelangeloPartialMesh";
         
         private MeshFilter meshFilter => GetComponent<MeshFilter>();
         private MeshRenderer meshRenderer => GetComponent<MeshRenderer>();
