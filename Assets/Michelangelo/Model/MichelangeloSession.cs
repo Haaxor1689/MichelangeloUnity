@@ -39,8 +39,15 @@ namespace Michelangelo.Model {
 
         public static IPromise<IEnumerable<Grammar[]>> RefreshGrammarList() {
             grammarList = new Dictionary<string, Grammar>();
-            return Promise<Grammar[]>.All(WebAPI.GetMyGrammarArray(), WebAPI.GetSharedGrammarArray(), WebAPI.GetTutorialGrammarArray())
-                                     .Then(x => { grammarList = x.SelectMany(dict => dict).ToDictionary(g => g.id, g => g); });
+
+            Action<Grammar[]> appendGrammars = x => {
+                foreach (var g in x) {
+                    grammarList.Add(g.id, g);
+                }
+            };
+            return Promise<Grammar[]>.All(WebAPI.GetMyGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load own grammars.", x); }),
+                                         WebAPI.GetSharedGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load shared grammars.", x); }),
+                                         WebAPI.GetTutorialGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load tutorial grammars.", x); }));
         }
 
         public static IPromise InstantiateGrammar(string grammarId) {

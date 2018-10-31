@@ -11,11 +11,6 @@ namespace Michelangelo.Model.Render {
         public Matrix4x4 ModelMatrix;
         public Mesh Model;
 
-        public CombineInstance CombineInstance => new CombineInstance() {
-            mesh = Mesh, 
-            transform = ModelMatrix
-        };
-
         public Primitive(int material, string primitiveType, Matrix4x4 modelMatrix, Mesh model = null) {
             Material = material;
             PrimitiveType = primitiveType;

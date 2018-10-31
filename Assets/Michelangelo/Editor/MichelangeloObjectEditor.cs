@@ -64,9 +64,11 @@ namespace Michelangelo.Editor {
 
         private void Generate() {
             isLoading = true;
-            MichelangeloSession.GenerateGrammar(Script.Grammar?.id)
+            MichelangeloSession.GrammarList[Script.Grammar.id].code = Script.Grammar.code;
+            MichelangeloSession.GenerateGrammar(Script.Grammar.id)
                                .Then(model => {
                                    Script.Model = model;
+                                   Script.CreateMesh();
                                    isLoading = false;
                                    Repaint();
                                })

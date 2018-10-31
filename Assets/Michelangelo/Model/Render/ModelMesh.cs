@@ -28,17 +28,6 @@ namespace Michelangelo.Model.Render {
         private Material[] materials;
         public Material[] Materials => materials ?? (materials = string.IsNullOrEmpty(jsonSource) ? new Material[] { } : MaterialsFromJSON(JSON.Parse(jsonSource)));
 
-        public void Render(Transform transform) {
-            if (string.IsNullOrEmpty(jsonSource)) {
-                return;
-            }
-
-            var inverse = transform.worldToLocalMatrix.inverse;
-            foreach (var item in Primitives) {
-                Graphics.DrawMesh(item.Mesh, inverse * item.ModelMatrix, Materials[item.Material], 0);
-            }
-        }
-
         #region Generated model helpers
         private static Primitive[] PrimitivesFromJSON(JSONNode json) {
 
@@ -70,19 +59,12 @@ namespace Michelangelo.Model.Render {
         }
 
         private static Matrix4x4 MatrixFromJSON(JSONNode json) {
-            var matrix = new Matrix4x4(
+            return new Matrix4x4(
                 new Vector4(json[0], json[4], json[8], json[12]),
                 new Vector4(json[1], json[5], json[9], json[13]),
                 new Vector4(json[2], json[6], json[10], json[14]),
                 new Vector4(json[3], json[7], json[11], json[15])
-                );
-
-            if (matrix.HasNegativeScale()) {
-                var scaleMatrix = Matrix4x4.identity;
-                scaleMatrix.m00 = -1;
-                matrix *= scaleMatrix;
-            }
-            return matrix;
+            );
         }
 
         private static Mesh MeshFromJSON(JSONNode json) {
