@@ -63,11 +63,10 @@ namespace Michelangelo.Model {
             return Promise.Resolved();
         }
 
-        public static IPromise<ModelMesh> GenerateGrammar(string grammarId) {
-            if (!GrammarList.ContainsKey(grammarId)) {
-                return Promise<ModelMesh>.Rejected(new ApplicationException("Requested grammar not found."));
-            }
-            return WebAPI.GenerateGrammar(GrammarList[grammarId]);
+        public static IPromise<GenerateGrammarResponse> GenerateGrammar(string grammarId) {
+            return !GrammarList.ContainsKey(grammarId) 
+                ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Requested grammar not found.")) 
+                : WebAPI.GenerateGrammar(GrammarList[grammarId]);
         }
 
         public static Grammar GetGrammar(string grammarId) {

@@ -276,9 +276,10 @@ namespace Michelangelo.Session {
         #endregion
 
         #region GenerateGrammar
-        public static IPromise<ModelMesh> GenerateGrammar(Grammar grammar) => new Promise<ModelMesh>((resolve, reject) => Shared.StartCoroutine(GenerateGrammarCoroutine(grammar, resolve, reject)));
+        public static IPromise<GenerateGrammarResponse> GenerateGrammar(Grammar grammar) 
+            => new Promise<GenerateGrammarResponse>((resolve, reject) => Shared.StartCoroutine(GenerateGrammarCoroutine(grammar, resolve, reject)));
 
-        private static IEnumerator<UnityWebRequestAsyncOperation> GenerateGrammarCoroutine(Grammar grammar, Action<ModelMesh> resolve, Action<Exception> reject) {
+        private static IEnumerator<UnityWebRequestAsyncOperation> GenerateGrammarCoroutine(Grammar grammar, Action<GenerateGrammarResponse> resolve, Action<Exception> reject) {
             var form = new WWWForm();
             form.AddField("ID", grammar.id);
             form.AddField("Name", grammar.name);
@@ -295,6 +296,7 @@ namespace Michelangelo.Session {
                 }
                 Debug.Log(postRequest.Info());
                 string rawJson;
+                string errorMessage = string.Empty;
                 bool isGenerating;
                 var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
                 do {
@@ -309,13 +311,12 @@ namespace Michelangelo.Session {
                         rawJson = getRequest.GetResponseBody();
                         var match = Regex.Match(rawJson, "\"e\":\"([^\"]+)\"");
                         if (match.Success) {
-                            reject(new ApplicationException($"Server responded with error:\n{Regex.Replace(match.Groups[1].Value, "<br\\/>", "\n")}"));
-                            yield break;
+                            errorMessage = Regex.Replace(match.Groups[1].Value, "<br\\/>", "\n");
                         }
                         isGenerating = Regex.IsMatch(rawJson, "\"ml\":\\{\\},\"o\":\\[\\],");
                     }
                 } while (isGenerating);
-                resolve(new ModelMesh(rawJson));
+                resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(rawJson), ErrorMessage = errorMessage });
             }
         }
         #endregion

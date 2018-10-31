@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Michelangelo.Model;
+using Michelangelo.Model.Render;
 using Michelangelo.Session;
 using Michelangelo.Utility;
 using UnityEditor;
@@ -66,9 +67,10 @@ namespace Michelangelo.Editor {
             isLoading = true;
             MichelangeloSession.GrammarList[Script.Grammar.id].code = Script.Grammar.code;
             MichelangeloSession.GenerateGrammar(Script.Grammar.id)
-                               .Then(model => {
-                                   Script.Model = model;
+                               .Then(response => {
+                                   Script.Model = response.Mesh;
                                    Script.CreateMesh();
+                                   errorMessage = response.ErrorMessage;
                                    isLoading = false;
                                    Repaint();
                                })
