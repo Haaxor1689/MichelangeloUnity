@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Michelangelo.Model;
-using Michelangelo.Model.Render;
 using Michelangelo.Session;
 using Michelangelo.Utility;
 using UnityEditor;

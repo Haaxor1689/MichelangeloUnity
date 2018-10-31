@@ -15,8 +15,8 @@ namespace Michelangelo {
         private void CreateMesh(Primitive primitive, Material material) {
             // Transform
             transform.localScale = primitive.ModelMatrix.ExtractScale();
-            transform.rotation = primitive.ModelMatrix.ExtractRotation();
-            transform.position = primitive.ModelMatrix.ExtractPosition();
+            transform.localRotation = primitive.ModelMatrix.ExtractRotation();
+            transform.localPosition = primitive.ModelMatrix.ExtractPosition();
 
             // Mesh
             meshFilter.sharedMesh = primitive.Mesh;
