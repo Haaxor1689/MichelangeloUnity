@@ -31,7 +31,7 @@ namespace Michelangelo.Session {
                 if (shared != null && (shared = FindObjectOfType(typeof(WebAPI)) as WebAPI) != null) {
                     return shared;
                 }
-                var singleton = new GameObject("MichelangeloWebAPISingleton") { hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector };
+                var singleton = new GameObject("MichelangeloWebAPISingleton") { hideFlags = HideFlags.HideAndDontSave };
                 return shared = singleton.AddComponent<WebAPI>();
             }
         }
