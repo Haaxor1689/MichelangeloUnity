@@ -37,7 +37,7 @@ namespace Michelangelo.Editor {
                 Reload();
             }
 
-            if (string.IsNullOrEmpty(Script.Grammar?.code)) {
+            if (string.IsNullOrEmpty(Script.Grammar?.code) || MichelangeloSession.GrammarList.Count == 0 || !MichelangeloSession.GrammarList.ContainsKey(Script.Grammar?.id)) {
                 EditorGUILayout.HelpBox("Grammar source code missing. Please reload it first.", MessageType.Info);
                 GUI.enabled = false;
             }

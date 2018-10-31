@@ -10,6 +10,7 @@ namespace Michelangelo {
             DeleteOldMeshes();
             foreach (var primitive in model.Primitives) {
                 var newObject = new GameObject(MichelangeloMesh.MichelangeloMeshObjectName);
+                newObject.hideFlags = HideFlags.NotEditable;
                 newObject.transform.SetParent(transform);
                 var michelangeloMesh = newObject.AddComponent<MichelangeloMesh>();
                 michelangeloMesh.CreateMesh(primitive, model.Materials[primitive.Material]);
