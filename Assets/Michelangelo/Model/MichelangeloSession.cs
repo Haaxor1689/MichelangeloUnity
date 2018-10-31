@@ -53,9 +53,7 @@ namespace Michelangelo.Model {
             }
             var grammar = GrammarList[grammarId];
 
-            var newObject = new GameObject(grammar.name);
-            var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
-            michelangeloObject.Grammar = grammar;
+            var newObject = MichelangeloObject.Construct(grammar);
             Selection.objects = new UnityEngine.Object[] { newObject };
             return Promise.Resolved();
         }

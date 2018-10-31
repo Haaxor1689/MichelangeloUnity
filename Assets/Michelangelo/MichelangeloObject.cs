@@ -1,19 +1,25 @@
+using System.Runtime.Remoting.Messaging;
 using Michelangelo.Model;
 using Michelangelo.Model.Render;
+using RSG;
 using UnityEngine;
 
 namespace Michelangelo {
     public class MichelangeloObject : MonoBehaviour {
-        [HideInInspector] public Grammar Grammar;
 
-        public void CreateMesh(ModelMesh model) {
+        private string id;
+
+        public Grammar Grammar => MichelangeloSession.GetGrammar(id);
+
+        public IPromise<GenerateGrammarResponse> Generate() {
+            MichelangeloSession.GrammarList[Grammar.id].code = Grammar.code;
+            return MichelangeloSession.GenerateGrammar(Grammar.id).Then(response => CreateMesh(response.Mesh));
+        }
+
+        private void CreateMesh(ModelMesh model) {
             DeleteOldMeshes();
             foreach (var primitive in model.Primitives) {
-                var newObject = new GameObject(MichelangeloMesh.MichelangeloMeshObjectName);
-                newObject.hideFlags = HideFlags.NotEditable;
-                newObject.transform.SetParent(transform);
-                var michelangeloMesh = newObject.AddComponent<MichelangeloMesh>();
-                michelangeloMesh.CreateMesh(primitive, model.Materials[primitive.Material]);
+                MichelangeloMesh.Construct(transform, primitive, model.Materials[primitive.Material]);
             }
         }
 
@@ -25,6 +31,13 @@ namespace Michelangelo {
                     --i;
                 }
             }
+        }
+
+        public static GameObject Construct(Grammar grammar) {
+            var newObject = new GameObject(grammar.name);
+            var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
+            michelangeloObject.id = grammar.id;
+            return newObject;
         }
     }
 }

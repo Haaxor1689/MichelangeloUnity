@@ -12,7 +12,7 @@ namespace Michelangelo {
         private MeshFilter meshFilter => GetComponent<MeshFilter>();
         private MeshRenderer meshRenderer => GetComponent<MeshRenderer>();
 
-        public void CreateMesh(Primitive primitive, Material material) {
+        private void CreateMesh(Primitive primitive, Material material) {
             // Transform
             transform.localScale = primitive.ModelMatrix.ExtractScale();
             transform.rotation = primitive.ModelMatrix.ExtractRotation();
@@ -23,6 +23,15 @@ namespace Michelangelo {
             
             // Material
             meshRenderer.material = material;
+        }
+
+        public static GameObject Construct(Transform parent, Primitive primitive, Material material) {
+            var newObject = new GameObject(MichelangeloMesh.MichelangeloMeshObjectName);
+            newObject.hideFlags = HideFlags.NotEditable;
+            newObject.transform.SetParent(parent);
+            var michelangeloMesh = newObject.AddComponent<MichelangeloMesh>();
+            michelangeloMesh.CreateMesh(primitive, material);
+            return newObject;
         }
     }
 }

@@ -65,15 +65,13 @@ namespace Michelangelo.Editor {
 
         private void Generate() {
             isLoading = true;
-            MichelangeloSession.GrammarList[Script.Grammar.id].code = Script.Grammar.code;
-            MichelangeloSession.GenerateGrammar(Script.Grammar.id)
-                               .Then(response => {
-                                   Script.CreateMesh(response.Mesh);
-                                   errorMessage = response.ErrorMessage;
-                                   isLoading = false;
-                                   Repaint();
-                               })
-                               .Catch(HandleError);
+            Script.Generate()
+                  .Then(response => {
+                      errorMessage = response.ErrorMessage;
+                      isLoading = false;
+                      Repaint();
+                  })
+                  .Catch(HandleError);
         }
 
         private void Reload() {
@@ -81,9 +79,6 @@ namespace Michelangelo.Editor {
             MichelangeloSession.UpdateGrammar(Script.Grammar.id)
                                .Then(grammar => {
                                    isLoading = false;
-                                   if (grammar != Grammar.Placeholder) {
-                                       Script.Grammar = grammar;
-                                   }
                                    Repaint();
                                })
                                .Catch(HandleError);
