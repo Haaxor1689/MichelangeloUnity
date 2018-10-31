@@ -33,7 +33,7 @@ namespace Michelangelo.Editor {
             EditorGUILayout.LabelField("Last Modified", Script.Grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
 
             if (GUILayout.Button("Reload")) {
-                Reload();
+                Async(Reload);
             }
 
             if (string.IsNullOrEmpty(Script.Grammar?.code) || MichelangeloSession.GrammarList.Count == 0 || !MichelangeloSession.GrammarList.ContainsKey(Script.Grammar?.id)) {
@@ -46,7 +46,7 @@ namespace Michelangelo.Editor {
             }
 
             if (GUILayout.Button("Generate")) {
-                Generate();
+                Async(Generate);
             }
             GUI.enabled = true;
 
@@ -63,7 +63,6 @@ namespace Michelangelo.Editor {
         }
 
         private void Generate() {
-            isLoading = true;
             Script.Generate()
                   .Then(response => {
                       errorMessage = response.ErrorMessage;
@@ -74,13 +73,13 @@ namespace Michelangelo.Editor {
         }
 
         private void Reload() {
-            isLoading = true;
             MichelangeloSession.UpdateGrammar(Script.Grammar.id)
                                .Then(grammar => {
                                    isLoading = false;
                                    Repaint();
                                })
                                .Catch(HandleError);
+            
         }
 
         private void CreateCodeFile() {
@@ -107,6 +106,16 @@ namespace Michelangelo.Editor {
             isLoading = false;
             Repaint();
             Debug.LogError(error);
+        }
+
+        private void Async(Action a) {
+            try {
+                isLoading = true;
+                a();
+            } catch {
+                isLoading = false;
+                throw;
+            }
         }
     }
 }
