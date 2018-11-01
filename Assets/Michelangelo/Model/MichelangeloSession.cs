@@ -1,36 +1,51 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Michelangelo.Session;
+using Michelangelo.Utility;
 using RSG;
 using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Model {
     public static class MichelangeloSession {
-        public static bool IsLoggedIn { get; private set; }
+        public static UserInfo User => user ?? (user = UserInfoFromPrefs);
+        public static IReadOnlyDictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = GrammarListFromPrefs);
 
-        public static UserInfo User { get; private set; }
-
+        private const string UserInfoPrefsKey = Constants.EditorPrefsPrefix + "UserInfo";
+        private static UserInfo UserInfoFromPrefs => UserInfo.FromJson(EditorPrefs.GetString(UserInfoPrefsKey));
+        private static UserInfo user;
+        
+        private const string GrammarListPrefsKey = Constants.EditorPrefsPrefix + "GrammarList";
+        private static Dictionary<string, Grammar> GrammarListFromPrefs => JsonArray.FromJsonArray<Grammar>(EditorPrefs.GetString(GrammarListPrefsKey)).ToDictionary(x => x.id);
         private static Dictionary<string, Grammar> grammarList;
-        public static Dictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = new Dictionary<string, Grammar>());
+
+        private static void SaveGrammarList() => EditorPrefs.SetString(GrammarListPrefsKey, JsonArray.ToJsonArray(grammarList.Values.ToArray()));
 
         public static IPromise<UserInfo> LogIn(string loginEmail, string loginPassword) {
             return WebAPI.Login(loginEmail, loginPassword).Then(() => UpdateUserInfo());
         }
 
         public static IPromise LogOut() {
-            return WebAPI.Logout().Then(() => User = null);
+            return WebAPI.Logout().Then(() => {
+                EditorPrefs.SetString(UserInfoPrefsKey, "");
+                user = null;
+            });
         }
 
         public static IPromise<Grammar> CreateGrammar() {
-            return WebAPI.CreateGrammar().Then(grammar => { GrammarList.Add(grammar.id, grammar); });
+            return WebAPI.CreateGrammar()
+                         .Then(grammar => {
+                             grammarList.Add(grammar.id, grammar);
+                             SaveGrammarList();
+                         });
         }
 
         public static IPromise<UserInfo> UpdateUserInfo() {
             return WebAPI.GetUserInfo()
                          .Then(newUser => {
-                             IsLoggedIn = true;
-                             User = newUser;
+                             user = newUser;
+                             EditorPrefs.SetString(UserInfoPrefsKey, JsonUtility.ToJson(user));
                          });
         }
 
@@ -44,7 +59,8 @@ namespace Michelangelo.Model {
             };
             return Promise<Grammar[]>.All(WebAPI.GetMyGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load own grammars.", x); }),
                                          WebAPI.GetSharedGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load shared grammars.", x); }),
-                                         WebAPI.GetTutorialGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load tutorial grammars.", x); }));
+                                         WebAPI.GetTutorialGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load tutorial grammars.", x); }))
+                                     .Then(_ => SaveGrammarList());
         }
 
         public static IPromise InstantiateGrammar(string grammarId) {
@@ -72,7 +88,10 @@ namespace Michelangelo.Model {
             if (!GrammarList.ContainsKey(grammarId)) {
                 return Promise.Rejected(new ApplicationException("Requested grammar not found."));
             }
-            return WebAPI.DeleteGrammar(grammarId).Then(() => { GrammarList.Remove(grammarId); });
+            return WebAPI.DeleteGrammar(grammarId).Then(() => {
+                grammarList.Remove(grammarId);
+                SaveGrammarList();
+            });
         }
 
         public static IPromise<Grammar> UpdateGrammar(string grammarId) {
@@ -80,9 +99,15 @@ namespace Michelangelo.Model {
                 return Promise<Grammar>.Rejected(new ApplicationException("Requested grammar not found."));
             }
             if (GrammarList[grammarId].isTutorial) {
-                return WebAPI.GetTutorial(grammarId).Then(grammar => { GrammarList[grammarId] = grammar; });
+                return WebAPI.GetTutorial(grammarId).Then(grammar => {
+                    grammarList[grammarId] = grammar;
+                    SaveGrammarList();
+                });
             }
-            return WebAPI.GetGrammar(grammarId).Then(grammar => { GrammarList[grammarId] = grammar; });
+            return WebAPI.GetGrammar(grammarId).Then(grammar => {
+                grammarList[grammarId] = grammar;
+                SaveGrammarList();
+            });
         }
     }
 }

@@ -8,7 +8,6 @@ using Michelangelo.Model;
 using Michelangelo.Model.Render;
 using Michelangelo.Utility;
 using RSG;
-using SimpleJSON;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;

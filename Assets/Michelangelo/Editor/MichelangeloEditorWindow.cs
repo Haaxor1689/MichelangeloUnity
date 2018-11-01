@@ -5,7 +5,6 @@ using Michelangelo.Model;
 using Michelangelo.Session;
 using Michelangelo.Utility;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
@@ -41,7 +40,7 @@ namespace Michelangelo.Editor {
             }
 
             if (WebAPI.IsAuthenticated) {
-                if (!MichelangeloSession.IsLoggedIn || MichelangeloSession.User == null) {
+                if (MichelangeloSession.User == null) {
                     MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(HandleException);
                     MichelangeloSession.RefreshGrammarList();
                     return;
@@ -207,39 +206,6 @@ namespace Michelangelo.Editor {
                 isLoading = false;
                 throw;
             }
-        }
-
-        [DidReloadScripts]
-        private static void OnScriptsReloaded() {
-            var window = Resources.FindObjectsOfTypeAll(typeof(MichelangeloEditorWindow)).FirstOrDefault() as MichelangeloEditorWindow;
-            if (window == null || !WebAPI.IsAuthenticated) {
-                return;
-            }
-
-            window.grammarPage = 0;
-            MichelangeloSession.UpdateUserInfo()
-                               .Then(_ => {
-                                   if (window != null) {
-                                       window.Repaint();
-                                   }
-                               })
-                               .Catch(error => {
-                                   if (window != null) {
-                                       window.HandleException(error);
-                                   }
-                               });
-
-            MichelangeloSession.RefreshGrammarList()
-                               .Then(_ => {
-                                   if (window != null) {
-                                       window.Repaint();
-                                   }
-                               })
-                               .Catch(error => {
-                                   if (window != null) {
-                                       window.HandleException(error);
-                                   }
-                               });
         }
     }
 }

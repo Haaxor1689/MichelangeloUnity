@@ -8,7 +8,7 @@ namespace Michelangelo.Model {
         public int energyAvailable;
         public int energyCapacity;
         public string username;
-
+        
         public static UserInfo FromJson(string json) => JsonUtility.FromJson<UserInfo>(json);
 
         public new string ToString() {
