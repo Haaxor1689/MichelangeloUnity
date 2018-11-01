@@ -8,6 +8,7 @@ namespace Michelangelo {
     [SelectionBase]
     public class MichelangeloObject : MonoBehaviour {
 
+        [SerializeField, HideInInspector]
         private string id;
 
         public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
