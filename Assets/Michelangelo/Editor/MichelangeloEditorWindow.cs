@@ -21,8 +21,9 @@ namespace Michelangelo.Editor {
         private string loginPassword;
 
         private Vector2 scrollPos;
-        private GrammarSource selectedSource;
-        private GrammarType selectedType;
+        private string nameFilter;
+        private bool hasChangedNameFilter;
+        private GrammarSource sourceFilter;
 
         [MenuItem("Window/Michelangelo")]
         public static void ShowWindow() => GetWindow<MichelangeloEditorWindow>("Michelangelo");
@@ -125,7 +126,7 @@ namespace Michelangelo.Editor {
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
             var pageCount = 0;
-            var filteredGrammarList = MichelangeloSession.GrammarList.Values.OrderByDescending(x => x.LastModifiedDate).Where(FilterGrammar);
+            var filteredGrammarList = MichelangeloSession.GrammarList.Values.OrderByDescending(x => x.LastModifiedDate).Where(FilterGrammar).ToList();
             if (grammarsPerPage <= 0) {
                 foreach (var grammar in filteredGrammarList) {
                     DrawGrammar(grammar);
@@ -154,21 +155,36 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.LabelField("Filters", EditorStyles.boldLabel);
-            selectedSource = (GrammarSource) EditorGUILayout.EnumPopup("Source", selectedSource);
-            selectedType = (GrammarType) EditorGUILayout.EnumPopup("Type", selectedType);
+
+            DrawNameFilter();
+            sourceFilter = (GrammarSource) EditorGUILayout.EnumPopup("Source", sourceFilter);
             grammarsPerPage = EditorGUILayout.IntField(new GUIContent("Items per page", "0 = unlimited"), grammarsPerPage);
         }
 
-        private bool FilterGrammar(Grammar g) => TypeFilter(g) && SourceFilter(g);
+        private bool FilterGrammar(Grammar g) => SourceFilter(g) && NameFilter(g);
 
-        private bool TypeFilter(Grammar g) => selectedType == GrammarType.All ||
-                                              selectedType == GrammarType.ACGAX && g.type == "ACGAX" ||
-                                              selectedType == GrammarType.DOG && g.type == "DOG";
+        private bool NameFilter(Grammar g) => string.IsNullOrEmpty(nameFilter) || g.name.IndexOf(nameFilter, StringComparison.InvariantCultureIgnoreCase) != -1;
 
-        private bool SourceFilter(Grammar g) => selectedSource == GrammarSource.All ||
-                                                selectedSource == GrammarSource.Mine && g.isOwner ||
-                                                selectedSource == GrammarSource.Shared && g.shared ||
-                                                selectedSource == GrammarSource.Tutorial && g.isTutorial;
+        private bool SourceFilter(Grammar g) => sourceFilter == GrammarSource.All ||
+                                                sourceFilter == GrammarSource.Mine && g.isOwner ||
+                                                sourceFilter == GrammarSource.Shared && g.shared ||
+                                                sourceFilter == GrammarSource.Tutorial && g.isTutorial;
+
+        private void DrawNameFilter() {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Name", GUILayout.Width(EditorGUIUtility.labelWidth - GUI.skin.box.padding.left));
+            GUI.SetNextControlName("NameFilter");
+            var newNameFilter = GUILayout.TextField(nameFilter, GUILayout.ExpandWidth(true));
+            if (hasChangedNameFilter) {
+                GUI.FocusControl("NameFilter");
+                hasChangedNameFilter = false;
+            }
+            if (newNameFilter != nameFilter || string.IsNullOrEmpty(nameFilter)) {
+                hasChangedNameFilter = true;
+                nameFilter = newNameFilter;
+            }
+            EditorGUILayout.EndHorizontal();
+        }
 
         private void DrawGrammar(Grammar grammar) {
             EditorGUILayout.BeginVertical("Box");

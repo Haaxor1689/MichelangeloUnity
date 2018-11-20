@@ -1,12 +1,4 @@
-﻿using UnityEngine;
-
-namespace Michelangelo.Model {
-    public enum GrammarType {
-        ACGAX, 
-        DOG,
-        All
-    }
-
+﻿namespace Michelangelo.Model {
     public enum GrammarSource {
         Mine, 
         Shared, 
