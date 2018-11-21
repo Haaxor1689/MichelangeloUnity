@@ -3,35 +3,21 @@ using UnityEngine;
 
 namespace Michelangelo.MonoBehaviours {
     public class MichelangeloSingleton : MonoBehaviour {
+        private const string MichelangeloSingletonName = "MichelangeloSingleton";
+
         private static MichelangeloSingleton instance;
-        private static bool isApplicationQuitting;
+        private static MichelangeloSingleton Instance => instance ? instance : (instance = Construct());
 
         public static void Coroutine(IEnumerator coroutine) {
-            instance.StartCoroutine(coroutine);
+            Instance.StartCoroutine(coroutine);
         }
-
-        [RuntimeInitializeOnLoadMethod]
-        private static void Init() {
-            if (instance != null) {
-                return;
-            }
-
-            var gameObject = new GameObject("MichelangeloSingleton");
-            instance = gameObject.AddComponent<MichelangeloSingleton>();
-            gameObject.hideFlags = HideFlags.HideAndDontSave;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        private void OnApplicationQuit() {
-            isApplicationQuitting = true;
-        }
-
-        private void OnDestroy() {
-            if (isApplicationQuitting) {
-                return;
-            }
-            instance = null;
-            Init();
+        
+        private static MichelangeloSingleton Construct() {
+            var gameObject = new GameObject {
+                name = MichelangeloSingletonName,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            return gameObject.AddComponent<MichelangeloSingleton>();
         }
     }
 }
