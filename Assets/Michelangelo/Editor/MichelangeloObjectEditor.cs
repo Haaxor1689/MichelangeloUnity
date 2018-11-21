@@ -45,10 +45,6 @@ namespace Michelangelo.Editor {
                 GUI.enabled = false;
             }
 
-            if (GUILayout.Button("Create code file")) {
-                CreateCodeFile();
-            }
-
             if (GUILayout.Button("Generate")) {
                 Async(Generate);
             }
@@ -86,25 +82,6 @@ namespace Michelangelo.Editor {
                                    Repaint();
                                })
                                .Catch(HandleError);
-        }
-
-        private void CreateCodeFile() {
-            if (Script.Grammar.type == "ACGAX") {
-                HandleError(new ApplicationException("Editing of ACGAX grammars in editor isn't supported."));
-                return;
-            }
-
-            var sourceFilePath = Script.Grammar.SourceFilePath;
-            if (File.Exists(sourceFilePath)) {
-                HandleError(new Exception($"File with name {Path.GetFileName(sourceFilePath)} already exists."));
-                return;
-            }
-
-            File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), sourceFilePath);
-
-            var indentedCode = Regex.Replace(Script.Grammar.code, "\n", "\n            ");
-            File.WriteAllText(sourceFilePath, Regex.Replace(Regex.Replace(File.ReadAllText(sourceFilePath), "_empty_", Script.Grammar.ClassName), "//_codePlaceholder_", indentedCode));
-            AssetDatabase.Refresh();
         }
 
         private void HandleError(Exception error) {

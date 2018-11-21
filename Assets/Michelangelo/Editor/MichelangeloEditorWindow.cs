@@ -191,6 +191,7 @@ namespace Michelangelo.Editor {
             EditorGUILayout.LabelField(grammar.name, EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Type", grammar.type);
             EditorGUILayout.LabelField("Last Modified", grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
+            DrawGrammarCodeField(grammar);
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
             if (GUILayout.Button("Instantiate")) {
                 MichelangeloSession.InstantiateGrammar(grammar.id).Catch(HandleException);
@@ -200,6 +201,25 @@ namespace Michelangelo.Editor {
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
+        }
+
+        private void DrawGrammarCodeField(Grammar grammar) {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Name", GUILayout.Width(EditorGUIUtility.labelWidth - GUI.skin.box.padding.left));
+            if (string.IsNullOrEmpty(grammar.code)) {
+                if (GUILayout.Button("Download", GUILayout.ExpandWidth(true))) {
+                    MichelangeloSession.UpdateGrammar(grammar.id).Then(_ => Repaint()).Catch(HandleException);
+                }
+            } else if (grammar.SourceCode == null) {
+                if (GUILayout.Button("Create file", GUILayout.ExpandWidth(true))) {
+                    grammar.CreateSourceFile();
+                }
+            } else {
+                GUI.enabled = false;
+                EditorGUILayout.ObjectField(grammar.SourceCode, typeof(TextAsset), false, GUILayout.ExpandWidth(true));
+                GUI.enabled = true;
+            }
+            EditorGUILayout.EndHorizontal();
         }
 
         private void HandleException(Exception error) {

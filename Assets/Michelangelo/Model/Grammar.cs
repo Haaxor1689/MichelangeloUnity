@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -20,11 +21,26 @@ namespace Michelangelo.Model {
         public bool isTutorial;
 
         private DateTime lastModifiedDate;
-        public DateTime LastModifiedDate => lastModifiedDate != DateTime.MinValue ? lastModifiedDate : (lastModifiedDate = Convert.ToDateTime(lastModified));
+        public DateTime LastModifiedDate => lastModifiedDate != DateTime.MinValue ? lastModifiedDate : lastModifiedDate = Convert.ToDateTime(lastModified);
+
+        private TextAsset sourceCode;
+        public TextAsset SourceCode => sourceCode ? sourceCode : sourceCode = AssetDatabase.LoadAssetAtPath<TextAsset>(Path.Combine("Assets", SourceFilePathRelative));
 
         public string ClassName => name.ClassNameFriendly();
-        public string SourceFilePathRelative => Path.Combine(Constants.GrammarCodeFolderRelative, $"{ClassName}Grammar.cs");
-        public string SourceFilePath => Path.Combine(Constants.GrammarCodeFolder, $"{ClassName}Grammar.cs");
+        public string FileName => $"{ClassName}Grammar.txt";
+        public string SourceFilePathRelative => Path.Combine(Constants.GrammarCodeFolderRelative, FileName);
+        public string SourceFilePath => Path.Combine(Constants.GrammarCodeFolder, FileName);
+
+        public bool CreateSourceFile() {
+            if (File.Exists(SourceFilePath)) {
+                Debug.LogWarning($"Replacing old code file for \"{name}\".");
+            }
+
+            File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), SourceFilePath);
+            File.WriteAllText(SourceFilePath, code);
+            AssetDatabase.Refresh();
+            return true;
+        }
 
         public static Grammar FromJSON(string json) => JsonUtility.FromJson<Grammar>(json);
         public static Grammar[] FromJSONArray(string json) => JsonArray.FromJsonArray<Grammar>(json);
