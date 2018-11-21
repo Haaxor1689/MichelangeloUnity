@@ -12,7 +12,7 @@ namespace Michelangelo.Editor {
         private string errorMessage;
 
         private int grammarPage;
-        private int grammarsPerPage;
+        private int grammarsPerPage = 5;
 
         private bool isLoading;
         private bool isUnreachable;
@@ -179,7 +179,7 @@ namespace Michelangelo.Editor {
                 GUI.FocusControl("NameFilter");
                 hasChangedNameFilter = false;
             }
-            if (newNameFilter != nameFilter || string.IsNullOrEmpty(nameFilter)) {
+            if (newNameFilter != nameFilter) {
                 hasChangedNameFilter = true;
                 nameFilter = newNameFilter;
             }
