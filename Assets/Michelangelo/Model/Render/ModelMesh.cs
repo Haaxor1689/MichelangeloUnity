@@ -10,7 +10,8 @@ namespace Michelangelo.Model.Render {
     public class ModelMesh {
         private static readonly Material DefaultMaterial = new Material(Shader.Find("Diffuse"));
 
-        [SerializeField] private string jsonSource;
+        [SerializeField]
+        private string jsonSource;
         
         public ModelMesh(string rawJson) {
             jsonSource = rawJson;

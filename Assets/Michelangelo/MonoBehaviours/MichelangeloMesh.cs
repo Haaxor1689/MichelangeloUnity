@@ -3,10 +3,10 @@ using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo {
+namespace Michelangelo.MonoBehaviours {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class MichelangeloMesh : MonoBehaviour {
+    public class MichelangeloMesh : UnityEngine.MonoBehaviour {
 
         public const string MichelangeloMeshObjectName = "MichelangeloPartialMesh";
         

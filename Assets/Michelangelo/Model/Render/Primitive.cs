@@ -24,7 +24,7 @@ namespace Michelangelo.Model.Render {
                     return Model;
                 }
 
-                var field = typeof(Utility.Primitives).GetField(PrimitiveType, BindingFlags.Static | BindingFlags.Public);
+                var field = typeof(Primitives).GetField(PrimitiveType, BindingFlags.Static | BindingFlags.Public);
                 if (field != null) {
                     return field.GetValue(null) as Mesh;
                 }

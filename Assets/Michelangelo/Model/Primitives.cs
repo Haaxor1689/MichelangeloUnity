@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Michelangelo.Utility {
+namespace Michelangelo.Model {
     internal static class Primitives {
         public static readonly Mesh Box = _box();
         public static readonly Mesh Sphere = _sphere();
