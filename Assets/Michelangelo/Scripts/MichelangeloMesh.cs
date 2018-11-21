@@ -34,10 +34,12 @@ namespace Michelangelo.Scripts {
         }
 
         public static GameObject Construct(Transform parent, Primitive primitive, Material material) {
-            var newObject = new GameObject(MichelangeloMesh.MichelangeloMeshObjectName);
+            var newObject = new GameObject(MichelangeloMeshObjectName);
             newObject.hideFlags = HideFlags.NotEditable;
             newObject.transform.SetParent(parent);
             var michelangeloMesh = newObject.AddComponent<MichelangeloMesh>();
+            newObject.GetComponent<MeshFilter>().hideFlags = HideFlags.HideInInspector;
+            newObject.GetComponent<MeshRenderer>().hideFlags = HideFlags.HideInInspector;
             michelangeloMesh.CreateMesh(primitive, material);
             return newObject;
         }
