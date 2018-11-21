@@ -34,15 +34,15 @@ namespace Michelangelo.Editor {
                 GUI.enabled = false;
             }
 
-            if (GUILayout.Button("Generate")) {
-                Async(Generate);
-            }
-            EditorGUILayout.Space();
-
             EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
             if (Script.HasMesh) {
                 serializedObject.FindProperty("isInEditMode").boolValue = EditorGUILayout.Toggle("Edit mode", serializedObject.FindProperty("isInEditMode").boolValue);
                 serializedObject.ApplyModifiedProperties();
+            }
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Generate new mesh", GUILayout.Height(40.0f))) {
+                Async(Generate);
             }
 
             GUI.enabled = true;
