@@ -62,6 +62,11 @@ namespace Michelangelo.Model {
             EditorGUILayout.LabelField("Type", type);
             EditorGUILayout.LabelField("Last Modified", LastModifiedDate.ToString(CultureInfo.CurrentCulture));
             DrawCodeField(onResolved, onRejected);
+
+            if (showInstantiate || isOwner) {
+                EditorGUILayout.Space();
+            }
+
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
             if (showInstantiate && GUILayout.Button("Instantiate")) {
                 MichelangeloSession.InstantiateGrammar(id).Then(onResolved).Catch(onRejected);

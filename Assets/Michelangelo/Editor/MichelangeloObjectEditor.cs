@@ -27,7 +27,8 @@ namespace Michelangelo.Editor {
             }
             
             Script.Grammar.Draw(Repaint, OnRejected);
-
+            EditorGUILayout.Space();
+            
             if (string.IsNullOrEmpty(Script.Grammar.code) && GUI.enabled) {
                 EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
                 GUI.enabled = false;
@@ -36,9 +37,13 @@ namespace Michelangelo.Editor {
             if (GUILayout.Button("Generate")) {
                 Async(Generate);
             }
+            EditorGUILayout.Space();
 
-            serializedObject.FindProperty("isInEditMode").boolValue = EditorGUILayout.Toggle("Edit mode", serializedObject.FindProperty("isInEditMode").boolValue);
-            serializedObject.ApplyModifiedProperties();
+            EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
+            if (Script.HasMesh) {
+                serializedObject.FindProperty("isInEditMode").boolValue = EditorGUILayout.Toggle("Edit mode", serializedObject.FindProperty("isInEditMode").boolValue);
+                serializedObject.ApplyModifiedProperties();
+            }
 
             GUI.enabled = true;
             if (!string.IsNullOrEmpty(errorMessage)) {
