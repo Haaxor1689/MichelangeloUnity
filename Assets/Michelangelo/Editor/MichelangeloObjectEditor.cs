@@ -39,7 +39,7 @@ namespace Michelangelo.Editor {
                 Async(Reload);
             }
 
-            if (string.IsNullOrEmpty(Script.Grammar.code) && GUI.enabled == true) {
+            if (string.IsNullOrEmpty(Script.Grammar.code) && GUI.enabled) {
                 EditorGUILayout.HelpBox("Grammar source code missing. Please reload it first.", MessageType.Info);
                 GUI.enabled = false;
             }
@@ -51,8 +51,11 @@ namespace Michelangelo.Editor {
             if (GUILayout.Button("Generate")) {
                 Async(Generate);
             }
-            GUI.enabled = true;
 
+            serializedObject.FindProperty("isInEditMode").boolValue = EditorGUILayout.Toggle("Edit mode", serializedObject.FindProperty("isInEditMode").boolValue);
+            serializedObject.ApplyModifiedProperties();
+
+            GUI.enabled = true;
             if (!string.IsNullOrEmpty(errorMessage)) {
                 if (string.IsNullOrEmpty(errorMessage)) {
                     return;

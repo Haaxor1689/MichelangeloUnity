@@ -1,5 +1,6 @@
 ﻿using Michelangelo.Model.Render;
 using Michelangelo.Utility;
+using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo {
@@ -11,6 +12,7 @@ namespace Michelangelo {
         
         private MeshFilter meshFilter => GetComponent<MeshFilter>();
         private MeshRenderer meshRenderer => GetComponent<MeshRenderer>();
+        private MichelangeloObject parentObject => transform.parent.GetComponent<MichelangeloObject>();
 
         private void CreateMesh(Primitive primitive, Material material) {
             // Transform
@@ -23,6 +25,12 @@ namespace Michelangelo {
             
             // Material
             meshRenderer.material = material;
+        }
+
+        private void OnDrawGizmosSelected() {
+            if (Selection.activeGameObject == gameObject) {
+                parentObject.SetSelection();
+            }
         }
 
         public static GameObject Construct(Transform parent, Primitive primitive, Material material) {

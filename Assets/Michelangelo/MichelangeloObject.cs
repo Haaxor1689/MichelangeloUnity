@@ -1,16 +1,17 @@
-using System.Runtime.Remoting.Messaging;
 using Michelangelo.Model;
 using Michelangelo.Model.Render;
 using RSG;
+using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo {
-    [SelectionBase]
     public class MichelangeloObject : MonoBehaviour {
 
-        [SerializeField, HideInInspector]
+        [SerializeField][HideInInspector]
         private string id;
 
+        [SerializeField][HideInInspector]
+        private bool isInEditMode;
         public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
 
         public IPromise<GenerateGrammarResponse> Generate() {
@@ -40,6 +41,12 @@ namespace Michelangelo {
             var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
             michelangeloObject.id = grammar.id;
             return newObject;
+        }
+        
+        public void SetSelection() {
+            if (!isInEditMode) {
+                Selection.objects = new Object[] { gameObject };
+            }
         }
     }
 }
