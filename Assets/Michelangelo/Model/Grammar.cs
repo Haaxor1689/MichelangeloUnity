@@ -85,9 +85,10 @@ namespace Michelangelo.Model {
                     CreateSourceFile();
                 }
             } else {
+                var original = GUI.enabled;
                 GUI.enabled = false;
                 EditorGUILayout.ObjectField(SourceCode, typeof(TextAsset), false, GUILayout.ExpandWidth(true));
-                GUI.enabled = true;
+                GUI.enabled = original;
             }
             EditorGUILayout.EndHorizontal();
         }
