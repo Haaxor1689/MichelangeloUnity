@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Michelangelo.MonoBehaviours {
+namespace Michelangelo.Scripts {
     public class MichelangeloSingleton : MonoBehaviour {
         private const string MichelangeloSingletonName = "MichelangeloSingleton";
 

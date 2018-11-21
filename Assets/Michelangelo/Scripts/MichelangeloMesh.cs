@@ -3,7 +3,7 @@ using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.MonoBehaviours {
+namespace Michelangelo.Scripts {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
     public class MichelangeloMesh : UnityEngine.MonoBehaviour {

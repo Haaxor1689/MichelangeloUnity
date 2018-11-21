@@ -4,7 +4,7 @@ using RSG;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.MonoBehaviours {
+namespace Michelangelo.Scripts {
     public class MichelangeloObject : UnityEngine.MonoBehaviour {
 
         [SerializeField][HideInInspector]
