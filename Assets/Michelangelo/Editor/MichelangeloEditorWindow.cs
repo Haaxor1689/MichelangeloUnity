@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using Michelangelo.Model;
 using Michelangelo.Session;
@@ -42,7 +41,7 @@ namespace Michelangelo.Editor {
 
             if (WebAPI.IsAuthenticated) {
                 if (MichelangeloSession.User == null) {
-                    MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(HandleException);
+                    MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(OnRejected);
                     MichelangeloSession.RefreshGrammarList();
                     return;
                 }
@@ -96,7 +95,7 @@ namespace Michelangelo.Editor {
                                    Repaint();
                                    MichelangeloSession.RefreshGrammarList();
                                })
-                               .Catch(HandleException);
+                               .Catch(OnRejected);
         }
 
         private void LogOut() {
@@ -106,11 +105,11 @@ namespace Michelangelo.Editor {
                                    errorMessage = null;
                                    Repaint();
                                })
-                               .Catch(HandleException);
+                               .Catch(OnRejected);
         }
 
         private void Refresh() {
-            MichelangeloSession.UpdateUserInfo().Then(_ => isLoading = false).Catch(HandleException);
+            MichelangeloSession.UpdateUserInfo().Then(_ => isLoading = false).Catch(OnRejected);
             MichelangeloSession.RefreshGrammarList();
         }
 
@@ -121,7 +120,7 @@ namespace Michelangelo.Editor {
                 return;
             }
             if (GUILayout.Button("Create Grammar")) {
-                MichelangeloSession.CreateGrammar().Then(_ => { Repaint(); }).Catch(HandleException);
+                MichelangeloSession.CreateGrammar().Then(_ => { Repaint(); }).Catch(OnRejected);
             }
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
@@ -129,7 +128,7 @@ namespace Michelangelo.Editor {
             var filteredGrammarList = MichelangeloSession.GrammarList.Values.OrderByDescending(x => x.LastModifiedDate).Where(FilterGrammar).ToList();
             if (grammarsPerPage <= 0) {
                 foreach (var grammar in filteredGrammarList) {
-                    DrawGrammar(grammar);
+                    grammar.Draw(Repaint, OnRejected, true);
                 }
             } else {
                 pageCount = (filteredGrammarList.Count() - 1) / grammarsPerPage;
@@ -138,7 +137,7 @@ namespace Michelangelo.Editor {
                 }
 
                 foreach (var grammar in filteredGrammarList.Skip(grammarPage * grammarsPerPage).Take(grammarsPerPage)) {
-                    DrawGrammar(grammar);
+                    grammar.Draw(Repaint, OnRejected, true);
                 }
             }
             EditorGUILayout.EndScrollView();
@@ -186,43 +185,7 @@ namespace Michelangelo.Editor {
             EditorGUILayout.EndHorizontal();
         }
 
-        private void DrawGrammar(Grammar grammar) {
-            EditorGUILayout.BeginVertical("Box");
-            EditorGUILayout.LabelField(grammar.name, EditorStyles.boldLabel);
-            EditorGUILayout.LabelField("Type", grammar.type);
-            EditorGUILayout.LabelField("Last Modified", grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
-            DrawGrammarCodeField(grammar);
-            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
-            if (GUILayout.Button("Instantiate")) {
-                MichelangeloSession.InstantiateGrammar(grammar.id).Catch(HandleException);
-            }
-            if (grammar.isOwner && GUILayout.Button("Delete")) {
-                MichelangeloSession.DeleteGrammar(grammar.id).Then(() => { Repaint(); }).Catch(HandleException);
-            }
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndVertical();
-        }
-
-        private void DrawGrammarCodeField(Grammar grammar) {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Name", GUILayout.Width(EditorGUIUtility.labelWidth - GUI.skin.box.padding.left));
-            if (string.IsNullOrEmpty(grammar.code)) {
-                if (GUILayout.Button("Download", GUILayout.ExpandWidth(true))) {
-                    MichelangeloSession.UpdateGrammar(grammar.id).Then(_ => Repaint()).Catch(HandleException);
-                }
-            } else if (grammar.SourceCode == null) {
-                if (GUILayout.Button("Create file", GUILayout.ExpandWidth(true))) {
-                    grammar.CreateSourceFile();
-                }
-            } else {
-                GUI.enabled = false;
-                EditorGUILayout.ObjectField(grammar.SourceCode, typeof(TextAsset), false, GUILayout.ExpandWidth(true));
-                GUI.enabled = true;
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void HandleException(Exception error) {
+        private void OnRejected(Exception error) {
             errorMessage = error.Message;
             isLoading = false;
 

@@ -1,7 +1,7 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -54,6 +54,42 @@ namespace Michelangelo.Model {
             builder.Append("), modified ");
             builder.Append(lastModified);
             return builder.ToString();
+        }
+        
+        public void Draw(Action onResolved, Action<Exception> onRejected, bool showInstantiate = false) {
+            EditorGUILayout.BeginVertical("Box");
+            EditorGUILayout.LabelField(name, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Type", type);
+            EditorGUILayout.LabelField("Last Modified", LastModifiedDate.ToString(CultureInfo.CurrentCulture));
+            DrawCodeField(onResolved, onRejected);
+            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+            if (showInstantiate && GUILayout.Button("Instantiate")) {
+                MichelangeloSession.InstantiateGrammar(id).Then(onResolved).Catch(onRejected);
+            }
+            if (isOwner && GUILayout.Button("Delete")) {
+                MichelangeloSession.DeleteGrammar(id).Then(onResolved).Catch(onRejected);
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawCodeField(Action onResolved, Action<Exception> onRejected) {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Code", GUILayout.Width(EditorGUIUtility.labelWidth - GUI.skin.box.padding.left));
+            if (string.IsNullOrEmpty(code)) {
+                if (GUILayout.Button("Download", GUILayout.ExpandWidth(true))) {
+                    MichelangeloSession.UpdateGrammar(id).Then(_ => onResolved).Catch(onRejected);
+                }
+            } else if (SourceCode == null) {
+                if (GUILayout.Button("Create file", GUILayout.ExpandWidth(true))) {
+                    CreateSourceFile();
+                }
+            } else {
+                GUI.enabled = false;
+                EditorGUILayout.ObjectField(SourceCode, typeof(TextAsset), false, GUILayout.ExpandWidth(true));
+                GUI.enabled = true;
+            }
+            EditorGUILayout.EndHorizontal();
         }
     }
 }

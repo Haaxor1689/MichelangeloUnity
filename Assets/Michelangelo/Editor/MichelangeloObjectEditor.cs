@@ -1,11 +1,7 @@
 using System;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
 using Michelangelo.Model;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
-using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,8 +15,6 @@ namespace Michelangelo.Editor {
         private MichelangeloObject Script => (MichelangeloObject) target;
 
         public override void OnInspectorGUI() {
-            DrawDefaultInspector();
-
             if (!WebAPI.IsAuthenticated) {
                 EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first, through Window -> Michelangelo.", MessageType.Warning);
                 GUI.enabled = false;
@@ -31,17 +25,11 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
-
-            EditorGUILayout.LabelField(Script.Grammar.name);
-            EditorGUILayout.LabelField("Type", Script.Grammar.type);
-            EditorGUILayout.LabelField("Last Modified", Script.Grammar.LastModifiedDate.ToString(CultureInfo.CurrentCulture));
-
-            if (GUILayout.Button("Reload")) {
-                Async(Reload);
-            }
+            
+            Script.Grammar.Draw(Repaint, OnRejected);
 
             if (string.IsNullOrEmpty(Script.Grammar.code) && GUI.enabled) {
-                EditorGUILayout.HelpBox("Grammar source code missing. Please reload it first.", MessageType.Info);
+                EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
                 GUI.enabled = false;
             }
 
@@ -72,7 +60,7 @@ namespace Michelangelo.Editor {
                       isLoading = false;
                       Repaint();
                   })
-                  .Catch(HandleError);
+                  .Catch(OnRejected);
         }
 
         private void Reload() {
@@ -81,10 +69,10 @@ namespace Michelangelo.Editor {
                                    isLoading = false;
                                    Repaint();
                                })
-                               .Catch(HandleError);
+                               .Catch(OnRejected);
         }
 
-        private void HandleError(Exception error) {
+        private void OnRejected(Exception error) {
             errorMessage = error.Message;
             isLoading = false;
             Repaint();
