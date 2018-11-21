@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Michelangelo.Model;
 using Michelangelo.Model.Render;
@@ -34,22 +33,21 @@ namespace Michelangelo.Session {
         
         private static string CookiesString => $"{RequestTokenName}={RequestTokenCookie}; {VerificationTokenName}={VerificationTokenCookie};";
         public static bool IsAuthenticated => !string.IsNullOrEmpty(RequestTokenCookie) && !string.IsNullOrEmpty(VerificationTokenCookie);
-
+        
         #region Login
         public static IPromise Login(string email, string password) => new Promise((resolve, reject) => MichelangeloSingleton.Coroutine(LoginCoroutine(email, password, resolve, reject)));
-
         private static IEnumerator<UnityWebRequestAsyncOperation> LoginCoroutine(string email, string password, Action resolve, Action<Exception> reject) {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) {
                 reject(new ApplicationException("Login request error:\nFill out both email and password before logging in."));
                 yield break;
             }
+
             using (var getRequest = UnityWebRequest.Get(URLConstants.LogInAPI)) {
                 yield return getRequest.SendWebRequest();
                 if (CheckAndLogError(getRequest)) {
                     reject(GenerateException("Login request error:\n", getRequest));
                     yield break;
                 }
-                Debug.Log(getRequest.Info());
                 
                 RequestTokenCookie = GetCookie(RequestTokenName, getRequest);
                 if (string.IsNullOrEmpty(RequestTokenCookie)) {
@@ -62,6 +60,7 @@ namespace Michelangelo.Session {
                     reject(new ApplicationException("Login request error:\nFailed to get login request token."));
                     yield break;
                 }
+
                 var form = new WWWForm();
                 form.AddField(RequestTokenName, requestToken);
                 form.AddField("Email", email);
@@ -74,7 +73,6 @@ namespace Michelangelo.Session {
                         reject(GenerateException("Login request error:\n", postRequest));
                         yield break;
                     }
-                    Debug.Log(postRequest.Info());
 
                     VerificationTokenCookie = GetCookie(VerificationTokenName, postRequest);
                     if (string.IsNullOrEmpty(VerificationTokenCookie)) {
@@ -89,33 +87,29 @@ namespace Michelangelo.Session {
 
         #region Logout
         public static IPromise Logout() => new Promise((resolve, reject) => MichelangeloSingleton.Coroutine(LogoutCoroutine(resolve, reject)));
-
         private static IEnumerator<UnityWebRequestAsyncOperation> LogoutCoroutine(Action resolve, Action<Exception> reject) {
             using (var getRequest = UnityWebRequest.Get(URLConstants.MainPage).WithCookies(CookiesString)) {
                 yield return getRequest.SendWebRequest();
-
                 if (CheckAndLogError(getRequest)) {
                     reject(GenerateException("Logout request error:\n", getRequest));
                     yield break;
                 }
-                Debug.Log(getRequest.Info());
 
                 var requestToken = GetRequestToken(getRequest.GetResponseBody());
                 if (string.IsNullOrEmpty(requestToken)) {
                     reject(new ApplicationException("Logout request error:\nFailed to get logout request token."));
                     yield break;
                 }
+
                 var form = new WWWForm();
                 form.AddField(RequestTokenName, requestToken);
 
                 using (var postRequest = UnityWebRequest.Post(URLConstants.LogOutAPI, form).NoRedirect().WithCookies(CookiesString)) {
                     yield return postRequest.SendWebRequest();
-
                     if (postRequest.error != "Redirect limit exceeded" && CheckAndLogError(postRequest)) {
                         reject(GenerateException("Logout request error:\n", postRequest));
                         yield break;
                     }
-                    Debug.Log(postRequest.Info());
 
                     DeleteCookies();
                     resolve();
@@ -124,25 +118,8 @@ namespace Michelangelo.Session {
         }
         #endregion
 
-        #region GetMainPage
-        public static IPromise GetMainPage() => new Promise((resolve, reject) => MichelangeloSingleton.Coroutine(GetMainPageCoroutine(resolve, reject)));
-
-        private static IEnumerator<UnityWebRequestAsyncOperation> GetMainPageCoroutine(Action resolve, Action<Exception> reject) {
-            using (var getRequest = UnityWebRequest.Get(URLConstants.MainPage).WithCookies(CookiesString)) {
-                yield return getRequest.SendWebRequest();
-                if (CheckAndLogError(getRequest)) {
-                    reject(GenerateException("Main page request error:\n", getRequest));
-                    yield break;
-                }
-                Debug.Log(getRequest.Info());
-                resolve();
-            }
-        }
-        #endregion
-
         #region GetUserInfo
         public static IPromise<UserInfo> GetUserInfo() => new Promise<UserInfo>((resolve, reject) => MichelangeloSingleton.Coroutine(GetUserInfoCoroutine(resolve, reject)));
-
         private static IEnumerator<UnityWebRequestAsyncOperation> GetUserInfoCoroutine(Action<UserInfo> resolve, Action<Exception> reject) {
             using (var getRequest = UnityWebRequest.Get(URLConstants.MeAPI).WithCookies(CookiesString)) {
                 yield return getRequest.SendWebRequest();
@@ -150,31 +127,23 @@ namespace Michelangelo.Session {
                     reject(GenerateException("User info request error:\n", getRequest));
                     yield break;
                 }
-                Debug.Log(getRequest.Info());
                 resolve(UserInfo.FromJson(getRequest.GetResponseBody()));
             }
         }
         #endregion
 
         #region GetGrammarArray
-        public static IPromise<Grammar[]> GetMyGrammarArray() 
-            => new Promise<Grammar[]>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarArrayCoroutine(URLConstants.GrammarAPI, resolve, reject)));
-
-        public static IPromise<Grammar[]> GetSharedGrammarArray() 
-            => new Promise<Grammar[]>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarArrayCoroutine(URLConstants.SharedAPI, resolve, reject)));
-
-        public static IPromise<Grammar[]> GetTutorialGrammarArray() 
-            => new Promise<Grammar[]>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarArrayCoroutine(URLConstants.TutorialAPI, resolve, reject)));
-
+        public static IPromise<Grammar[]> GetMyGrammarArray() => new Promise<Grammar[]>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarArrayCoroutine(URLConstants.GrammarAPI, resolve, reject)));
+        public static IPromise<Grammar[]> GetSharedGrammarArray() => new Promise<Grammar[]>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarArrayCoroutine(URLConstants.SharedAPI, resolve, reject)));
+        public static IPromise<Grammar[]> GetTutorialGrammarArray() => new Promise<Grammar[]>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarArrayCoroutine(URLConstants.TutorialAPI, resolve, reject)));
         private static IEnumerator<UnityWebRequestAsyncOperation> GetGrammarArrayCoroutine(string api, Action<Grammar[]> resolve, Action<Exception> reject) {
             using (var getRequest = UnityWebRequest.Get(api).WithCookies(CookiesString)) {
                 yield return getRequest.SendWebRequest();
-
                 if (CheckAndLogError(getRequest)) {
                     reject(GenerateException("Grammar array request error:\n", getRequest));
                     yield break;
                 }
-                Debug.Log(getRequest.Info());
+
                 var grammarArray = Grammar.FromJSONArray(getRequest.GetResponseBody());
                 if (api == URLConstants.TutorialAPI) {
                     foreach (var grammar in grammarArray) {
@@ -188,7 +157,6 @@ namespace Michelangelo.Session {
 
         #region CreateGrammar
         public static IPromise<Grammar> CreateGrammar() => new Promise<Grammar>((resolve, reject) => MichelangeloSingleton.Coroutine(CreateGrammarCoroutine(resolve, reject)));
-
         private static IEnumerator<UnityWebRequestAsyncOperation> CreateGrammarCoroutine(Action<Grammar> resolve, Action<Exception> reject) {
             using (var putRequest = UnityWebRequest.Put(URLConstants.GrammarAPI, "null").WithCookies(CookiesString)) {
                 yield return putRequest.SendWebRequest();
@@ -196,7 +164,6 @@ namespace Michelangelo.Session {
                     reject(GenerateException("Create grammar request error:\n", putRequest));
                     yield break;
                 }
-                Debug.Log(putRequest.Info());
                 resolve(Grammar.FromJSON(putRequest.GetResponseBody()));
             }
         }
@@ -204,18 +171,14 @@ namespace Michelangelo.Session {
 
         #region GetGrammar
         public static IPromise<Grammar> GetGrammar(string grammarId) => new Promise<Grammar>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarCoroutine(URLConstants.GrammarAPI, grammarId, resolve, reject)));
-
         public static IPromise<Grammar> GetTutorial(string grammarId) => new Promise<Grammar>((resolve, reject) => MichelangeloSingleton.Coroutine(GetGrammarCoroutine(URLConstants.TutorialAPI, grammarId, resolve, reject)));
-
         private static IEnumerator<UnityWebRequestAsyncOperation> GetGrammarCoroutine(string api, string grammarId, Action<Grammar> resolve, Action<Exception> reject) {
             using (var getRequest = UnityWebRequest.Get(api + "/" + grammarId).WithCookies(CookiesString)) {
                 yield return getRequest.SendWebRequest();
-
                 if (CheckAndLogError(getRequest)) {
                     reject(GenerateException("Get grammar request error:\n", getRequest));
                     yield break;
                 }
-                Debug.Log(getRequest.Info());
                 resolve(Grammar.FromJSON(getRequest.GetResponseBody()));
             }
         }
@@ -223,25 +186,20 @@ namespace Michelangelo.Session {
 
         #region DeleteGrammar
         public static IPromise DeleteGrammar(string grammarId) => new Promise((resolve, reject) => MichelangeloSingleton.Coroutine(DeleteGrammarCoroutine(grammarId, resolve, reject)));
-
         private static IEnumerator<UnityWebRequestAsyncOperation> DeleteGrammarCoroutine(string grammarId, Action resolve, Action<Exception> reject) {
             using (var deleteRequest = UnityWebRequest.Delete(URLConstants.GrammarAPI + "/" + grammarId).WithCookies(CookiesString)) {
                 yield return deleteRequest.SendWebRequest();
-
                 if (CheckAndLogError(deleteRequest)) {
                     reject(GenerateException("Delete grammar request error:\n", deleteRequest));
                     yield break;
                 }
-                Debug.Log(deleteRequest.Info());
                 resolve();
             }
         }
         #endregion
 
         #region GenerateGrammar
-        public static IPromise<GenerateGrammarResponse> GenerateGrammar(Grammar grammar) 
-            => new Promise<GenerateGrammarResponse>((resolve, reject) => MichelangeloSingleton.Coroutine(GenerateGrammarCoroutine(grammar, resolve, reject)));
-
+        public static IPromise<GenerateGrammarResponse> GenerateGrammar(Grammar grammar) => new Promise<GenerateGrammarResponse>((resolve, reject) => MichelangeloSingleton.Coroutine(GenerateGrammarCoroutine(grammar, resolve, reject)));
         private static IEnumerator<UnityWebRequestAsyncOperation> GenerateGrammarCoroutine(Grammar grammar, Action<GenerateGrammarResponse> resolve, Action<Exception> reject) {
             var form = new WWWForm();
             form.AddField("ID", grammar.id);
@@ -257,9 +215,9 @@ namespace Michelangelo.Session {
                     reject(GenerateException("Generate grammar request error:\n", postRequest));
                     yield break;
                 }
-                Debug.Log(postRequest.Info());
+
                 string rawJson;
-                string errorMessage = string.Empty;
+                string errorMessage = null;
                 bool isGenerating;
                 var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
                 do {
@@ -269,8 +227,6 @@ namespace Michelangelo.Session {
                             reject(GenerateException("Generate grammar request error:\n", getRequest));
                             yield break;
                         }
-
-                        Debug.Log(getRequest.Info());
                         rawJson = getRequest.GetResponseBody();
                         var match = Regex.Match(rawJson, "\"e\":\"([^\"]+)\"");
                         if (match.Success) {
@@ -290,10 +246,11 @@ namespace Michelangelo.Session {
 
         private static bool CheckAndLogError(UnityWebRequest request) {
             if (!request.isNetworkError && !request.isHttpError) {
+                Debug.Log(request.Info());
                 return false;
             }
-
             Debug.LogError(request.Info());
+
             if (request.responseCode == 401) {
                 DeleteCookies();
                 Debug.LogError("Unauthorized response code received. Deleting cookies...");
