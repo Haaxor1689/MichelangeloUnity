@@ -5,24 +5,39 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
-    public class MichelangeloObject : UnityEngine.MonoBehaviour {
+    public class MichelangeloObject : MonoBehaviour {
 
-        [SerializeField][HideInInspector]
+        [SerializeField]
         private string id;
 
-        [SerializeField][HideInInspector]
+        [SerializeField]
         private bool isInEditMode;
+
+        [SerializeField]
+        private ModelMesh modelMesh;
+
         public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
 
+        public bool HasMesh {
+            get {
+                for (var i = 0; i < transform.childCount; ++i) {
+                    if (transform.GetChild(i).name == MichelangeloMesh.MichelangeloMeshObjectName) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         public IPromise<GenerateGrammarResponse> Generate() {
-            MichelangeloSession.GrammarList[Grammar.id].code = Grammar.code;
             return MichelangeloSession.GenerateGrammar(Grammar.id).Then(response => CreateMesh(response.Mesh));
         }
 
         private void CreateMesh(ModelMesh model) {
+            modelMesh = model;
             DeleteOldMeshes();
-            foreach (var primitive in model.Primitives) {
-                MichelangeloMesh.Construct(transform, primitive, model.Materials[primitive.Material]);
+            foreach (var primitive in modelMesh.Primitives) {
+                MichelangeloMesh.Construct(transform, primitive, modelMesh.Materials[primitive.Material]);
             }
         }
 
