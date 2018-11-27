@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Michelangelo.Scripts {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class MichelangeloMesh : UnityEngine.MonoBehaviour {
+    public class MichelangeloMesh : MonoBehaviour {
 
         public const string MichelangeloMeshObjectName = "MichelangeloPartialMesh";
         
@@ -28,8 +28,28 @@ namespace Michelangelo.Scripts {
         }
 
         private void OnDrawGizmosSelected() {
-            if (Selection.activeGameObject == gameObject) {
-                parentObject.SetSelection();
+            if (!parentObject.IsInEditMode) {
+                if (Selection.activeGameObject == gameObject) {
+                    Selection.objects = new Object[] { parentObject.gameObject };
+                }
+                return;
+            }
+
+            if (Selection.activeGameObject == parentObject.gameObject) {
+                return;
+            }
+
+            // Draw vertices and normals
+            for (var i = 0; i < meshFilter.sharedMesh.vertices.Length; i++) {
+                var sharedMeshVertex = meshFilter.sharedMesh.vertices[i];
+                sharedMeshVertex.Scale(transform.localScale);
+                sharedMeshVertex = transform.localRotation * sharedMeshVertex;
+                sharedMeshVertex += transform.position;
+                
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(sharedMeshVertex, sharedMeshVertex + transform.localRotation * meshFilter.sharedMesh.normals[i] * 0.2f);
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(sharedMeshVertex, 0.02f);
             }
         }
 

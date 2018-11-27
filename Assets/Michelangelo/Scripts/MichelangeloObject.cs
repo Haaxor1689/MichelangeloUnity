@@ -16,6 +16,7 @@ namespace Michelangelo.Scripts {
         [SerializeField]
         private ModelMesh modelMesh;
 
+        public bool IsInEditMode => isInEditMode;
         public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
 
         public bool HasMesh {
@@ -56,12 +57,6 @@ namespace Michelangelo.Scripts {
             var michelangeloObject = newObject.AddComponent<MichelangeloObject>();
             michelangeloObject.id = grammar.id;
             return newObject;
-        }
-        
-        public void SetSelection() {
-            if (!isInEditMode) {
-                Selection.objects = new Object[] { gameObject };
-            }
         }
     }
 }
