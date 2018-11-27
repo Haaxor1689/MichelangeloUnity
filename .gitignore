@@ -49,3 +49,6 @@ Assets/Dialoguer/
 Assets/Dialoguer.meta
 Assets/DialoguerOutput/
 Assets/DialoguerOutput.meta
+
+# Michelangelo grammars
+Assets/Michelangelo/GrammarSources/*Grammar.txt*
