@@ -10,18 +10,18 @@ namespace Michelangelo.Utility {
         public static T[] FromJsonArray<T>(string json) {
             var newJson = Prefix + json + "}";
             var wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
-            return wrapper.Array;
+            return wrapper.array;
         }
         
         public static string ToJsonArray<T>(T[] data) {
-            var wrapper = new Wrapper<T> { Array = data };
+            var wrapper = new Wrapper<T> { array = data };
             var newJson = JsonUtility.ToJson(wrapper);
             return newJson.Substring(Prefix.Length, newJson.Length - Prefix.Length - 1);
         }
         
         [Serializable]
         private class Wrapper<T> {
-            public T[] Array;
+            public T[] array;
         }
     }
 }
