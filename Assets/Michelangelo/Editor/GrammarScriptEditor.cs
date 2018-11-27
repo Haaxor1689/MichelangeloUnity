@@ -6,13 +6,13 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
-    [CustomEditor(typeof(MichelangeloObject))]
-    public class LevelScriptEditor : UnityEditor.Editor {
+    [CustomEditor(typeof(GrammarScript))]
+    public class GrammarScriptEditor : UnityEditor.Editor {
         private string errorMessage;
         private bool isLoading;
         private bool isSynced;
 
-        private MichelangeloObject Script => (MichelangeloObject) target;
+        private GrammarScript Script => (GrammarScript) target;
 
         public override void OnInspectorGUI() {
             if (!WebAPI.IsAuthenticated) {

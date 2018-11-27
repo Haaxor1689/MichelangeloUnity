@@ -6,13 +6,13 @@ using UnityEngine;
 namespace Michelangelo.Scripts {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class MichelangeloMesh : MonoBehaviour {
+    public class Element : MonoBehaviour {
 
-        public const string MichelangeloMeshObjectName = "MichelangeloPartialMesh";
+        public const string ObjectName = "MichelangeloElement";
         
         private MeshFilter meshFilter => GetComponent<MeshFilter>();
         private MeshRenderer meshRenderer => GetComponent<MeshRenderer>();
-        private MichelangeloObject parentObject => transform.parent.GetComponent<MichelangeloObject>();
+        private IObjectBase parentObject => transform.parent.GetComponent<IObjectBase>();
 
         private void CreateMesh(Primitive primitive, Material material) {
             // Transform
@@ -54,10 +54,10 @@ namespace Michelangelo.Scripts {
         }
 
         public static GameObject Construct(Transform parent, Primitive primitive, Material material) {
-            var newObject = new GameObject(MichelangeloMeshObjectName);
+            var newObject = new GameObject(ObjectName);
             newObject.hideFlags = HideFlags.NotEditable;
             newObject.transform.SetParent(parent);
-            var michelangeloMesh = newObject.AddComponent<MichelangeloMesh>();
+            var michelangeloMesh = newObject.AddComponent<Element>();
             newObject.GetComponent<MeshFilter>().hideFlags = HideFlags.HideInInspector;
             newObject.GetComponent<MeshRenderer>().hideFlags = HideFlags.HideInInspector;
             michelangeloMesh.CreateMesh(primitive, material);

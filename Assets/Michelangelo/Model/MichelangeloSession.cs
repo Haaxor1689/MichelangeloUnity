@@ -70,7 +70,7 @@ namespace Michelangelo.Model {
             }
             var grammar = GrammarList[grammarId];
 
-            var newObject = MichelangeloObject.Construct(grammar);
+            var newObject = GrammarScript.Construct(grammar);
             Selection.objects = new UnityEngine.Object[] { newObject };
             return Promise.Resolved();
         }
