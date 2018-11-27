@@ -27,6 +27,12 @@ namespace Michelangelo.Editor {
         [MenuItem("Window/Michelangelo")]
         public static void ShowWindow() => GetWindow<MichelangeloEditorWindow>("Michelangelo");
 
+        public static void OpenMichelangeloWindowButton() {
+            if (GUILayout.Button("Open Michelangelo window", GUILayout.Height(40.0f))) {
+                ShowWindow();
+            }
+        }
+
         private void OnGUI() {
             if (isUnreachable) {
                 EditorGUILayout.HelpBox("Michelangelo web server seems to be unreachable\nPlease try again later...", MessageType.Error);

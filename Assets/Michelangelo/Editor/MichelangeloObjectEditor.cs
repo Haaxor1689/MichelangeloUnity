@@ -16,10 +16,12 @@ namespace Michelangelo.Editor {
 
         public override void OnInspectorGUI() {
             if (!WebAPI.IsAuthenticated) {
-                EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first, through Window -> Michelangelo.", MessageType.Warning);
+                EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first.", MessageType.Warning);
+                MichelangeloEditorWindow.OpenMichelangeloWindowButton();
                 GUI.enabled = false;
             } else if (Script.Grammar == Grammar.Placeholder) {
                 EditorGUILayout.HelpBox("Grammar this object is referring to no longer exists or wasn't downloaded. Try refreshing Michelangelo window.", MessageType.Warning);
+                MichelangeloEditorWindow.OpenMichelangeloWindowButton();
                 GUI.enabled = false;
             } else if (isLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
