@@ -6,6 +6,16 @@ using UnityEngine.Networking;
 
 namespace Michelangelo.Utility {
     public static class Extensions {
+        public static void Then(this UnityWebRequest request, Action<UnityWebRequest> completion) {
+            request.SendWebRequest().completed += operation => {
+                try {
+                    completion.Invoke(((UnityWebRequestAsyncOperation) operation).webRequest);
+                } finally {
+                    request.Dispose();
+                }
+            };
+        }
+
         public static UnityWebRequest NoRedirect(this UnityWebRequest request) {
             request.redirectLimit = 0;
             return request;
@@ -76,6 +86,8 @@ namespace Michelangelo.Utility {
             }
             return Regex.Replace(className, "[^\\p{Lu}\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\p{Nl}\\p{Mn}\\p{Mc}\\p{Nd}\\p{Pc}\\p{Cf}]", "_");
         }
+
+        public static int Clamp(this int value, int min, int max) => value < min ? min : value > max ? max : value;
 
         public static Quaternion ExtractRotation(this Matrix4x4 matrix) {
             Vector3 forward;
