@@ -8,7 +8,7 @@ namespace Michelangelo.Utility {
             ResponseCode = responseCode;
         }
 
-        public static string MessageFromResponseCode(long responseCode) {
+        private static string MessageFromResponseCode(long responseCode) {
             switch (responseCode) {
             case 400: return "400 Bad Request";
             case 401: return "401 Unauthorized";
