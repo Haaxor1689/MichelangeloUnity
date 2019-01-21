@@ -89,7 +89,12 @@ namespace Michelangelo.Model {
                 GUI.enabled = original;
             }
             if (GUILayout.Button("Download", GUILayout.ExpandWidth(true)) 
-             && (SourceCode == null || EditorUtility.DisplayDialog("Download server version of grammar?", "Any unsaved local changes to the grammar will be lost.", "Download", "Cancel"))) {
+             && (SourceCode == null || 
+                 EditorUtility.DisplayDialog(
+                     "Download server version of grammar?",
+                     "Any unsaved local changes to the grammar will be lost.",
+                     "Download",
+                     "Cancel"))) {
                 MichelangeloSession.UpdateGrammar(id).Then(_ => {
                     CreateSourceFile();
                     onResolved(); }).Catch(onRejected);

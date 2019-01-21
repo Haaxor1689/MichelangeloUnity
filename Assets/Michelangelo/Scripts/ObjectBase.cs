@@ -1,5 +1,6 @@
 ﻿using Michelangelo.Model;
 using Michelangelo.Model.Render;
+using Michelangelo.Utility;
 using RSG;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace Michelangelo.Scripts {
             }
         }
 
+        public bool IsFlatShaded;
+
         public abstract IPromise<GenerateGrammarResponse> Generate();
 
         protected void CreateMesh(ModelMesh model) {
@@ -42,6 +45,17 @@ namespace Michelangelo.Scripts {
                     --i;
                 }
             }
+            IsFlatShaded = false;
+        }
+
+        public void ToFlatShaded() {
+            for (var i = 0; i < transform.childCount; ++i) {
+                var child = transform.GetChild(i);
+                if (child.name == Element.ObjectName) {
+                    MeshUtilities.ToFlatShaded(child.GetComponent<MeshFilter>().sharedMesh);
+                }
+            }
+            IsFlatShaded = true;
         }
     }
 }
