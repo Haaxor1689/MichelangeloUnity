@@ -10,6 +10,7 @@ namespace Michelangelo.Model {
     [Serializable]
     public class Grammar {
         public static readonly Grammar Placeholder = new Grammar { name = "...", type = "..." };
+
         public string code;
         public string id;
         public bool isOwner;
@@ -36,7 +37,7 @@ namespace Michelangelo.Model {
                 Debug.LogWarning($"Replacing old code file for \"{name}\".");
             }
 
-            File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), SourceFilePath);
+            File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), SourceFilePath, true);
             File.WriteAllText(SourceFilePath, code);
             AssetDatabase.Refresh();
             return true;
@@ -81,19 +82,17 @@ namespace Michelangelo.Model {
         private void DrawCodeField(Action onResolved, Action<Exception> onRejected) {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Code", GUILayout.Width(EditorGUIUtility.labelWidth - GUI.skin.box.padding.left));
-            if (string.IsNullOrEmpty(code)) {
-                if (GUILayout.Button("Download", GUILayout.ExpandWidth(true))) {
-                    MichelangeloSession.UpdateGrammar(id).Then(_ => onResolved).Catch(onRejected);
-                }
-            } else if (SourceCode == null) {
-                if (GUILayout.Button("Create file", GUILayout.ExpandWidth(true))) {
-                    CreateSourceFile();
-                }
-            } else {
+            if (SourceCode != null) {
                 var original = GUI.enabled;
                 GUI.enabled = false;
                 EditorGUILayout.ObjectField(SourceCode, typeof(TextAsset), false, GUILayout.ExpandWidth(true));
                 GUI.enabled = original;
+            }
+            if (GUILayout.Button("Download", GUILayout.ExpandWidth(true)) 
+             && (SourceCode == null || EditorUtility.DisplayDialog("Download server version of grammar?", "Any unsaved local changes to the grammar will be lost.", "Download", "Cancel"))) {
+                MichelangeloSession.UpdateGrammar(id).Then(_ => {
+                    CreateSourceFile();
+                    onResolved(); }).Catch(onRejected);
             }
             EditorGUILayout.EndHorizontal();
         }

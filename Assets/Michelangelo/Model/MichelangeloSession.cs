@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
@@ -53,9 +54,12 @@ namespace Michelangelo.Model {
         public static IPromise<IEnumerable<Grammar[]>> RefreshGrammarList() {
             grammarList = new Dictionary<string, Grammar>();
 
-            Action<Grammar[]> appendGrammars = x => {
-                foreach (var g in x) {
-                    grammarList.Add(g.id, g);
+            Action<Grammar[]> appendGrammars = retrievedGrammars => {
+                foreach (var grammar in retrievedGrammars) {
+                    if (grammar.SourceCode != null) {
+                        grammar.code = grammar.SourceCode.text;
+                    }
+                    grammarList.Add(grammar.id, grammar);
                 }
             };
             return Promise<Grammar[]>.All(WebAPI.GetMyGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load own grammars.", x); }),
