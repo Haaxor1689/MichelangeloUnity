@@ -19,6 +19,7 @@ namespace Michelangelo.Editor {
         private string loginEmail;
         private string loginPassword;
 
+        private bool localOnly;
         private Vector2 scrollPos;
         private string nameFilter;
         private bool hasChangedNameFilter;
@@ -164,9 +165,10 @@ namespace Michelangelo.Editor {
             DrawNameFilter();
             sourceFilter = (GrammarSource) EditorGUILayout.EnumPopup("Source", sourceFilter);
             grammarsPerPage = EditorGUILayout.IntField(new GUIContent("Items per page", "0 = unlimited"), grammarsPerPage);
+            localOnly = EditorGUILayout.Toggle(new GUIContent("Local only", "Filter out not downloaded grammars."), localOnly);
         }
 
-        private bool FilterGrammar(Grammar g) => SourceFilter(g) && NameFilter(g);
+        private bool FilterGrammar(Grammar g) => SourceFilter(g) && NameFilter(g) && LocalOnlyFilter(g);
 
         private bool NameFilter(Grammar g) => string.IsNullOrEmpty(nameFilter) || g.name.IndexOf(nameFilter, StringComparison.InvariantCultureIgnoreCase) != -1;
 
@@ -174,6 +176,8 @@ namespace Michelangelo.Editor {
                                                 sourceFilter == GrammarSource.Mine && g.isOwner ||
                                                 sourceFilter == GrammarSource.Shared && g.shared ||
                                                 sourceFilter == GrammarSource.Tutorial && g.isTutorial;
+
+        private bool LocalOnlyFilter(Grammar g) => !localOnly || g.SourceCode != null;
 
         private void DrawNameFilter() {
             EditorGUILayout.BeginHorizontal();
