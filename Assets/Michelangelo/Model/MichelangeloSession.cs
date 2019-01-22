@@ -11,14 +11,16 @@ using UnityEngine;
 
 namespace Michelangelo.Model {
     public static class MichelangeloSession {
-        public static UserInfo User => user ?? (user = UserInfoFromPrefs);
-        public static IReadOnlyDictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = GrammarListFromPrefs);
-
         private const string UserInfoPrefsKey = Constants.EditorPrefsPrefix + "UserInfo";
+        private const string GrammarListPrefsKey = Constants.EditorPrefsPrefix + "GrammarList";
+
+        public static UserInfo User => user ?? (user = UserInfoFromPrefs);
+
         private static UserInfo UserInfoFromPrefs => UserInfo.FromJson(EditorPrefs.GetString(UserInfoPrefsKey));
         private static UserInfo user;
         
-        private const string GrammarListPrefsKey = Constants.EditorPrefsPrefix + "GrammarList";
+        public static IReadOnlyDictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = GrammarListFromPrefs);
+
         private static Dictionary<string, Grammar> GrammarListFromPrefs => JsonArray.FromJsonArray<Grammar>(EditorPrefs.GetString(GrammarListPrefsKey)).ToDictionary(x => x.id);
         private static Dictionary<string, Grammar> grammarList;
 

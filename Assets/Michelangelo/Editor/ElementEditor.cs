@@ -12,6 +12,7 @@ namespace Michelangelo.Editor {
             GUI.enabled = true;
             if (GUILayout.Button("Select parent object", GUILayout.Height(40.0f))) {
                 Selection.objects = new Object[] { Script.transform.parent.gameObject };
+                Selection.activeObject = Script.transform.parent.gameObject;
             }
             GUI.enabled = false;
         }

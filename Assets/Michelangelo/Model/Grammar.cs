@@ -71,7 +71,7 @@ namespace Michelangelo.Model {
             if (showInstantiate && GUILayout.Button("Instantiate")) {
                 MichelangeloSession.InstantiateGrammar(id).Then(onResolved).Catch(onRejected);
             }
-            if (isOwner && GUILayout.Button("Delete") && EditorUtility.DisplayDialog("Delete grammar?", $"Are you sure you want to delete grammar \"{name}\"?", "Delete", "Cancel")) {
+            if (isOwner && GUILayout.Button("Delete Grammar") && EditorUtility.DisplayDialog("Delete grammar?", $"Are you sure you want to delete grammar \"{name}\"?", "Delete", "Cancel")) {
                 MichelangeloSession.DeleteGrammar(id).Then(onResolved).Catch(onRejected);
             }
             EditorGUILayout.EndHorizontal();
