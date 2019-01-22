@@ -7,6 +7,7 @@ using Michelangelo.Model.Render;
 using Michelangelo.Scripts;
 using Michelangelo.Utility;
 using RSG;
+using SimpleJSON;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -232,7 +233,8 @@ namespace Michelangelo.Session {
                         if (match.Success) {
                             errorMessage = Regex.Replace(match.Groups[1].Value, "<br\\/>", "\n");
                         }
-                        isGenerating = Regex.IsMatch(rawJson, "\"ml\":\\{\\},\"o\":\\[\\],");
+                        var json = JSON.Parse(rawJson);
+                        isGenerating = json["o"] == null || json["o"].IsNull || json["o"].AsArray.Count == 0;
                     }
                 } while (isGenerating);
                 resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(rawJson), ErrorMessage = errorMessage });
