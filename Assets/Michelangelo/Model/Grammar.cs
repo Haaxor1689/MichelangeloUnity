@@ -32,7 +32,7 @@ namespace Michelangelo.Model {
         public string SourceFilePathRelative => Path.Combine(Constants.GrammarCodeFolderRelative, FileName);
         public string SourceFilePath => Path.Combine(Constants.GrammarCodeFolder, FileName);
 
-        public bool CreateSourceFile() {
+        public void SaveSourceCodeFile() {
             if (File.Exists(SourceFilePath)) {
                 Debug.LogWarning($"Replacing old code file for \"{name}\".");
             }
@@ -40,7 +40,6 @@ namespace Michelangelo.Model {
             File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), SourceFilePath, true);
             File.WriteAllText(SourceFilePath, code);
             AssetDatabase.Refresh();
-            return true;
         }
 
         public static Grammar FromJSON(string json) => JsonUtility.FromJson<Grammar>(json);
@@ -95,9 +94,10 @@ namespace Michelangelo.Model {
                      "Any unsaved local changes to the grammar will be lost.",
                      "Download",
                      "Cancel"))) {
-                MichelangeloSession.UpdateGrammar(id).Then(_ => {
-                    CreateSourceFile();
-                    onResolved(); }).Catch(onRejected);
+                MichelangeloSession.UpdateGrammar(id).Then(g => {
+                    g.SaveSourceCodeFile();
+                    onResolved();
+                }).Catch(onRejected);
             }
             EditorGUILayout.EndHorizontal();
         }
