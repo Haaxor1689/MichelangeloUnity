@@ -11,6 +11,9 @@ using SimpleJSON;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Playables;
+using MessagePack;
+using Michelangelo.Model.MsgSerialized;
 
 namespace Michelangelo.Session {
     public static class WebAPI {
@@ -18,22 +21,16 @@ namespace Michelangelo.Session {
 
         private const string SetCookieName = "Set-Cookie";
         private const string RequestTokenName = "__RequestVerificationToken";
-        private const string RequestTokenPrefsKey = Constants.EditorPrefsPrefix + RequestTokenName;
         private const string VerificationTokenName = ".AspNet.ApplicationCookie";
         private const string VerificationTokenPrefsKey = Constants.EditorPrefsPrefix + VerificationTokenName;
-
-        private static string RequestTokenCookie {
-            get { return EditorPrefs.GetString(RequestTokenPrefsKey); }
-            set { EditorPrefs.SetString(RequestTokenPrefsKey, value); }
-        }
 
         private static string VerificationTokenCookie {
             get { return EditorPrefs.GetString(VerificationTokenPrefsKey); }
             set { EditorPrefs.SetString(VerificationTokenPrefsKey, value); }
         }
         
-        private static string CookiesString => $"{RequestTokenName}={RequestTokenCookie}; {VerificationTokenName}={VerificationTokenCookie};";
-        public static bool IsAuthenticated => !string.IsNullOrEmpty(RequestTokenCookie) && !string.IsNullOrEmpty(VerificationTokenCookie);
+        private static string CookiesString => $"{VerificationTokenName}={VerificationTokenCookie};";
+        public static bool IsAuthenticated => !string.IsNullOrEmpty(VerificationTokenCookie);
         
         #region Login
         public static IPromise Login(string email, string password) => new Promise((resolve, reject) => MichelangeloSingleton.Coroutine(LoginCoroutine(email, password, resolve, reject)));
@@ -47,12 +44,6 @@ namespace Michelangelo.Session {
                 yield return getRequest.SendWebRequest();
                 if (CheckAndLogError(getRequest)) {
                     reject(GenerateException("Login request error:\n", getRequest));
-                    yield break;
-                }
-                
-                RequestTokenCookie = GetCookie(RequestTokenName, getRequest);
-                if (string.IsNullOrEmpty(RequestTokenCookie)) {
-                    reject(new ApplicationException("Login request error:\nFailed to get request verification token."));
                     yield break;
                 }
 
@@ -198,7 +189,7 @@ namespace Michelangelo.Session {
             }
         }
         #endregion
-
+        
         #region GenerateGrammar
         public static IPromise<GenerateGrammarResponse> GenerateGrammar(Grammar grammar) => new Promise<GenerateGrammarResponse>((resolve, reject) => MichelangeloSingleton.Coroutine(GenerateGrammarCoroutine(grammar, resolve, reject)));
         private static IEnumerator<UnityWebRequestAsyncOperation> GenerateGrammarCoroutine(Grammar grammar, Action<GenerateGrammarResponse> resolve, Action<Exception> reject) {
@@ -216,35 +207,48 @@ namespace Michelangelo.Session {
                     reject(GenerateException("Generate grammar request error:\n", postRequest));
                     yield break;
                 }
-
-                string rawJson;
+                
                 string errorMessage = null;
                 bool isGenerating;
-                var token = new Regex("\"img\":\"(?<t>.*?)\"").Match(postRequest.GetResponseBody()).Groups["t"].Value;
+                var response = MessagePackSerializer.Deserialize<PostResponseModel>(postRequest.downloadHandler.data);
+                var token = response.IMG;
+                
                 do {
                     using (var getRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(CookiesString)) {
                         yield return getRequest.SendWebRequest();
+                        if (CancelGeneration) {
+                            CancelGeneration = false;
+                            reject(new ApplicationException("Generate grammar request error:\nGeneration canceled by user."));
+                            yield break;
+                        }
                         if (CheckAndLogError(getRequest)) {
                             reject(GenerateException("Generate grammar request error:\n", getRequest));
                             yield break;
                         }
-                        rawJson = getRequest.GetResponseBody();
-                        var match = Regex.Match(rawJson, "\"e\":\"([^\"]+)\"");
-                        if (match.Success) {
-                            errorMessage = Regex.Replace(match.Groups[1].Value, "<br\\/>", "\n");
+                        response = MessagePackSerializer.Deserialize<PostResponseModel>(getRequest.downloadHandler.data);
+                        var rawError = response.E;
+                        if (!String.IsNullOrEmpty(rawError)) {
+                            errorMessage = Regex.Replace(rawError, "<br\\/>", "\n");
                         }
-                        var json = JSON.Parse(rawJson);
-                        isGenerating = json["o"] == null || json["o"].IsNull || json["o"].AsArray.Count == 0;
+                        isGenerating = response.O == null || response.O?.Length == 0;
                     }
                 } while (isGenerating);
-                resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(rawJson), ErrorMessage = errorMessage });
+                resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(response), ErrorMessage = errorMessage });
             }
         }
+
+        public static bool CancelGeneration;
         #endregion
 
         #region Helper methods
         private static string GetRequestToken(string source) => RequestTokenRegex.Match(source).ToString().Split('\"').Last();
-        private static string GetCookie(string cookie, UnityWebRequest request) => new Regex(cookie + "=(?<c>[^;]*)").Match(request.GetResponseHeader(SetCookieName)).Groups["c"].Value;
+        private static string GetCookie(string cookie, UnityWebRequest request) {
+            var cookieHeader = request.GetResponseHeader(SetCookieName);
+            if (string.IsNullOrEmpty(cookieHeader)) {
+                return null;
+            }
+            return new Regex(cookie + "=(?<c>[^;]*)").Match(cookieHeader).Groups["c"].Value;
+        }
 
         private static bool CheckAndLogError(UnityWebRequest request) {
             if (!request.isNetworkError && !request.isHttpError) {
@@ -268,7 +272,6 @@ namespace Michelangelo.Session {
         }
 
         private static void DeleteCookies() {
-            RequestTokenCookie = null;
             VerificationTokenCookie = null;
         }
         #endregion

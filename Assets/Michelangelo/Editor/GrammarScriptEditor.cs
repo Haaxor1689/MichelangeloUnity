@@ -25,6 +25,9 @@ namespace Michelangelo.Editor {
                 GUI.enabled = false;
             } else if (isLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
+                if (GUILayout.Button("Stop generation", GUILayout.Height(40.0f))) {
+                    WebAPI.CancelGeneration = true;
+                }
                 GUI.enabled = false;
             }
             
