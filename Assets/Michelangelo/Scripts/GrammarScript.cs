@@ -17,6 +17,8 @@ namespace Michelangelo.Scripts {
             return MichelangeloSession.GenerateGrammar(Grammar.id).Then(response => CreateMesh(response.Mesh));
         }
 
+        public void SetId(string newId) => id = newId;
+
         /// <summary>
         /// Constructs new <see cref="GameObject"/> with correctly initialized <see cref="GrammarScript"/> with a grammar.
         /// </summary>

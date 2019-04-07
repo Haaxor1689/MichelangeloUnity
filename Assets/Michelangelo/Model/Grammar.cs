@@ -101,5 +101,14 @@ namespace Michelangelo.Model {
             }
             EditorGUILayout.EndHorizontal();
         }
+
+        public void DrawSimple(Action<string> onSelected) {
+            EditorGUILayout.BeginVertical("Box");
+            EditorGUILayout.LabelField(name, EditorStyles.boldLabel);
+            if (GUILayout.Button("Select")) {
+                onSelected(id);
+            }
+            EditorGUILayout.EndVertical();
+        }
     }
 }

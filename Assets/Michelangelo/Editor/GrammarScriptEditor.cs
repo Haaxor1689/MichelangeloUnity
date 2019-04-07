@@ -20,8 +20,10 @@ namespace Michelangelo.Editor {
                 MichelangeloEditorWindow.OpenMichelangeloWindowButton();
                 GUI.enabled = false;
             } else if (Script.Grammar == Grammar.Placeholder) {
-                EditorGUILayout.HelpBox("Grammar this object is referring to no longer exists or wasn't downloaded. Try refreshing Michelangelo window.", MessageType.Warning);
-                MichelangeloEditorWindow.OpenMichelangeloWindowButton();
+                EditorGUILayout.HelpBox("Grammar this object is referring to no longer exists. Try refreshing grammars in Michelangelo window or reconnect this object to other grammar.", MessageType.Warning);
+                if (GUILayout.Button("Reconnect to grammar", GUILayout.Height(40.0f))) {
+                    ReconnectGrammarPopup.Init(Script);
+                }
                 GUI.enabled = false;
             } else if (isLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
