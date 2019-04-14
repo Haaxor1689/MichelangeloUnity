@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Michelangelo.Editor {
     [CustomEditor(typeof(GrammarObject))]
     public class GrammarObjectEditor : ObjectBaseEditor {
-        private new GrammarObject Object => (GrammarObject) target;
+        private GrammarObject Object => (GrammarObject) target;
 
         protected override void RenderBody() {
             if (Object.Grammar == Grammar.Placeholder) {
@@ -20,16 +20,15 @@ namespace Michelangelo.Editor {
             Object.Grammar.Draw(Repaint, OnRejected);
             EditorGUILayout.Space();
             
-            if (string.IsNullOrEmpty(Object.Grammar.code) && GUI.enabled) {
+            if (string.IsNullOrEmpty(Object.Grammar.code)) {
                 EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
-                GUI.enabled = false;
             }
         }
 
         protected void Reload() {
             MichelangeloSession.UpdateGrammar(Object.Grammar.id)
                                .Then(grammar => {
-                                   isLoading = false;
+                                   IsLoading = false;
                                    Repaint();
                                })
                                .Catch(OnRejected);

@@ -1,5 +1,4 @@
 ﻿using System;
-using Michelangelo.Model;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
 using UnityEditor;
@@ -8,22 +7,24 @@ using UnityEngine;
 namespace Michelangelo.Editor {
     [CustomEditor(typeof(ObjectBase))]
     public class ObjectBaseEditor : UnityEditor.Editor {
-        protected string errorMessage;
-        protected bool isLoading;
-        protected bool isSynced;
+        protected string ErrorMessage;
+        protected bool IsLoading;
 
-        protected virtual ObjectBase Object => (ObjectBase) target;
+        protected virtual bool CanGenerate => true;
+        protected virtual string GenerateButtonTooltip => "Sends a request to Michelangelo API to generate new mesh. This will replace current mesh of the object if it has any.";
+
+        private ObjectBase Object => (ObjectBase) target;
 
         public override void OnInspectorGUI() {
             if (!WebAPI.IsAuthenticated) {
                 EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first.", MessageType.Warning);
                 MichelangeloEditorWindow.OpenMichelangeloWindowButton();
                 GUI.enabled = false;
-            } else if (isLoading) {
+            } else if (IsLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 if (GUILayout.Button("Stop generation", GUILayout.Height(40.0f))) {
                     WebAPI.CancelGeneration = true;
-                    isLoading = false;
+                    IsLoading = false;
                 }
                 GUI.enabled = false;
             }
@@ -49,19 +50,20 @@ namespace Michelangelo.Editor {
             }
 
             EditorGUILayout.Space();
-            if (GUILayout.Button("Generate new mesh", GUILayout.Height(40.0f))) {
+            GUI.enabled = GUI.enabled && CanGenerate;
+            if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
                 Async(Generate);
             }
 
             GUI.enabled = true;
-            if (!string.IsNullOrEmpty(errorMessage)) {
-                if (string.IsNullOrEmpty(errorMessage)) {
+            if (!string.IsNullOrEmpty(ErrorMessage)) {
+                if (string.IsNullOrEmpty(ErrorMessage)) {
                     return;
                 }
                 GUILayout.Space(20.0f);
-                EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
+                EditorGUILayout.HelpBox(ErrorMessage, MessageType.Error);
                 if (GUILayout.Button("Clear error message")) {
-                    errorMessage = null;
+                    ErrorMessage = null;
                 }
             }
         }
@@ -71,26 +73,26 @@ namespace Michelangelo.Editor {
         protected void Generate() {
             Object.Generate()
                   .Then(response => {
-                      errorMessage = response.ErrorMessage;
-                      isLoading = false;
+                      ErrorMessage = response.ErrorMessage;
+                      IsLoading = false;
                       Repaint();
                   })
                   .Catch(OnRejected);
         }
 
         protected void OnRejected(Exception error) {
-            errorMessage = error.Message;
-            isLoading = false;
+            ErrorMessage = error.Message;
+            IsLoading = false;
             Repaint();
             Debug.LogError(error);
         }
 
         protected void Async(Action a) {
             try {
-                isLoading = true;
+                IsLoading = true;
                 a();
             } catch {
-                isLoading = false;
+                IsLoading = false;
                 throw;
             }
         }
