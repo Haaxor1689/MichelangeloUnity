@@ -208,36 +208,58 @@ namespace Michelangelo.Session {
                     yield break;
                 }
                 
-                string errorMessage = null;
-                bool isGenerating;
                 var response = MessagePackSerializer.Deserialize<PostResponseModel>(postRequest.downloadHandler.data);
-                var token = response.IMG;
-                
-                do {
-                    using (var getRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + grammar.id + "/Response/" + token).WithCookies(CookiesString)) {
-                        yield return getRequest.SendWebRequest();
-                        if (CancelGeneration) {
-                            CancelGeneration = false;
-                            reject(new ApplicationException("Generate grammar request error:\nGeneration canceled by user."));
-                            yield break;
-                        }
-                        if (CheckAndLogError(getRequest)) {
-                            reject(GenerateException("Generate grammar request error:\n", getRequest));
-                            yield break;
-                        }
-                        response = MessagePackSerializer.Deserialize<PostResponseModel>(getRequest.downloadHandler.data);
-                        var rawError = response.E;
-                        if (!String.IsNullOrEmpty(rawError)) {
-                            errorMessage = Regex.Replace(rawError, "<br\\/>", "\n");
-                        }
-                        isGenerating = response.O == null || response.O?.Length == 0;
-                    }
-                } while (isGenerating);
-                resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(response), ErrorMessage = errorMessage });
+                MichelangeloSingleton.Coroutine(GetResponseCoroutine(response, grammar.id, response.IMG, resolve, reject));
             }
         }
+        #endregion
 
+        #region GenerateScene
+        public static IPromise<GenerateGrammarResponse> GenerateScene(string code) => new Promise<GenerateGrammarResponse>((resolve, reject) => MichelangeloSingleton.Coroutine(GenerateSceneCoroutine(code, resolve, reject)));
+        private static IEnumerator<UnityWebRequestAsyncOperation> GenerateSceneCoroutine(string code, Action<GenerateGrammarResponse> resolve, Action<Exception> reject) {
+            var form = new WWWForm();
+            form.AddField("Type", "DOG");
+            form.AddField("Code", code);
+
+            using (var postRequest = UnityWebRequest.Post(URLConstants.SceneAPI, form).WithCookies(CookiesString)) {
+                yield return postRequest.SendWebRequest();
+                if (CheckAndLogError(postRequest)) {
+                    reject(GenerateException("Generate scene request error:\n", postRequest));
+                    yield break;
+                }
+                
+                var response = MessagePackSerializer.Deserialize<PostResponseModel>(postRequest.downloadHandler.data);
+                MichelangeloSingleton.Coroutine(GetResponseCoroutine(response, response.Info, response.IMG, resolve, reject));
+            }
+        }
+        #endregion
+        
+        #region GetResponse
         public static bool CancelGeneration;
+        private static IEnumerator<UnityWebRequestAsyncOperation> GetResponseCoroutine(PostResponseModel response, string id, string token, Action<GenerateGrammarResponse> resolve, Action<Exception> reject) {
+            bool isGenerating;
+            do {
+                using (var getRequest = UnityWebRequest.Get(URLConstants.GrammarAPI + "/" + id + "/Response/" + token).WithCookies(CookiesString)) {
+                    yield return getRequest.SendWebRequest();
+                    if (CancelGeneration) {
+                        CancelGeneration = false;
+                        reject(new ApplicationException("Generate grammar request error:\nGeneration canceled by user."));
+                        yield break;
+                    }
+                    if (CheckAndLogError(getRequest)) {
+                        reject(GenerateException("Generate grammar request error:\n", getRequest));
+                        yield break;
+                    }
+                    response = MessagePackSerializer.Deserialize<PostResponseModel>(getRequest.downloadHandler.data);
+                    isGenerating = response.O == null || response.O?.Length == 0;
+                    if (isGenerating && !String.IsNullOrEmpty(response.E)) {
+                        reject(new ApplicationException("Generate grammar request error:\n" + Regex.Replace(response.E, "<br\\/>", "\n")));
+                        yield break;
+                    }
+                }
+            } while (isGenerating);
+            resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(response), ErrorMessage = Regex.Replace(response.E, "<br\\/>", "\n") });
+        }
         #endregion
 
         #region Helper methods

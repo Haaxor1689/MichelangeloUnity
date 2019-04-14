@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace Michelangelo.Editor {
     public class ReconnectGrammarPopup : EditorWindow {
-        private GrammarScript grammar;
+        private GrammarObject grammar;
         private bool hasChangedNameFilter;
         private string nameFilter;
         private Vector2 scrollPos;
 
-        public static void Init(GrammarScript grammar) {
+        public static void Init(GrammarObject grammar) {
             var window = CreateInstance<ReconnectGrammarPopup>();
             window.position = new Rect(0, 0, 300, 450);
             window.CenterOnMainWin();

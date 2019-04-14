@@ -75,7 +75,7 @@ namespace Michelangelo.Model {
             }
             var grammar = GrammarList[grammarId];
 
-            var newObject = GrammarScript.Construct(grammar);
+            var newObject = GrammarObject.Construct(grammar);
             Selection.objects = new UnityEngine.Object[] { newObject };
             return Promise.Resolved();
         }
@@ -115,5 +115,7 @@ namespace Michelangelo.Model {
                 SaveGrammarList();
             });
         }
+
+        public static IPromise<GenerateGrammarResponse> GenerateScene(string code) => WebAPI.GenerateScene(code);
     }
 }

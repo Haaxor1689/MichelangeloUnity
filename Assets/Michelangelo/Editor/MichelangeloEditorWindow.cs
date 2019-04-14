@@ -25,7 +25,7 @@ namespace Michelangelo.Editor {
         private bool hasChangedNameFilter;
         private GrammarSource sourceFilter;
 
-        [MenuItem("Window/Michelangelo")]
+        [MenuItem("Michelangelo/Michelangelo", false, 0)]
         public static void ShowWindow() => GetWindow<MichelangeloEditorWindow>("Michelangelo");
 
         public static void OpenMichelangeloWindowButton() {

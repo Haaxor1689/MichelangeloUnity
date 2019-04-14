@@ -47,9 +47,14 @@ namespace Michelangelo.Model.MsgSerialized {
         public GeometricModel[] O;
 
         /// <summary>
-        ///   Parsed grammar code (by Roslyn)
+        /// Parsed grammar code (by Roslyn)
         /// </summary>
-        public string ParsedJSON = "";
+        public string Parsed = "";
+
+        /// <summary>
+        /// Extra information (
+        /// </summary>
+        public string Info = "";
 
         public List<AxiomPostModel> PS = null;
 
