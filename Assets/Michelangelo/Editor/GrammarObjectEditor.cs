@@ -1,7 +1,5 @@
-using System;
 using Michelangelo.Model;
 using Michelangelo.Scripts;
-using Michelangelo.Session;
 using UnityEditor;
 using UnityEngine;
 

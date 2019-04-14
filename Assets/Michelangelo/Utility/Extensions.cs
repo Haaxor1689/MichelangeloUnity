@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -108,6 +109,23 @@ namespace Michelangelo.Utility {
                 scale.x *= -1;
             }
             return scale;
+        }
+
+        public static T[] RemoveAt<T>(this T[] source, int index) {
+            T[] dest = new T[source.Length - 1];
+            if( index > 0 )
+                Array.Copy(source, 0, dest, 0, index);
+
+            if( index < source.Length - 1 )
+                Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
+
+            return dest;
+        }
+
+        public static T[] Add<T>(this T[] source, T value) {
+            var dest = new List<T>(source);
+            dest.Add(value);
+            return dest.ToArray();
         }
     }
 }
