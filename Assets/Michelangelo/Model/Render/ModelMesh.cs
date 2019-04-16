@@ -10,7 +10,6 @@ namespace Michelangelo.Model.Render {
     public class ModelMesh {
         private static readonly Material DefaultMaterial = new Material(Shader.Find("Diffuse"));
         
-        // public ModelMesh(string rawJson) {
         public ModelMesh(PostResponseModel response) {
             Primitives = response.O.Select(o => new Primitive(o)).ToArray();
             Materials = response.ML.Select(ml => new Material(DefaultMaterial) { color = ParseColor(ml.Value) }).ToArray();

@@ -10,20 +10,21 @@ namespace Michelangelo.Model.Handlers {
     public class Goal : IHandler {
         public string Name;
         public RestrictSource RestrictSources;
-        public Command[] With = new Command[0];
+        public Vector3 Size = Vector3.one;
+        public bool CenterOnPivot = false;
 
         public void Draw() {
             EditorGUILayout.BeginVertical("Box");
             EditorGUILayout.LabelField(String.IsNullOrEmpty(Name) ? "Invalid goal" : $"Goal: {Name}", EditorStyles.boldLabel);
             Name = EditorGUILayout.TextField("Goal", Name);
+            Size = EditorGUILayout.Vector3Field("Size", Size);
+            CenterOnPivot = EditorGUILayout.Toggle("Center on pivot", CenterOnPivot);
             
             EditorGUILayout.Space();
             RestrictSources.Draw();
             EditorGUILayout.EndVertical();
         }
 
-        public string ToCode() => $"new Model(\"{Name}\"){ArrToCode("With", With)}{RestrictSources.ToCode()};";
-
-        private static string ArrToCode(string name, ICollection<IHandler> arr) => arr.Count > 1 ? $".{name}({string.Join(", ", arr.Select(r => r.ToCode()))})" : "";
+        public string ToCode() => $"new Model(\"{Name}\").With(Size{Size.ToString()}, Position{(CenterOnPivot ? new Vector3(-Size.x / 2, 0, -Size.z / 2).ToString() : Vector3.zero.ToString())}){RestrictSources.ToCode()};";
     }
 }

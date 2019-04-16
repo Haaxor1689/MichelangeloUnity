@@ -54,6 +54,9 @@ namespace Michelangelo.Editor {
             if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
                 Async(Generate);
             }
+            // if (GUILayout.Button(new GUIContent("Bake mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
+            //     Object.BakeMesh();
+            // }
 
             GUI.enabled = true;
             if (!string.IsNullOrEmpty(ErrorMessage)) {
