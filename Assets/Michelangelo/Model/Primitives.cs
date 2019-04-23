@@ -1,14 +1,33 @@
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Michelangelo.Model {
     internal static class Primitives {
         public static readonly Mesh Box = _box();
         public static readonly Mesh Sphere = _sphere();
-        public static readonly Mesh Torus = _torus();
-        public static readonly Mesh Cone = _cone();
         public static readonly Mesh Cylinder = _cone(0.5f);
-        public static readonly Mesh Pyramid = _cone(0.0f, 4);
-        public static readonly Mesh Plane = _plane();
+        public static readonly Mesh Cone = _cone();
+        public static readonly Mesh Icosahedron = new Mesh(); // Not implemented
+        public static readonly Mesh Empty = new Mesh();
+
+        // Old Shapes
+        // public static readonly Mesh Torus = _torus();
+        // public static readonly Mesh Pyramid = _cone(0.0f, 4);
+        // public static readonly Mesh Plane = _plane();
+
+        public static uint GetVertexCount(string primitive) {
+            switch (primitive) {
+                case "Box": return 3 * 4 * 6;
+                case "Sphere": return 25 * 16 * 3 + 6;
+                case "Cylinder":
+                case "Cone": 
+                    return 76 * 3;
+                case "Empty": return 0;
+                default:
+                    Debug.LogError("Unknown primitive type " + primitive);
+                    return 0;
+            }
+        }
 
         private static Mesh _box() {
             var mesh = new Mesh();

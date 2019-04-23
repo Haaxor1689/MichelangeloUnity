@@ -1,8 +1,10 @@
-﻿using Michelangelo.Model.Render;
+﻿using System.Collections.Generic;
+using Michelangelo.Model.MichelangeloApi;
 
 namespace Michelangelo.Model {
     public class GenerateGrammarResponse {
-        public ModelMesh Mesh;
+        public ParseTree ParseTree;
+        public Dictionary<int, MaterialModel> Materials;
         public string ErrorMessage;
     }
 }

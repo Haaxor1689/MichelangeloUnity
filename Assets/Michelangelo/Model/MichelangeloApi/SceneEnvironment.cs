@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MessagePack;
 
-namespace Michelangelo.Model.MsgSerialized {
+namespace Michelangelo.Model.MichelangeloApi {
     [MessagePackObject(true)]
     public class SceneEnvironment {
         public double Ambient = 0.5;

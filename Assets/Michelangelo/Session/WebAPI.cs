@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Michelangelo.Model;
-using Michelangelo.Model.Render;
 using Michelangelo.Scripts;
 using Michelangelo.Utility;
 using RSG;
-using SimpleJSON;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.Playables;
 using MessagePack;
-using Michelangelo.Model.MsgSerialized;
+using Michelangelo.Model.MichelangeloApi;
 
 namespace Michelangelo.Session {
     public static class WebAPI {
@@ -251,14 +248,18 @@ namespace Michelangelo.Session {
                         yield break;
                     }
                     response = MessagePackSerializer.Deserialize<PostResponseModel>(getRequest.downloadHandler.data);
-                    isGenerating = response.O == null || response.O?.Length == 0;
-                    if (isGenerating && !String.IsNullOrEmpty(response.E)) {
-                        reject(new ApplicationException("Generate grammar request error:\n" + Regex.Replace(response.E, "<br\\/>", "\n")));
+                    isGenerating = response.Objects == null || response.Objects?.Length == 0;
+                    if (isGenerating && !String.IsNullOrEmpty(response.Errors)) {
+                        reject(new ApplicationException("Generate grammar request error:\n" + Regex.Replace(response.Errors, "<br\\/>", "\n")));
                         yield break;
                     }
                 }
             } while (isGenerating);
-            resolve(new GenerateGrammarResponse { Mesh = new ModelMesh(response), ErrorMessage = Regex.Replace(response.E, "<br\\/>", "\n") });
+            resolve(new GenerateGrammarResponse {
+                ParseTree = new ParseTree(response.ParseTree),
+                Materials = response.Materials,
+                ErrorMessage = Regex.Replace(response.Errors, "<br\\/>", "\n")
+            });
         }
         #endregion
 

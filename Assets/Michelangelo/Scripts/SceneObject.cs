@@ -17,7 +17,7 @@ namespace Michelangelo.Scripts {
         /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
         public override IPromise<GenerateGrammarResponse> Generate() {
             Debug.Log(Goal.ToCode());
-            return MichelangeloSession.GenerateScene(Goal.ToCode()).Then(response => CreateMesh(response.Mesh));
+            return MichelangeloSession.GenerateScene(Goal.ToCode()).Then(response => CreateMesh(response.ParseTree, response.Materials));
         }
 
         [MenuItem("Michelangelo/SceneObject", false, 12)]

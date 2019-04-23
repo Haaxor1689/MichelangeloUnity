@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace Michelangelo.Model.MsgSerialized {
+namespace Michelangelo.Model.MichelangeloApi {
     [MessagePackObject(true)]
     public class SkyMaterial {
         public bool ActiveSky = true;

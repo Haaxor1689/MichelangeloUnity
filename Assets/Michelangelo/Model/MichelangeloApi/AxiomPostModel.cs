@@ -1,16 +1,16 @@
 ﻿using MessagePack;
 
-namespace Michelangelo.Model.MsgSerialized {
+namespace Michelangelo.Model.MichelangeloApi {
     [MessagePackObject(true)]
     public class AxiomPostModel {
         /// <summary>
-        ///   Axiom ID
+        /// Axiom ID
         /// </summary>
-        public uint A;
+        public uint AxiomID;
 
         /// <summary>
-        ///   Parse Tree Pointer
+        /// Parse Tree Pointer
         /// </summary>
-        public uint P;
+        public uint ParseTreeIndex;
     }
 }

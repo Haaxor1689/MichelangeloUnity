@@ -43,31 +43,34 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(23)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(26)
             {
-                {typeof(global::Michelangelo.Model.MsgSerialized.GeometricModel[]), 0 },
-                {typeof(global::System.Collections.Generic.Dictionary<string, string>), 1 },
-                {typeof(global::System.Collections.Generic.IList<string>), 2 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.SemanticModel[]), 3 },
-                {typeof(global::System.Collections.Generic.HashSet<string>), 4 },
-                {typeof(global::System.Collections.Generic.Dictionary<string, long>), 5 },
-                {typeof(global::System.Collections.Generic.Dictionary<int, string>), 6 },
-                {typeof(global::System.Collections.Generic.List<global::Michelangelo.Model.MsgSerialized.AxiomPostModel>), 7 },
-                {typeof(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MsgSerialized.ParseTreeModel>), 8 },
-                {typeof(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MsgSerialized.RuleExtraInfo>), 9 },
-                {typeof(global::MessagePack.MessagePackType), 10 },
-                {typeof(global::Michelangelo.Model.GrammarSource), 11 },
-                {typeof(global::SimpleJSON.JSONNodeType), 12 },
-                {typeof(global::SimpleJSON.JSONTextMode), 13 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.AxiomPostModel), 14 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.TriangularMesh), 15 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.GeometricModel), 16 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.SemanticModel), 17 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.ParseTreeModel), 18 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.SkyMaterial), 19 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.SceneEnvironment), 20 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.RuleExtraInfo), 21 },
-                {typeof(global::Michelangelo.Model.MsgSerialized.PostResponseModel), 22 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, double>), 0 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, double[]>), 1 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]), 2 },
+                {typeof(string[][]), 3 },
+                {typeof(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>), 4 },
+                {typeof(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>), 5 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>), 6 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, long>), 7 },
+                {typeof(global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>), 8 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, string>), 9 },
+                {typeof(global::System.Collections.Generic.IList<string>), 10 },
+                {typeof(global::MessagePack.MessagePackType), 11 },
+                {typeof(global::Michelangelo.Model.GrammarSource), 12 },
+                {typeof(global::Michelangelo.Model.Handlers.SourceType), 13 },
+                {typeof(global::SimpleJSON.JSONNodeType), 14 },
+                {typeof(global::SimpleJSON.JSONTextMode), 15 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.AxiomPostModel), 16 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.TriangularMesh), 17 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.GeometricModel), 18 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.MaterialModel), 19 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.ParseTreeModel), 20 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo), 21 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.SkyMaterial), 22 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.SceneEnvironment), 23 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.PostResponseModel), 24 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.SemanticModel), 25 },
             };
         }
 
@@ -78,29 +81,32 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Model.MsgSerialized.GeometricModel>();
-                case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, string>();
-                case 2: return new global::MessagePack.Formatters.InterfaceListFormatter<string>();
-                case 3: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Model.MsgSerialized.SemanticModel>();
-                case 4: return new global::MessagePack.Formatters.HashSetFormatter<string>();
-                case 5: return new global::MessagePack.Formatters.DictionaryFormatter<string, long>();
-                case 6: return new global::MessagePack.Formatters.DictionaryFormatter<int, string>();
-                case 7: return new global::MessagePack.Formatters.ListFormatter<global::Michelangelo.Model.MsgSerialized.AxiomPostModel>();
-                case 8: return new global::MessagePack.Formatters.DictionaryFormatter<uint, global::Michelangelo.Model.MsgSerialized.ParseTreeModel>();
-                case 9: return new global::MessagePack.Formatters.DictionaryFormatter<string, global::Michelangelo.Model.MsgSerialized.RuleExtraInfo>();
-                case 10: return new MessagePack.Formatters.MessagePack.MessagePackTypeFormatter();
-                case 11: return new MessagePack.Formatters.Michelangelo.Model.GrammarSourceFormatter();
-                case 12: return new MessagePack.Formatters.SimpleJSON.JSONNodeTypeFormatter();
-                case 13: return new MessagePack.Formatters.SimpleJSON.JSONTextModeFormatter();
-                case 14: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.AxiomPostModelFormatter();
-                case 15: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.TriangularMeshFormatter();
-                case 16: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.GeometricModelFormatter();
-                case 17: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.SemanticModelFormatter();
-                case 18: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.ParseTreeModelFormatter();
-                case 19: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.SkyMaterialFormatter();
-                case 20: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.SceneEnvironmentFormatter();
-                case 21: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.RuleExtraInfoFormatter();
-                case 22: return new MessagePack.Formatters.Michelangelo.Model.MsgSerialized.PostResponseModelFormatter();
+                case 0: return new global::MessagePack.Formatters.DictionaryFormatter<string, double>();
+                case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, double[]>();
+                case 2: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Model.MichelangeloApi.GeometricModel>();
+                case 3: return new global::MessagePack.Formatters.ArrayFormatter<string[]>();
+                case 4: return new global::MessagePack.Formatters.DictionaryFormatter<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>();
+                case 5: return new global::MessagePack.Formatters.DictionaryFormatter<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>();
+                case 6: return new global::MessagePack.Formatters.DictionaryFormatter<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>();
+                case 7: return new global::MessagePack.Formatters.DictionaryFormatter<string, long>();
+                case 8: return new global::MessagePack.Formatters.ListFormatter<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>();
+                case 9: return new global::MessagePack.Formatters.DictionaryFormatter<string, string>();
+                case 10: return new global::MessagePack.Formatters.InterfaceListFormatter<string>();
+                case 11: return new MessagePack.Formatters.MessagePack.MessagePackTypeFormatter();
+                case 12: return new MessagePack.Formatters.Michelangelo.Model.GrammarSourceFormatter();
+                case 13: return new MessagePack.Formatters.Michelangelo.Model.Handlers.SourceTypeFormatter();
+                case 14: return new MessagePack.Formatters.SimpleJSON.JSONNodeTypeFormatter();
+                case 15: return new MessagePack.Formatters.SimpleJSON.JSONTextModeFormatter();
+                case 16: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.AxiomPostModelFormatter();
+                case 17: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.TriangularMeshFormatter();
+                case 18: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.GeometricModelFormatter();
+                case 19: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.MaterialModelFormatter();
+                case 20: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.ParseTreeModelFormatter();
+                case 21: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.RuleExtraInfoFormatter();
+                case 22: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.SkyMaterialFormatter();
+                case 23: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.SceneEnvironmentFormatter();
+                case 24: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.PostResponseModelFormatter();
+                case 25: return new MessagePack.Formatters.Michelangelo.Model.MichelangeloApi.SemanticModelFormatter();
                 default: return null;
             }
         }
@@ -177,6 +183,36 @@ namespace MessagePack.Formatters.Michelangelo.Model
 #pragma warning disable 414
 #pragma warning disable 168
 
+namespace MessagePack.Formatters.Michelangelo.Model.Handlers
+{
+    using System;
+    using MessagePack;
+
+    public sealed class SourceTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.Handlers.SourceType>
+    {
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.Handlers.SourceType value, global::MessagePack.IFormatterResolver formatterResolver)
+        {
+            return MessagePackBinary.WriteInt32(ref bytes, offset, (Int32)value);
+        }
+        
+        public global::Michelangelo.Model.Handlers.SourceType Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        {
+            return (global::Michelangelo.Model.Handlers.SourceType)MessagePackBinary.ReadInt32(bytes, offset, out readSize);
+        }
+    }
+
+
+}
+
+#pragma warning disable 168
+#pragma warning restore 414
+#pragma warning restore 618
+#pragma warning restore 612
+#pragma warning disable 618
+#pragma warning disable 612
+#pragma warning disable 414
+#pragma warning disable 168
+
 namespace MessagePack.Formatters.SimpleJSON
 {
     using System;
@@ -222,13 +258,13 @@ namespace MessagePack.Formatters.SimpleJSON
 #pragma warning disable 414
 #pragma warning disable 168
 
-namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
+namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 {
     using System;
     using MessagePack;
 
 
-    public sealed class AxiomPostModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.AxiomPostModel>
+    public sealed class AxiomPostModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -238,20 +274,20 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "A", 0},
-                { "P", 1},
+                { "AxiomID", 0},
+                { "ParseTreeIndex", 1},
             };
 
             this.____stringByteKeys = new byte[][]
             {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("A"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("P"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("AxiomID"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ParseTreeIndex"),
                 
             };
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.AxiomPostModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.AxiomPostModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -261,13 +297,13 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var startOffset = offset;
             offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 2);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.A);
+            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.AxiomID);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.P);
+            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.ParseTreeIndex);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.AxiomPostModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.AxiomPostModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -279,8 +315,8 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __A__ = default(uint);
-            var __P__ = default(uint);
+            var __AxiomID__ = default(uint);
+            var __ParseTreeIndex__ = default(uint);
 
             for (int i = 0; i < length; i++)
             {
@@ -296,10 +332,10 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
                 switch (key)
                 {
                     case 0:
-                        __A__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        __AxiomID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
                         break;
                     case 1:
-                        __P__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        __ParseTreeIndex__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -312,15 +348,15 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.AxiomPostModel();
-            ____result.A = __A__;
-            ____result.P = __P__;
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.AxiomPostModel();
+            ____result.AxiomID = __AxiomID__;
+            ____result.ParseTreeIndex = __ParseTreeIndex__;
             return ____result;
         }
     }
 
 
-    public sealed class TriangularMeshFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.TriangularMesh>
+    public sealed class TriangularMeshFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.TriangularMesh>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -345,7 +381,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.TriangularMesh value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.TriangularMesh value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -363,7 +399,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.TriangularMesh Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.TriangularMesh Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -412,7 +448,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.TriangularMesh();
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.TriangularMesh();
             ____result.Indexed = __Indexed__;
             ____result.Indices = __Indices__;
             ____result.Points = __Points__;
@@ -421,7 +457,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
     }
 
 
-    public sealed class GeometricModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.GeometricModel>
+    public sealed class GeometricModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.GeometricModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -431,26 +467,26 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "G", 0},
-                { "M", 1},
-                { "N", 2},
-                { "T", 3},
-                { "V", 4},
+                { "Primitive", 0},
+                { "MaterialID", 1},
+                { "NodeID", 2},
+                { "Transform", 3},
+                { "Mesh", 4},
             };
 
             this.____stringByteKeys = new byte[][]
             {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("G"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("M"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("N"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("T"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("V"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Primitive"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("MaterialID"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("NodeID"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Transform"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Mesh"),
                 
             };
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.GeometricModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.GeometricModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -460,19 +496,19 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var startOffset = offset;
             offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 5);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.G, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Primitive, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += MessagePackBinary.WriteInt32(ref bytes, offset, value.M);
+            offset += MessagePackBinary.WriteInt32(ref bytes, offset, value.MaterialID);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.N);
+            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.NodeID);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += formatterResolver.GetFormatterWithVerify<float[]>().Serialize(ref bytes, offset, value.T, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<float[]>().Serialize(ref bytes, offset, value.Transform, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.TriangularMesh>().Serialize(ref bytes, offset, value.V, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.TriangularMesh>().Serialize(ref bytes, offset, value.Mesh, formatterResolver);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.GeometricModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.GeometricModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -484,11 +520,11 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __G__ = default(string);
-            var __M__ = default(int);
-            var __N__ = default(uint);
-            var __T__ = default(float[]);
-            var __V__ = default(global::Michelangelo.Model.MsgSerialized.TriangularMesh);
+            var __Primitive__ = default(string);
+            var __MaterialID__ = default(int);
+            var __NodeID__ = default(uint);
+            var __Transform__ = default(float[]);
+            var __Mesh__ = default(global::Michelangelo.Model.MichelangeloApi.TriangularMesh);
 
             for (int i = 0; i < length; i++)
             {
@@ -504,19 +540,19 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
                 switch (key)
                 {
                     case 0:
-                        __G__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Primitive__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 1:
-                        __M__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
+                        __MaterialID__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
                         break;
                     case 2:
-                        __N__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        __NodeID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
                         break;
                     case 3:
-                        __T__ = formatterResolver.GetFormatterWithVerify<float[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Transform__ = formatterResolver.GetFormatterWithVerify<float[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 4:
-                        __V__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.TriangularMesh>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Mesh__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.TriangularMesh>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -529,45 +565,43 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.GeometricModel();
-            ____result.G = __G__;
-            ____result.M = __M__;
-            ____result.N = __N__;
-            ____result.T = __T__;
-            ____result.V = __V__;
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.GeometricModel();
+            ____result.Primitive = __Primitive__;
+            ____result.MaterialID = __MaterialID__;
+            ____result.NodeID = __NodeID__;
+            ____result.Transform = __Transform__;
+            ____result.Mesh = __Mesh__;
             return ____result;
         }
     }
 
 
-    public sealed class SemanticModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.SemanticModel>
+    public sealed class MaterialModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.MaterialModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
 
-        public SemanticModelFormatter()
+        public MaterialModelFormatter()
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "At", 0},
-                { "Go", 1},
-                { "On", 2},
-                { "Ta", 3},
+                { "Albedo", 0},
+                { "Scalars", 1},
+                { "Vectors", 2},
             };
 
             this.____stringByteKeys = new byte[][]
             {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("At"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Go"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("On"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Ta"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Albedo"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Scalars"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Vectors"),
                 
             };
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.SemanticModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.MaterialModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -575,19 +609,17 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             }
             
             var startOffset = offset;
-            offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 4);
+            offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 3);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Serialize(ref bytes, offset, value.At, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<double[]>().Serialize(ref bytes, offset, value.Albedo, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Serialize(ref bytes, offset, value.Go, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, double>>().Serialize(ref bytes, offset, value.Scalars, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IList<string>>().Serialize(ref bytes, offset, value.On, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += formatterResolver.GetFormatterWithVerify<string[]>().Serialize(ref bytes, offset, value.Ta, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, double[]>>().Serialize(ref bytes, offset, value.Vectors, formatterResolver);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.SemanticModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.MaterialModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -599,10 +631,9 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __At__ = default(global::System.Collections.Generic.Dictionary<string, string>);
-            var __Go__ = default(global::System.Collections.Generic.Dictionary<string, string>);
-            var __On__ = default(global::System.Collections.Generic.IList<string>);
-            var __Ta__ = default(string[]);
+            var __Albedo__ = default(double[]);
+            var __Scalars__ = default(global::System.Collections.Generic.Dictionary<string, double>);
+            var __Vectors__ = default(global::System.Collections.Generic.Dictionary<string, double[]>);
 
             for (int i = 0; i < length; i++)
             {
@@ -618,16 +649,13 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
                 switch (key)
                 {
                     case 0:
-                        __At__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Albedo__ = formatterResolver.GetFormatterWithVerify<double[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 1:
-                        __Go__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Scalars__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, double>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 2:
-                        __On__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IList<string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 3:
-                        __Ta__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Vectors__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, double[]>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -640,17 +668,16 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.SemanticModel();
-            ____result.At = __At__;
-            ____result.Go = __Go__;
-            ____result.On = __On__;
-            ____result.Ta = __Ta__;
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.MaterialModel();
+            ____result.Albedo = __Albedo__;
+            ____result.Scalars = __Scalars__;
+            ____result.Vectors = __Vectors__;
             return ____result;
         }
     }
 
 
-    public sealed class ParseTreeModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.ParseTreeModel>
+    public sealed class ParseTreeModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -660,26 +687,26 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "G", 0},
-                { "ID", 1},
-                { "P", 2},
-                { "R", 3},
-                { "S", 4},
+                { "ID", 0},
+                { "Rule", 1},
+                { "Shape", 2},
+                { "Ontology", 3},
+                { "ChildIndices", 4},
             };
 
             this.____stringByteKeys = new byte[][]
             {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("G"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ID"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("P"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("R"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("S"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Rule"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Shape"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Ontology"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ChildIndices"),
                 
             };
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.ParseTreeModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -689,19 +716,19 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var startOffset = offset;
             offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 5);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.GeometricModel[]>().Serialize(ref bytes, offset, value.G, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
             offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.ID);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Rule, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.P, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Shape, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.R, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<string[][]>().Serialize(ref bytes, offset, value.Ontology, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.SemanticModel[]>().Serialize(ref bytes, offset, value.S, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.ChildIndices, formatterResolver);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.ParseTreeModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.ParseTreeModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -713,11 +740,11 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __G__ = default(global::Michelangelo.Model.MsgSerialized.GeometricModel[]);
             var __ID__ = default(uint);
-            var __P__ = default(uint[]);
-            var __R__ = default(string);
-            var __S__ = default(global::Michelangelo.Model.MsgSerialized.SemanticModel[]);
+            var __Rule__ = default(string);
+            var __Shape__ = default(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]);
+            var __Ontology__ = default(string[][]);
+            var __ChildIndices__ = default(uint[]);
 
             for (int i = 0; i < length; i++)
             {
@@ -733,19 +760,19 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
                 switch (key)
                 {
                     case 0:
-                        __G__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 1:
                         __ID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
                         break;
+                    case 1:
+                        __Rule__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
                     case 2:
-                        __P__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Shape__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 3:
-                        __R__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Ontology__ = formatterResolver.GetFormatterWithVerify<string[][]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 4:
-                        __S__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.SemanticModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __ChildIndices__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -758,18 +785,146 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.ParseTreeModel();
-            ____result.G = __G__;
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.ParseTreeModel();
             ____result.ID = __ID__;
-            ____result.P = __P__;
-            ____result.R = __R__;
-            ____result.S = __S__;
+            ____result.Rule = __Rule__;
+            ____result.Shape = __Shape__;
+            ____result.Ontology = __Ontology__;
+            ____result.ChildIndices = __ChildIndices__;
             return ____result;
         }
     }
 
 
-    public sealed class SkyMaterialFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.SkyMaterial>
+    public sealed class RuleExtraInfoFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>
+    {
+
+        readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
+        readonly byte[][] ____stringByteKeys;
+
+        public RuleExtraInfoFormatter()
+        {
+            this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
+            {
+                { "CallsCount", 0},
+                { "FulfillsAttributes", 1},
+                { "FulfillsGoals", 2},
+                { "Local", 3},
+                { "RUID", 4},
+                { "TypeStr", 5},
+            };
+
+            this.____stringByteKeys = new byte[][]
+            {
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("CallsCount"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("FulfillsAttributes"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("FulfillsGoals"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Local"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("RUID"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("TypeStr"),
+                
+            };
+        }
+
+
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo value, global::MessagePack.IFormatterResolver formatterResolver)
+        {
+            if (value == null)
+            {
+                return global::MessagePack.MessagePackBinary.WriteNil(ref bytes, offset);
+            }
+            
+            var startOffset = offset;
+            offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 6);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
+            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.CallsCount);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
+            offset += formatterResolver.GetFormatterWithVerify<string[]>().Serialize(ref bytes, offset, value.FulfillsAttributes, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
+            offset += formatterResolver.GetFormatterWithVerify<string[]>().Serialize(ref bytes, offset, value.FulfillsGoals, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
+            offset += MessagePackBinary.WriteBoolean(ref bytes, offset, value.Local);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.RUID, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[5]);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.TypeStr, formatterResolver);
+            return offset - startOffset;
+        }
+
+        public global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        {
+            if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
+            {
+                readSize = 1;
+                return null;
+            }
+
+            var startOffset = offset;
+            var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
+            offset += readSize;
+
+            var __CallsCount__ = default(uint);
+            var __FulfillsAttributes__ = default(string[]);
+            var __FulfillsGoals__ = default(string[]);
+            var __Local__ = default(bool);
+            var __RUID__ = default(string);
+            var __TypeStr__ = default(string);
+
+            for (int i = 0; i < length; i++)
+            {
+                var stringKey = global::MessagePack.MessagePackBinary.ReadStringSegment(bytes, offset, out readSize);
+                offset += readSize;
+                int key;
+                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
+                {
+                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                    goto NEXT_LOOP;
+                }
+
+                switch (key)
+                {
+                    case 0:
+                        __CallsCount__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        break;
+                    case 1:
+                        __FulfillsAttributes__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __FulfillsGoals__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 3:
+                        __Local__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
+                        break;
+                    case 4:
+                        __RUID__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 5:
+                        __TypeStr__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
+                }
+                
+                NEXT_LOOP:
+                offset += readSize;
+            }
+
+            readSize = offset - startOffset;
+
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo();
+            ____result.CallsCount = __CallsCount__;
+            ____result.FulfillsAttributes = __FulfillsAttributes__;
+            ____result.FulfillsGoals = __FulfillsGoals__;
+            ____result.Local = __Local__;
+            ____result.RUID = __RUID__;
+            ____result.TypeStr = __TypeStr__;
+            return ____result;
+        }
+    }
+
+
+    public sealed class SkyMaterialFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.SkyMaterial>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -822,7 +977,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.SkyMaterial value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.SkyMaterial value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -868,7 +1023,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.SkyMaterial Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.SkyMaterial Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -973,7 +1128,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.SkyMaterial();
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.SkyMaterial();
             ____result.ActiveSky = __ActiveSky__;
             ____result.ActiveSun = __ActiveSun__;
             ____result.Albedo = __Albedo__;
@@ -996,7 +1151,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
     }
 
 
-    public sealed class SceneEnvironmentFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.SceneEnvironment>
+    public sealed class SceneEnvironmentFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.SceneEnvironment>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -1063,7 +1218,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.SceneEnvironment value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.SceneEnvironment value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -1109,7 +1264,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[17]);
             offset += MessagePackBinary.WriteInt32(ref bytes, offset, value.SamplesPower);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[18]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.SkyMaterial>().Serialize(ref bytes, offset, value.Sky, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SkyMaterial>().Serialize(ref bytes, offset, value.Sky, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[19]);
             offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, long>>().Serialize(ref bytes, offset, value.Statistics, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[20]);
@@ -1123,7 +1278,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.SceneEnvironment Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.SceneEnvironment Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -1153,7 +1308,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var __RR__ = default(int);
             var __RulesCount__ = default(int);
             var __SamplesPower__ = default(int);
-            var __Sky__ = default(global::Michelangelo.Model.MsgSerialized.SkyMaterial);
+            var __Sky__ = default(global::Michelangelo.Model.MichelangeloApi.SkyMaterial);
             var __Statistics__ = default(global::System.Collections.Generic.Dictionary<string, long>);
             var __StepsCount__ = default(ulong);
             var __TimeLimit__ = default(int);
@@ -1228,7 +1383,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
                         __SamplesPower__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
                         break;
                     case 18:
-                        __Sky__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.SkyMaterial>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Sky__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SkyMaterial>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 19:
                         __Statistics__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, long>>().Deserialize(bytes, offset, formatterResolver, out readSize);
@@ -1256,7 +1411,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.SceneEnvironment();
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.SceneEnvironment();
             ____result.Ambient = __Ambient__;
             ____result.AnimFps = __AnimFps__;
             ____result.AnimStart = __AnimStart__;
@@ -1286,135 +1441,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
     }
 
 
-    public sealed class RuleExtraInfoFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.RuleExtraInfo>
-    {
-
-        readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
-        readonly byte[][] ____stringByteKeys;
-
-        public RuleExtraInfoFormatter()
-        {
-            this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
-            {
-                { "CallsCount", 0},
-                { "FulfillsAttributes", 1},
-                { "FulfillsGoals", 2},
-                { "Local", 3},
-                { "RUID", 4},
-                { "TypeStr", 5},
-            };
-
-            this.____stringByteKeys = new byte[][]
-            {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("CallsCount"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("FulfillsAttributes"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("FulfillsGoals"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Local"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("RUID"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("TypeStr"),
-                
-            };
-        }
-
-
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.RuleExtraInfo value, global::MessagePack.IFormatterResolver formatterResolver)
-        {
-            if (value == null)
-            {
-                return global::MessagePack.MessagePackBinary.WriteNil(ref bytes, offset);
-            }
-            
-            var startOffset = offset;
-            offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 6);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.CallsCount);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += formatterResolver.GetFormatterWithVerify<string[]>().Serialize(ref bytes, offset, value.FulfillsAttributes, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += formatterResolver.GetFormatterWithVerify<string[]>().Serialize(ref bytes, offset, value.FulfillsGoals, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += MessagePackBinary.WriteBoolean(ref bytes, offset, value.Local);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.RUID, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[5]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.TypeStr, formatterResolver);
-            return offset - startOffset;
-        }
-
-        public global::Michelangelo.Model.MsgSerialized.RuleExtraInfo Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
-        {
-            if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
-            {
-                readSize = 1;
-                return null;
-            }
-
-            var startOffset = offset;
-            var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
-            offset += readSize;
-
-            var __CallsCount__ = default(uint);
-            var __FulfillsAttributes__ = default(string[]);
-            var __FulfillsGoals__ = default(string[]);
-            var __Local__ = default(bool);
-            var __RUID__ = default(string);
-            var __TypeStr__ = default(string);
-
-            for (int i = 0; i < length; i++)
-            {
-                var stringKey = global::MessagePack.MessagePackBinary.ReadStringSegment(bytes, offset, out readSize);
-                offset += readSize;
-                int key;
-                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
-                {
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    goto NEXT_LOOP;
-                }
-
-                switch (key)
-                {
-                    case 0:
-                        __CallsCount__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
-                        break;
-                    case 1:
-                        __FulfillsAttributes__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 2:
-                        __FulfillsGoals__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 3:
-                        __Local__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
-                        break;
-                    case 4:
-                        __RUID__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 5:
-                        __TypeStr__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    default:
-                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                        break;
-                }
-                
-                NEXT_LOOP:
-                offset += readSize;
-            }
-
-            readSize = offset - startOffset;
-
-            var ____result = new global::Michelangelo.Model.MsgSerialized.RuleExtraInfo();
-            ____result.CallsCount = __CallsCount__;
-            ____result.FulfillsAttributes = __FulfillsAttributes__;
-            ____result.FulfillsGoals = __FulfillsGoals__;
-            ____result.Local = __Local__;
-            ____result.RUID = __RUID__;
-            ____result.TypeStr = __TypeStr__;
-            return ____result;
-        }
-    }
-
-
-    public sealed class PostResponseModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MsgSerialized.PostResponseModel>
+    public sealed class PostResponseModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.PostResponseModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -1424,48 +1451,44 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "A", 0},
-                { "DL", 1},
-                { "E", 2},
-                { "ENV", 3},
-                { "HasAnim", 4},
-                { "IMG", 5},
-                { "LL", 6},
-                { "LR", 7},
-                { "ML", 8},
-                { "O", 9},
-                { "Parsed", 10},
-                { "Info", 11},
-                { "PS", 12},
-                { "PT", 13},
-                { "RC", 14},
-                { "RS", 15},
+                { "Materials", 0},
+                { "Objects", 1},
+                { "Errors", 2},
+                { "IMG", 3},
+                { "Parsed", 4},
+                { "Info", 5},
+                { "ParseTree", 6},
+                { "Rules", 7},
+                { "RootLocks", 8},
+                { "LeafLocks", 9},
+                { "ENV", 10},
+                { "Models", 11},
+                { "DL", 12},
+                { "HasAnim", 13},
             };
 
             this.____stringByteKeys = new byte[][]
             {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("A"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("DL"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("E"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ENV"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("HasAnim"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Materials"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Objects"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Errors"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("IMG"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("LL"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("LR"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ML"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("O"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Parsed"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Info"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("PS"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("PT"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("RC"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("RS"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ParseTree"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Rules"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("RootLocks"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("LeafLocks"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ENV"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Models"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("DL"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("HasAnim"),
                 
             };
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MsgSerialized.PostResponseModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.PostResponseModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -1473,43 +1496,39 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             }
             
             var startOffset = offset;
-            offset += global::MessagePack.MessagePackBinary.WriteMapHeader(ref bytes, offset, 16);
+            offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 14);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.HashSet<string>>().Serialize(ref bytes, offset, value.A, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>>().Serialize(ref bytes, offset, value.Materials, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.DL, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Objects, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.E, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Errors, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.SceneEnvironment>().Serialize(ref bytes, offset, value.ENV, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
-            offset += MessagePackBinary.WriteBoolean(ref bytes, offset, value.HasAnim);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[5]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.IMG, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[6]);
-            offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.LL, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[7]);
-            offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.LR, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[8]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, string>>().Serialize(ref bytes, offset, value.ML, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[9]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.GeometricModel[]>().Serialize(ref bytes, offset, value.O, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[10]);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Parsed, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[11]);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[5]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Info, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[6]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>>().Serialize(ref bytes, offset, value.ParseTree, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[7]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>>().Serialize(ref bytes, offset, value.Rules, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[8]);
+            offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.RootLocks, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[9]);
+            offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.LeafLocks, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[10]);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SceneEnvironment>().Serialize(ref bytes, offset, value.ENV, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[11]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>>().Serialize(ref bytes, offset, value.Models, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[12]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Model.MsgSerialized.AxiomPostModel>>().Serialize(ref bytes, offset, value.PS, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.DL, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[13]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MsgSerialized.ParseTreeModel>>().Serialize(ref bytes, offset, value.PT, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[14]);
-            offset += MessagePackBinary.WriteInt32(ref bytes, offset, value.RC);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[15]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MsgSerialized.RuleExtraInfo>>().Serialize(ref bytes, offset, value.RS, formatterResolver);
+            offset += MessagePackBinary.WriteBoolean(ref bytes, offset, value.HasAnim);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MsgSerialized.PostResponseModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Model.MichelangeloApi.PostResponseModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -1521,22 +1540,20 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __A__ = default(global::System.Collections.Generic.HashSet<string>);
-            var __DL__ = default(string);
-            var __E__ = default(string);
-            var __ENV__ = default(global::Michelangelo.Model.MsgSerialized.SceneEnvironment);
-            var __HasAnim__ = default(bool);
+            var __Materials__ = default(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>);
+            var __Objects__ = default(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]);
+            var __Errors__ = default(string);
             var __IMG__ = default(string);
-            var __LL__ = default(uint[]);
-            var __LR__ = default(uint[]);
-            var __ML__ = default(global::System.Collections.Generic.Dictionary<int, string>);
-            var __O__ = default(global::Michelangelo.Model.MsgSerialized.GeometricModel[]);
             var __Parsed__ = default(string);
             var __Info__ = default(string);
-            var __PS__ = default(global::System.Collections.Generic.List<global::Michelangelo.Model.MsgSerialized.AxiomPostModel>);
-            var __PT__ = default(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MsgSerialized.ParseTreeModel>);
-            var __RC__ = default(int);
-            var __RS__ = default(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MsgSerialized.RuleExtraInfo>);
+            var __ParseTree__ = default(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>);
+            var __Rules__ = default(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>);
+            var __RootLocks__ = default(uint[]);
+            var __LeafLocks__ = default(uint[]);
+            var __ENV__ = default(global::Michelangelo.Model.MichelangeloApi.SceneEnvironment);
+            var __Models__ = default(global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>);
+            var __DL__ = default(string);
+            var __HasAnim__ = default(bool);
 
             for (int i = 0; i < length; i++)
             {
@@ -1552,52 +1569,46 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
                 switch (key)
                 {
                     case 0:
-                        __A__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.HashSet<string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Materials__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 1:
-                        __DL__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Objects__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 2:
-                        __E__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Errors__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 3:
-                        __ENV__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.SceneEnvironment>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 4:
-                        __HasAnim__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
-                        break;
-                    case 5:
                         __IMG__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
-                    case 6:
-                        __LL__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 7:
-                        __LR__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 8:
-                        __ML__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 9:
-                        __O__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MsgSerialized.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 10:
+                    case 4:
                         __Parsed__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
-                    case 11:
+                    case 5:
                         __Info__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
+                    case 6:
+                        __ParseTree__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 7:
+                        __Rules__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 8:
+                        __RootLocks__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 9:
+                        __LeafLocks__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 10:
+                        __ENV__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SceneEnvironment>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 11:
+                        __Models__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
                     case 12:
-                        __PS__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Model.MsgSerialized.AxiomPostModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __DL__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 13:
-                        __PT__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MsgSerialized.ParseTreeModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 14:
-                        __RC__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
-                        break;
-                    case 15:
-                        __RS__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MsgSerialized.RuleExtraInfo>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __HasAnim__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -1610,23 +1621,131 @@ namespace MessagePack.Formatters.Michelangelo.Model.MsgSerialized
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MsgSerialized.PostResponseModel();
-            ____result.A = __A__;
-            ____result.DL = __DL__;
-            ____result.E = __E__;
-            ____result.ENV = __ENV__;
-            ____result.HasAnim = __HasAnim__;
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.PostResponseModel();
+            ____result.Materials = __Materials__;
+            ____result.Objects = __Objects__;
+            ____result.Errors = __Errors__;
             ____result.IMG = __IMG__;
-            ____result.LL = __LL__;
-            ____result.LR = __LR__;
-            ____result.ML = __ML__;
-            ____result.O = __O__;
             ____result.Parsed = __Parsed__;
             ____result.Info = __Info__;
-            ____result.PS = __PS__;
-            ____result.PT = __PT__;
-            ____result.RC = __RC__;
-            ____result.RS = __RS__;
+            ____result.ParseTree = __ParseTree__;
+            ____result.Rules = __Rules__;
+            ____result.RootLocks = __RootLocks__;
+            ____result.LeafLocks = __LeafLocks__;
+            ____result.ENV = __ENV__;
+            ____result.Models = __Models__;
+            ____result.DL = __DL__;
+            ____result.HasAnim = __HasAnim__;
+            return ____result;
+        }
+    }
+
+
+    public sealed class SemanticModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.SemanticModel>
+    {
+
+        readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
+        readonly byte[][] ____stringByteKeys;
+
+        public SemanticModelFormatter()
+        {
+            this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
+            {
+                { "At", 0},
+                { "Go", 1},
+                { "On", 2},
+                { "Ta", 3},
+            };
+
+            this.____stringByteKeys = new byte[][]
+            {
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("At"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Go"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("On"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Ta"),
+                
+            };
+        }
+
+
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.SemanticModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        {
+            if (value == null)
+            {
+                return global::MessagePack.MessagePackBinary.WriteNil(ref bytes, offset);
+            }
+            
+            var startOffset = offset;
+            offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 4);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Serialize(ref bytes, offset, value.At, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Serialize(ref bytes, offset, value.Go, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IList<string>>().Serialize(ref bytes, offset, value.On, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
+            offset += formatterResolver.GetFormatterWithVerify<string[]>().Serialize(ref bytes, offset, value.Ta, formatterResolver);
+            return offset - startOffset;
+        }
+
+        public global::Michelangelo.Model.MichelangeloApi.SemanticModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        {
+            if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
+            {
+                readSize = 1;
+                return null;
+            }
+
+            var startOffset = offset;
+            var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
+            offset += readSize;
+
+            var __At__ = default(global::System.Collections.Generic.Dictionary<string, string>);
+            var __Go__ = default(global::System.Collections.Generic.Dictionary<string, string>);
+            var __On__ = default(global::System.Collections.Generic.IList<string>);
+            var __Ta__ = default(string[]);
+
+            for (int i = 0; i < length; i++)
+            {
+                var stringKey = global::MessagePack.MessagePackBinary.ReadStringSegment(bytes, offset, out readSize);
+                offset += readSize;
+                int key;
+                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
+                {
+                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                    goto NEXT_LOOP;
+                }
+
+                switch (key)
+                {
+                    case 0:
+                        __At__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 1:
+                        __Go__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __On__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IList<string>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 3:
+                        __Ta__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
+                }
+                
+                NEXT_LOOP:
+                offset += readSize;
+            }
+
+            readSize = offset - startOffset;
+
+            var ____result = new global::Michelangelo.Model.MichelangeloApi.SemanticModel();
+            ____result.At = __At__;
+            ____result.Go = __Go__;
+            ____result.On = __On__;
+            ____result.Ta = __Ta__;
             return ____result;
         }
     }
