@@ -17,9 +17,9 @@ namespace Michelangelo.Scripts {
         private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
         private IObjectBase parentObject => transform.parent.GetComponent<IObjectBase>();
 
-        private void CreateMesh(ParseTree parseTree, ParseTreeModel node, Material[] grammarMaterials) {
+        private void CreateMesh(ParseTree parseTree, ParseTreeChild node, Material[] grammarMaterials) {
             var submeshes = new List<Tuple<Mesh, int>>();
-            foreach (var pair in node.GetLeafNodes(parseTree).SelectMany(n => n.Shape)
+            foreach (var pair in node.GetLeafNodes(parseTree).Select(n => n.Shape)
                                      .GroupBy(p => p.MaterialID, p => p, (key, p) => new { Material = key, GeometricModel = p })) {
                 var mesh = new Mesh();
                 var combine = new List<CombineInstance>();
@@ -37,8 +37,10 @@ namespace Michelangelo.Scripts {
                 materials.Add(grammarMaterials[m.Item2]);
             }
             objectMesh.CombineMeshes(finalCombine.ToArray(), false);
+            // objectMesh.CombineMeshes(finalCombine.ToArray());
             MeshFilter.sharedMesh = objectMesh;
             MeshRenderer.sharedMaterials = materials.ToArray();
+            // MeshRenderer.sharedMaterials = new []{ materials[0] };
             transform.localPosition = new Vector3(0, 0, 0);
         }
 
@@ -68,8 +70,8 @@ namespace Michelangelo.Scripts {
             // }
         }
 
-        public static GameObject Construct(Transform parent, ParseTree parseTree, ParseTreeModel node, Material[] grammarMaterials) {
-            var newObject = new GameObject(node.Rule);
+        public static GameObject Construct(Transform parent, ParseTree parseTree, ParseTreeChild node, Material[] grammarMaterials) {
+            var newObject = new GameObject(node.Ontology.Last());
             newObject.hideFlags = HideFlags.NotEditable;
             newObject.transform.SetParent(parent);
             var nodeScript = newObject.AddComponent<ParseTreeNode>();
