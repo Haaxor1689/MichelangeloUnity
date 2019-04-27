@@ -69,23 +69,13 @@ namespace Michelangelo.Scripts {
         }
 
         public void ToFlatShaded() {
-            // for (var i = 0; i < transform.childCount; ++i) {
-            //     var child = transform.GetChild(i);
-            //     if (child.name == Element.ObjectName) {
-            //         MeshUtilities.ToFlatShaded(child.GetComponent<MeshFilter>().sharedMesh);
-            //     }
-            // }
-            // MeshUtilities.ToFlatShaded(MeshFilter.sharedMesh);
+            for (var i = 0; i < transform.childCount; ++i) {
+                var child = transform.GetChild(i);
+                if (child.GetComponent<ParseTreeNode>()) {
+                    MeshUtilities.ToFlatShaded(child.GetComponent<MeshFilter>().sharedMesh);
+                }
+            }
             IsFlatShaded = true;
         }
-
-        // public void BakeMesh() {
-        //     var bakery = gameObject.AddComponent<MeshBakery>();
-        //     bakery.m_BatchIngredients = new List<BatchIngredient>();
-        //     foreach (Transform t in transform) {
-        //         bakery.m_BatchIngredients.Add(new BatchIngredient(t.gameObject.GetComponent<MeshFilter>().sharedMesh, t.gameObject.GetComponent<MeshRenderer>().sharedMaterial));
-        //     }
-        //     bakery.Init();
-        // }
     }
 }
