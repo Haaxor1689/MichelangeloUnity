@@ -194,7 +194,7 @@ namespace Michelangelo.Session {
             form.AddField("ID", grammar.id);
             form.AddField("Name", grammar.name);
             form.AddField("Type", grammar.type);
-            form.AddField("Code", grammar.code);
+            form.AddField("Code", grammar.SourceCode?.text ?? grammar.code);
             form.AddField("OnlyNID", uint.MaxValue.ToString());
             form.AddField("Render", "false");
 
