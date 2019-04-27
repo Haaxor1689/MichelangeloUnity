@@ -57,7 +57,11 @@ namespace Michelangelo.Editor {
             } else {
                 NotLoggedIn();
             }
-            DrawErrorMessage();
+
+            EditorGUILayout.Space();
+            if (RequestErrorMessage.IsRequestError(errorMessage)) {
+                RequestErrorMessage.Draw(ref errorMessage);
+            }
         }
 
         private void DrawErrorMessage() {

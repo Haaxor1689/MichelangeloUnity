@@ -1,14 +1,18 @@
 ﻿using System;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
+using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
     [CustomEditor(typeof(ObjectBase))]
     public class ObjectBaseEditor : UnityEditor.Editor {
-        protected string ErrorMessage;
         protected bool IsLoading;
+
+        private string compilationOutput;
+        private bool compilationFoldout = true;
+        private Vector2 scrollPos;
 
         protected virtual bool CanGenerate => true;
         protected virtual string GenerateButtonTooltip => "Sends a request to Michelangelo API to generate new mesh. This will replace current mesh of the object if it has any.";
@@ -55,25 +59,75 @@ namespace Michelangelo.Editor {
                 Async(Generate);
             }
 
-            GUI.enabled = true;
-            if (!string.IsNullOrEmpty(ErrorMessage)) {
-                if (string.IsNullOrEmpty(ErrorMessage)) {
-                    return;
-                }
-                GUILayout.Space(20.0f);
-                EditorGUILayout.HelpBox(ErrorMessage, MessageType.Error);
-                if (GUILayout.Button("Clear error message")) {
-                    ErrorMessage = null;
-                }
-            }
+            RenderCompilationOutput();
         }
 
         protected virtual void RenderBody() {}
 
+        private void RenderCompilationOutput() {
+            if (string.IsNullOrEmpty(compilationOutput)) {
+                return;
+            }
+
+            if (RequestErrorMessage.IsRequestError(compilationOutput)) {
+                RequestErrorMessage.Draw(ref compilationOutput);
+                return;
+            }
+            
+            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+            compilationFoldout = EditorGUILayout.Foldout(compilationFoldout, "Compilation output");
+            if (GUILayout.Button("Clear")) {
+                compilationOutput = null;
+                return;
+            }
+            EditorGUILayout.EndHorizontal();
+
+            if (compilationFoldout) {
+                EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+                scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+                var lines = compilationOutput.Split('\n');
+                foreach (var line in lines) {
+                    var split = line.Split('\t');
+                    EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+                    EditorGUILayout.LabelField(split[0], new GUIStyle {
+                        normal = { textColor = GetOutputNoteColor(split[0]) },
+                        alignment = TextAnchor.MiddleRight,
+                        fontStyle = FontStyle.Bold
+                    }, GUILayout.Width(70));
+
+                    EditorGUILayout.BeginVertical();
+                    EditorGUILayout.LabelField(split[1], EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField(split[2], EditorStyles.wordWrappedLabel);
+                    EditorGUILayout.EndVertical();
+
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.Space();
+                }
+                EditorGUILayout.EndScrollView();
+                EditorGUILayout.EndVertical();
+            }
+        }
+
+        private Color GetOutputNoteColor(string text) {
+            switch (text) {
+                case "Suggestion":
+                case "Info":
+                    return Color.blue;
+                case "Warning":
+                    return new Color(0.6f, 0.6f, 0.0f);
+                case "Serious":
+                case "Critical":
+                    return new Color(0.6f, 0.2f, 0.0f);
+                case "Comment": return new Color(0.1f, 0.6f, 0.1f);
+                case "Fatal": return new Color(0.8f, 0.1f, 0.0f);
+                default: return Color.cyan;
+            }
+        }
+
         protected void Generate() {
             Object.Generate()
                   .Then(response => {
-                      ErrorMessage = response.ErrorMessage;
+                      compilationOutput = response.ErrorMessage;
                       IsLoading = false;
                       Repaint();
                   })
@@ -81,7 +135,7 @@ namespace Michelangelo.Editor {
         }
 
         protected void OnRejected(Exception error) {
-            ErrorMessage = error.Message;
+            compilationOutput = error.Message;
             IsLoading = false;
             Repaint();
             Debug.LogError(error);

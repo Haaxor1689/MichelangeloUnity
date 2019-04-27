@@ -250,7 +250,7 @@ namespace Michelangelo.Session {
                     response = MessagePackSerializer.Deserialize<PostResponseModel>(getRequest.downloadHandler.data);
                     isGenerating = response.Objects == null || response.Objects?.Length == 0;
                     if (isGenerating && !String.IsNullOrEmpty(response.Errors)) {
-                        reject(new ApplicationException("Generate grammar request error:\n" + Regex.Replace(response.Errors, "<br\\/>", "\n")));
+                        reject(new ApplicationException(Regex.Replace(response.Errors, "<br\\/>", "\n")));
                         yield break;
                     }
                 }
