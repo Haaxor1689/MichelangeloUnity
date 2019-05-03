@@ -35,6 +35,12 @@ namespace Michelangelo.Editor {
 
             RenderBody();
 
+            EditorGUILayout.LabelField("Parse tree", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+            var rect = GUILayoutUtility.GetRect(0, 100, 100, 1000);
+            Object.TreeView?.OnGUI(rect);
+            EditorGUILayout.EndVertical();
+
             // EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
             // if (Object.HasMesh) {
             //     serializedObject.FindProperty("isInEditMode").boolValue = EditorGUILayout.Toggle(

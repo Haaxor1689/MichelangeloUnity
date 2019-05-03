@@ -9,14 +9,8 @@ namespace Michelangelo.Scripts {
         [SerializeField]
         private string id = "";
         public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
-
-        /// <summary>
-        /// Generates new mesh for Michelangelo object asynchronously.
-        /// </summary>
-        /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
-        public override IPromise<GenerateGrammarResponse> Generate() {
-            return MichelangeloSession.GenerateGrammar(Grammar.id).Then(response => CreateMesh(response.ParseTree, response.Materials));
-        }
+        
+        protected override IPromise<GenerateGrammarResponse> GenerateCallback() => MichelangeloSession.GenerateGrammar(Grammar.id);
 
         public void SetId(string newId) => id = newId;
         

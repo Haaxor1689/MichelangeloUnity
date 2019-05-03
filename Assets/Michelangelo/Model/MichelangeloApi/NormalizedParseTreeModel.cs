@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Michelangelo.Model.MichelangeloApi {
+    [Serializable]
     public class ParseTreeChild {
         private const uint MeshVertexCountLimit = 65534u;
 
         public uint Index;
-        public bool IsLeaf = false;
+        public bool IsLeaf;
         public string[] Ontology;
         public GeometricModel Shape;
         
@@ -20,11 +22,12 @@ namespace Michelangelo.Model.MichelangeloApi {
         public IEnumerable<ParseTreeChild> GetLeafNodes(ParseTree parseTree) =>
             IsLeaf ? new List<ParseTreeChild> { this } : parseTree[Index].GetLeafNodes(parseTree);
     }
-
+    
+    [Serializable]
     public class NormalizedParseTreeModel {
         public ParseTreeChild[] Children;
 
-        public uint ID = uint.MaxValue;
+        public uint Id = uint.MaxValue;
         public string Rule = string.Empty;
 
         public uint GetVertexCount(ParseTree parseTree) => 

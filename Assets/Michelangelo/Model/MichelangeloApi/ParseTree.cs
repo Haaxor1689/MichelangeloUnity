@@ -7,12 +7,14 @@ namespace Michelangelo.Model.MichelangeloApi {
     public class ParseTree : SerializableDictionary<uint, NormalizedParseTreeModel> {
         public ParseTree(IDictionary<uint, ParseTreeModel> dict) : base(FilterDanglingLeaves(dict)) { }
 
-        public IEnumerable<ParseTreeChild> GetMeshNodes() => Values.Where(n => n.Rule == "ROOT").SelectMany(n => n.GetMeshNodes(this));
+        public IEnumerable<NormalizedParseTreeModel> GetRoots() => Values.Where(n => n.Rule == "ROOT");
+
+        public IEnumerable<ParseTreeChild> GetMeshNodes() => GetRoots().SelectMany(n => n.GetMeshNodes(this));
 
         private static IDictionary<uint, NormalizedParseTreeModel> FilterDanglingLeaves(IDictionary<uint, ParseTreeModel> dict) => 
             dict.Select(k => k.Value)
                 .Select(m => new NormalizedParseTreeModel {
-                    ID = m.ID,
+                    Id = m.ID,
                     Rule = m.Rule,
                     Children = m.ChildIndices.Select((c, i) => new ParseTreeChild {
                         Index = c,
@@ -21,6 +23,6 @@ namespace Michelangelo.Model.MichelangeloApi {
                         Shape = m.Shape[i]
                     }).ToArray()
                 })
-                .ToDictionary(k => k.ID, v => v);
+                .ToDictionary(k => k.Id, v => v);
     }
 }

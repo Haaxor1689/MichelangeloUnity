@@ -10,15 +10,8 @@ namespace Michelangelo.Scripts {
     public class SceneObject : ObjectBase {
 
         public Goal Goal;
-
-        /// <summary>
-        /// Generates new mesh for Michelangelo object asynchronously.
-        /// </summary>
-        /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
-        public override IPromise<GenerateGrammarResponse> Generate() {
-            Debug.Log(Goal.ToCode());
-            return MichelangeloSession.GenerateScene(Goal.ToCode()).Then(response => CreateMesh(response.ParseTree, response.Materials));
-        }
+        
+        protected override IPromise<GenerateGrammarResponse> GenerateCallback() => MichelangeloSession.GenerateScene(Goal.ToCode());
 
         [MenuItem("Michelangelo/SceneObject", false, 12)]
         public static void ShowWindow() {

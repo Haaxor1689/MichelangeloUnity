@@ -4,20 +4,26 @@ using Michelangelo.Model;
 using Michelangelo.Model.MichelangeloApi;
 using Michelangelo.Utility;
 using RSG;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
     public abstract class ObjectBase : MonoBehaviour, IObjectBase {
-        public bool IsFlatShaded;
+        public TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
+
+        [SerializeField]
+        private TreeViewState treeViewState; 
+        public TreeView TreeView { get; private set; }
 
         [SerializeField]
         protected bool isInEditMode;
+        public bool IsInEditMode => isInEditMode;
 
         [SerializeField]
         protected Material[] Materials;
 
         [SerializeField]
-        protected ParseTree ParseTree;
+        public ParseTree ParseTree;
 
         public bool HasMesh {
             get {
@@ -30,14 +36,23 @@ namespace Michelangelo.Scripts {
             }
         }
 
-        public bool IsInEditMode => isInEditMode;
-
-        public abstract IPromise<GenerateGrammarResponse> Generate();
+        protected abstract IPromise<GenerateGrammarResponse> GenerateCallback();
+        
+        /// <summary>
+        /// Generates new mesh for Michelangelo object asynchronously.
+        /// </summary>
+        /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
+        public IPromise<GenerateGrammarResponse> Generate() {
+            return GenerateCallback().Then(response => CreateMesh(response.ParseTree, response.Materials));
+        }
 
         protected void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
             DeleteOldMeshes();
 
             ParseTree = parseTree;
+            TreeView = new ParseTreeView(TreeViewState, ParseTree);
+
+
             Materials = materials.Select(m => MaterialFromModel(m.Value)).ToArray();
 
             var nodes = parseTree.GetMeshNodes();
@@ -54,7 +69,6 @@ namespace Michelangelo.Scripts {
                     --i;
                 }
             }
-            IsFlatShaded = false;
         }
 
         private static Material MaterialFromModel(MaterialModel model) {
@@ -66,16 +80,6 @@ namespace Michelangelo.Scripts {
             material.SetFloat("_Metallic", (float) model.Scalars.GetValueOrDefault("gIi", 0.0));
             material.SetFloat("_Glossiness", 1.0f - (float) model.Scalars.GetValueOrDefault("gR", 1.0));
             return material;
-        }
-
-        public void ToFlatShaded() {
-            for (var i = 0; i < transform.childCount; ++i) {
-                var child = transform.GetChild(i);
-                if (child.GetComponent<ParseTreeNode>()) {
-                    MeshUtilities.ToFlatShaded(child.GetComponent<MeshFilter>().sharedMesh);
-                }
-            }
-            IsFlatShaded = true;
         }
     }
 }
