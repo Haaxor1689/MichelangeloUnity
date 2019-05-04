@@ -1,37 +1,82 @@
-﻿using Michelangelo.Model.MichelangeloApi;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Michelangelo.Model.MichelangeloApi;
 using UnityEditor.IMGUI.Controls;
 
 namespace Michelangelo.Scripts {
-    internal class ParseTreeView : TreeView {
+    public class ParseTreeView : TreeView {
         private readonly ParseTree parseTree;
 
         public ParseTreeView(TreeViewState state, ParseTree parseTree) : base(state) {
-            if (parseTree == null) {
-                return;
-            }
             this.parseTree = parseTree;
             Reload();
         }
 
-        protected override TreeViewItem BuildRoot() {
-            var root = new TreeViewItem { id = -1, depth = -1 };
+        protected override TreeViewItem BuildRoot() => new TreeViewItem { id = -1, depth = -1 };
+        
+        protected override IList<TreeViewItem> BuildRows(TreeViewItem root) {
+            if (parseTree == null) {
+                return new List<TreeViewItem>();
+            }
+
+            var rows = GetRows() ?? new List<TreeViewItem>(parseTree.Count);
+            rows.Clear();
+
             foreach (var node in parseTree.GetRoots()) {
                 var item = new TreeViewItem { id = (int) node.Id, displayName = node.Rule };
                 root.AddChild(item);
-                AddChildrenRecursive(node, item);
+                rows.Add(item);
+                
+                if (IsExpanded(item.id)) {
+                    AddChildrenRecursive(node, item, rows);
+                } else {
+                    item.children = CreateChildListForCollapsedParent();
+                }
             }
             SetupDepthsFromParentsAndChildren(root);
-            return root;
+            return rows;
         }
 
-        private void AddChildrenRecursive(NormalizedParseTreeModel node, TreeViewItem item) {
+        private void AddChildrenRecursive(NormalizedParseTreeModel node, TreeViewItem item, IList<TreeViewItem> rows) {
+            item.children = new List<TreeViewItem>(node.Children.Length);
             foreach (var child in node.Children) {
-                var childNode = parseTree[child.Index];
-                var childItem = new TreeViewItem { id = (int) childNode.Id, displayName = childNode.Rule };
+                var childItem = new TreeViewItem { id = (int) child.Index, displayName = child.Ontology.Last() };
 
                 item.AddChild(childItem);
-                AddChildrenRecursive(childNode, childItem);
+                rows.Add(childItem);
+                if (!child.IsLeaf) {
+                    if (IsExpanded(childItem.id)) {
+                        AddChildrenRecursive(parseTree[child.Index], childItem, rows);
+                    } else {
+                        childItem.children = CreateChildListForCollapsedParent();
+                    }
+                }
             }
+        }
+
+        protected override IList<int> GetAncestors(int id) {
+            var current = parseTree[(uint) id];
+            var ancestors = new List<int>();
+            while (current.Rule != "ROOT") {
+                current = parseTree.GetParent(current.Id);
+                ancestors.Add((int) current.Id);
+            }
+            return ancestors;
+        }
+
+        protected override IList<int> GetDescendantsThatHaveChildren(int id) {
+            var stack = new Stack<int>();
+            stack.Push(id);
+
+            var parents = new List<int>();
+            while (stack.Count > 0) {
+                var current = stack.Pop();
+                parents.Add(current);
+                foreach (var child in parseTree[(uint)current].Children) {
+                    stack.Push((int)child.Index);
+                }
+            }
+            return parents;
         }
     }
 }

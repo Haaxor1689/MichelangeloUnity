@@ -47,8 +47,8 @@ namespace MessagePack.Resolvers
             {
                 {typeof(global::System.Collections.Generic.Dictionary<string, double>), 0 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, double[]>), 1 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]), 2 },
-                {typeof(string[][]), 3 },
+                {typeof(string[][]), 2 },
+                {typeof(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]), 3 },
                 {typeof(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>), 4 },
                 {typeof(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>), 5 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>), 6 },
@@ -83,8 +83,8 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new global::MessagePack.Formatters.DictionaryFormatter<string, double>();
                 case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, double[]>();
-                case 2: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Model.MichelangeloApi.GeometricModel>();
-                case 3: return new global::MessagePack.Formatters.ArrayFormatter<string[]>();
+                case 2: return new global::MessagePack.Formatters.ArrayFormatter<string[]>();
+                case 3: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Model.MichelangeloApi.GeometricModel>();
                 case 4: return new global::MessagePack.Formatters.DictionaryFormatter<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>();
                 case 5: return new global::MessagePack.Formatters.DictionaryFormatter<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>();
                 case 6: return new global::MessagePack.Formatters.DictionaryFormatter<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>();
@@ -687,20 +687,20 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "ID", 0},
-                { "Rule", 1},
-                { "Shape", 2},
-                { "Ontology", 3},
-                { "ChildIndices", 4},
+                { "ChildIndices", 0},
+                { "ID", 1},
+                { "Ontology", 2},
+                { "Rule", 3},
+                { "Shape", 4},
             };
 
             this.____stringByteKeys = new byte[][]
             {
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ChildIndices"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ID"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Ontology"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Rule"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Shape"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Ontology"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("ChildIndices"),
                 
             };
         }
@@ -716,15 +716,15 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var startOffset = offset;
             offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 5);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.ID);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Rule, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Shape, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += formatterResolver.GetFormatterWithVerify<string[][]>().Serialize(ref bytes, offset, value.Ontology, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
             offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.ChildIndices, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
+            offset += MessagePackBinary.WriteUInt32(ref bytes, offset, value.ID);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
+            offset += formatterResolver.GetFormatterWithVerify<string[][]>().Serialize(ref bytes, offset, value.Ontology, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Rule, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Shape, formatterResolver);
             return offset - startOffset;
         }
 
@@ -740,11 +740,11 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
+            var __ChildIndices__ = default(uint[]);
             var __ID__ = default(uint);
+            var __Ontology__ = default(string[][]);
             var __Rule__ = default(string);
             var __Shape__ = default(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]);
-            var __Ontology__ = default(string[][]);
-            var __ChildIndices__ = default(uint[]);
 
             for (int i = 0; i < length; i++)
             {
@@ -760,19 +760,19 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                 switch (key)
                 {
                     case 0:
-                        __ID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        __ChildIndices__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 1:
-                        __Rule__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __ID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
                         break;
                     case 2:
-                        __Shape__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                        break;
-                    case 3:
                         __Ontology__ = formatterResolver.GetFormatterWithVerify<string[][]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
+                    case 3:
+                        __Rule__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
                     case 4:
-                        __ChildIndices__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Shape__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -786,11 +786,11 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             readSize = offset - startOffset;
 
             var ____result = new global::Michelangelo.Model.MichelangeloApi.ParseTreeModel();
+            ____result.ChildIndices = __ChildIndices__;
             ____result.ID = __ID__;
+            ____result.Ontology = __Ontology__;
             ____result.Rule = __Rule__;
             ____result.Shape = __Shape__;
-            ____result.Ontology = __Ontology__;
-            ____result.ChildIndices = __ChildIndices__;
             return ____result;
         }
     }

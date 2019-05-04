@@ -11,13 +11,19 @@ namespace Michelangelo.Editor {
         protected bool IsLoading;
 
         private string compilationOutput;
+        private bool parseTreeFoldout = true;
         private bool compilationFoldout = true;
         private Vector2 scrollPos;
+        public ParseTreeView TreeView { get; private set; }
 
         protected virtual bool CanGenerate => true;
         protected virtual string GenerateButtonTooltip => "Sends a request to Michelangelo API to generate new mesh. This will replace current mesh of the object if it has any.";
 
         private ObjectBase Object => (ObjectBase) target;
+
+        private void OnEnable() {
+            TreeView = new ParseTreeView(Object.TreeViewState, Object.ParseTree);
+        }
 
         public override void OnInspectorGUI() {
             if (!WebAPI.IsAuthenticated) {
@@ -34,12 +40,14 @@ namespace Michelangelo.Editor {
             }
 
             RenderBody();
-
-            EditorGUILayout.LabelField("Parse tree", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
-            var rect = GUILayoutUtility.GetRect(0, 100, 100, 1000);
-            Object.TreeView?.OnGUI(rect);
-            EditorGUILayout.EndVertical();
+            
+            parseTreeFoldout = EditorGUILayout.Foldout(parseTreeFoldout, "Parse tree");
+            if (parseTreeFoldout) {
+                EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+                var rect = GUILayoutUtility.GetRect(0, 100, 100, 1000);
+                TreeView.OnGUI(rect);
+                EditorGUILayout.EndVertical();
+            }
 
             // EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
             // if (Object.HasMesh) {
@@ -138,6 +146,7 @@ namespace Michelangelo.Editor {
                   .Then(response => {
                       compilationOutput = response.ErrorMessage;
                       IsLoading = false;
+                      TreeView = new ParseTreeView(Object.TreeViewState, Object.ParseTree);
                       Repaint();
                   })
                   .Catch(OnRejected);

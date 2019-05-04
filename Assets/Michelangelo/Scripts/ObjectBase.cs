@@ -12,8 +12,8 @@ namespace Michelangelo.Scripts {
         public TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
 
         [SerializeField]
+        [HideInInspector]
         private TreeViewState treeViewState; 
-        public TreeView TreeView { get; private set; }
 
         [SerializeField]
         protected bool isInEditMode;
@@ -21,9 +21,29 @@ namespace Michelangelo.Scripts {
 
         [SerializeField]
         protected Material[] Materials;
-
+        
         [SerializeField]
-        public ParseTree ParseTree;
+        private ParseTreeData parseTreeData;
+        public ParseTree ParseTree {
+            get {
+                if (parseTreeData == null) {
+                    InitParseTreeData();
+                }
+                return parseTreeData.ParseTree;
+            }
+        }
+
+        void InitParseTreeData() {
+            var child = transform.Find("ParseTreeData");
+            if (child) {
+                parseTreeData = child.GetComponent<ParseTreeData>();
+                return;
+            }
+            var newObject = new GameObject("ParseTreeData");
+            newObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
+            newObject.transform.SetParent(transform);
+            parseTreeData = newObject.AddComponent<ParseTreeData>();
+        }
 
         public bool HasMesh {
             get {
@@ -49,10 +69,8 @@ namespace Michelangelo.Scripts {
         protected void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
             DeleteOldMeshes();
 
-            ParseTree = parseTree;
-            TreeView = new ParseTreeView(TreeViewState, ParseTree);
-
-
+            InitParseTreeData();
+            parseTreeData.ParseTree = parseTree;
             Materials = materials.Select(m => MaterialFromModel(m.Value)).ToArray();
 
             var nodes = parseTree.GetMeshNodes();
