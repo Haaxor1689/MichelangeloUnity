@@ -88,30 +88,33 @@ namespace Michelangelo.Editor {
             }
             EditorGUILayout.EndHorizontal();
 
-            if (compilationFoldout) {
-                EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
-                scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-                var lines = compilationOutput.Split('\n');
-                foreach (var line in lines) {
-                    var split = line.Split('\t');
-                    EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
-                    EditorGUILayout.LabelField(split[0], new GUIStyle {
-                        normal = { textColor = GetOutputNoteColor(split[0]) },
-                        alignment = TextAnchor.MiddleRight,
-                        fontStyle = FontStyle.Bold
-                    }, GUILayout.Width(70));
-
-                    EditorGUILayout.BeginVertical();
-                    EditorGUILayout.LabelField(split[1], EditorStyles.boldLabel);
-                    EditorGUILayout.LabelField(split[2], EditorStyles.wordWrappedLabel);
-                    EditorGUILayout.EndVertical();
-
-                    EditorGUILayout.EndHorizontal();
-                    EditorGUILayout.Space();
-                }
-                EditorGUILayout.EndScrollView();
-                EditorGUILayout.EndVertical();
+            if (!compilationFoldout) {
+                return;
             }
+
+            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            var lines = compilationOutput.Split('\n');
+            foreach (var line in lines) {
+                var split = line.Split('\t');
+
+                EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+                EditorGUILayout.LabelField(split[0], new GUIStyle {
+                    normal = { textColor = GetOutputNoteColor(split[0]) },
+                    alignment = TextAnchor.MiddleRight,
+                    fontStyle = FontStyle.Bold
+                }, GUILayout.Width(70));
+
+                EditorGUILayout.BeginVertical();
+                EditorGUILayout.LabelField(split[1], EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(split[2], EditorStyles.wordWrappedLabel);
+                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.Space();
+            }
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
         }
 
         private Color GetOutputNoteColor(string text) {
