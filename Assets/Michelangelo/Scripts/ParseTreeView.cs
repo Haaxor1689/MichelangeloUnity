@@ -23,7 +23,7 @@ namespace Michelangelo.Scripts {
             rows.Clear();
 
             foreach (var node in parseTree.GetRoots()) {
-                var item = new TreeViewItem { id = (int) node.Id, displayName = node.Rule };
+                var item = new TreeViewItem { id = (int) node.Id, displayName = node.Name };
                 root.AddChild(item);
                 rows.Add(item);
                 
@@ -39,14 +39,14 @@ namespace Michelangelo.Scripts {
 
         private void AddChildrenRecursive(NormalizedParseTreeModel node, TreeViewItem item, IList<TreeViewItem> rows) {
             item.children = new List<TreeViewItem>(node.Children.Length);
-            foreach (var child in node.Children) {
-                var childItem = new TreeViewItem { id = (int) child.Index, displayName = child.Ontology.Last() };
+            foreach (var child in node.GetChildren(parseTree)) {
+                var childItem = new TreeViewItem { id = (int) child.Id, displayName = child.Name };
 
                 item.AddChild(childItem);
                 rows.Add(childItem);
                 if (!child.IsLeaf) {
                     if (IsExpanded(childItem.id)) {
-                        AddChildrenRecursive(parseTree[child.Index], childItem, rows);
+                        AddChildrenRecursive(parseTree[child.Id], childItem, rows);
                     } else {
                         childItem.children = CreateChildListForCollapsedParent();
                     }
@@ -72,11 +72,15 @@ namespace Michelangelo.Scripts {
             while (stack.Count > 0) {
                 var current = stack.Pop();
                 parents.Add(current);
-                foreach (var child in parseTree[(uint)current].Children) {
-                    stack.Push((int)child.Index);
+                foreach (var child in parseTree[(uint)current].GetChildren(parseTree)) {
+                    stack.Push((int)child.Id);
                 }
             }
             return parents;
+        }
+
+        protected override void SelectionChanged(IList<int> selectedIds) {
+            base.SelectionChanged(selectedIds);
         }
     }
 }

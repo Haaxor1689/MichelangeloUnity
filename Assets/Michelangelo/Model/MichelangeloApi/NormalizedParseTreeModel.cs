@@ -1,39 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Michelangelo.Model.MichelangeloApi {
     [Serializable]
-    public class ParseTreeChild {
-        private const uint MeshVertexCountLimit = 65534u;
-
-        public uint Index;
-        public bool IsLeaf;
-        public string[] Ontology;
-        public GeometricModel Shape;
-        
-        public uint GetVertexCount(ParseTree parseTree) =>
-            IsLeaf ? Shape.GetVertexCount() : parseTree[Index].GetVertexCount(parseTree);
-        
-        public IEnumerable<ParseTreeChild> GetMeshNodes(ParseTree parseTree) => GetVertexCount(parseTree) < MeshVertexCountLimit
-            ? new List<ParseTreeChild> { this }
-            : parseTree[Index].GetMeshNodes(parseTree);
-
-        public IEnumerable<ParseTreeChild> GetLeafNodes(ParseTree parseTree) =>
-            IsLeaf ? new List<ParseTreeChild> { this } : parseTree[Index].GetLeafNodes(parseTree);
-    }
-    
-    [Serializable]
     public class NormalizedParseTreeModel {
-        public ParseTreeChild[] Children;
+        private const uint MeshVertexCountLimit = 65534u;
 
         public uint Id = uint.MaxValue;
         public string Rule = string.Empty;
 
-        public uint GetVertexCount(ParseTree parseTree) => 
-            Children.Aggregate(0u, (sum, node) => sum + (node.IsLeaf ? node.Shape.GetVertexCount() : parseTree[node.Index].GetVertexCount(parseTree)));
+        public string Name => Ontology.Length > 0 ? Regex.Replace(Ontology.Last(), @"\s+", " ") : Rule;
+        public bool IsLeaf => Children.Length == 0;
+        public string[] Ontology;
+        public GeometricModel Shape;
+        public uint[] Children;
 
-        public IEnumerable<ParseTreeChild> GetMeshNodes(ParseTree parseTree) => Children.SelectMany(c => c.GetMeshNodes(parseTree)); 
-        public IEnumerable<ParseTreeChild> GetLeafNodes(ParseTree parseTree) => Children.SelectMany(c => c.GetLeafNodes(parseTree));
+        private uint? cachedVertexCount;
+
+        public IEnumerable<NormalizedParseTreeModel> GetChildren(ParseTree parseTree) => parseTree.Data.Select(kvp => kvp.Value).Where(n => Children.Any(c => c == n.Id));
+ 
+        public uint GetVertexCount(ParseTree parseTree) {
+            if (cachedVertexCount == null) {
+                cachedVertexCount = IsLeaf
+                    ? Shape.GetVertexCount()
+                    : GetChildren(parseTree).Aggregate(0u, (sum, node) => sum + node.GetVertexCount(parseTree));
+            }
+            return cachedVertexCount.Value;
+        }
+
+        public IEnumerable<NormalizedParseTreeModel> GetMeshNodes(ParseTree parseTree) => GetVertexCount(parseTree) < MeshVertexCountLimit
+            ? new List<NormalizedParseTreeModel> { this }
+            : GetChildren(parseTree).SelectMany(c => c.GetMeshNodes(parseTree));
+
+        public IEnumerable<NormalizedParseTreeModel> GetLeafNodes(ParseTree parseTree) => IsLeaf
+            ? new List<NormalizedParseTreeModel> { this }
+            : GetChildren(parseTree).SelectMany(c => c.GetLeafNodes(parseTree));
     }
 }

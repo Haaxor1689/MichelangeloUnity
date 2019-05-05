@@ -17,16 +17,15 @@ namespace Michelangelo.Scripts {
         private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
         private IObjectBase parentObject => transform.parent.GetComponent<IObjectBase>();
 
-        private void CreateMesh(ParseTree parseTree, ParseTreeChild node, Material[] grammarMaterials) {
+        private void CreateMesh(ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
             var submeshes = new List<Tuple<Mesh, int>>();
             foreach (var pair in node.GetLeafNodes(parseTree).Select(n => n.Shape)
                                      .GroupBy(p => p.MaterialID, p => p, (key, p) => new { Material = key, GeometricModel = p })) {
                 var mesh = new Mesh();
-                var combine = new List<CombineInstance>();
-                foreach (var model in pair.GeometricModel) {
-                    combine.Add(new CombineInstance { mesh = MeshFromGeometricModel(model), transform = MatrixFromArray(model.Transform) });
-                }
-                mesh.CombineMeshes(combine.ToArray());
+                mesh.CombineMeshes(pair.GeometricModel.Select(model => new CombineInstance {
+                    mesh = MeshFromGeometricModel(model),
+                    transform = MatrixFromArray(model.Transform)
+                }).ToArray());
                 submeshes.Add(Tuple.Create(mesh, pair.Material));
             }
             objectMesh = new Mesh();
@@ -70,8 +69,8 @@ namespace Michelangelo.Scripts {
             // }
         }
 
-        public static GameObject Construct(Transform parent, ParseTree parseTree, ParseTreeChild node, Material[] grammarMaterials) {
-            var newObject = new GameObject(node.Ontology.Last());
+        public static GameObject Construct(Transform parent, ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
+            var newObject = new GameObject(node.Name);
             newObject.hideFlags = HideFlags.NotEditable;
             newObject.transform.SetParent(parent);
             var nodeScript = newObject.AddComponent<ParseTreeNode>();

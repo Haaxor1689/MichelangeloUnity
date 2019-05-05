@@ -44,8 +44,7 @@ namespace Michelangelo.Editor {
             parseTreeFoldout = EditorGUILayout.Foldout(parseTreeFoldout, "Parse tree");
             if (parseTreeFoldout) {
                 EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
-                var rect = GUILayoutUtility.GetRect(0, 100, 100, 1000);
-                TreeView.OnGUI(rect);
+                TreeView.OnGUI(GUILayoutUtility.GetRect(0, 100, 100, 1000));
                 EditorGUILayout.EndVertical();
             }
 
