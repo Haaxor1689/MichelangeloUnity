@@ -3,30 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model.MichelangeloApi;
 using Michelangelo.Utility;
+using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Michelangelo.Scripts {
     public class ParseTreeView : TreeView {
-        private readonly ParseTree parseTree;
-        public IReadOnlyList<Tuple<Mesh, Matrix4x4>> MeshHighlights { get; private set; } = new List<Tuple<Mesh, Matrix4x4>>();
+        private readonly ObjectBase parentObject;
+        private ParseTree ParseTree => parentObject.ParseTree;
 
-        public ParseTreeView(TreeViewState state, ParseTree parseTree) : base(state) {
-            this.parseTree = parseTree;
+        public ParseTreeView(ObjectBase parentObject) : base(parentObject.TreeViewState) {
+            this.parentObject = parentObject;
             Reload();
         }
 
         protected override TreeViewItem BuildRoot() => new TreeViewItem { id = -1, depth = -1 };
         
         protected override IList<TreeViewItem> BuildRows(TreeViewItem root) {
-            if (parseTree == null) {
+            if (ParseTree == null) {
                 return new List<TreeViewItem>();
             }
 
-            var rows = GetRows() ?? new List<TreeViewItem>(parseTree.Count);
+            var rows = GetRows() ?? new List<TreeViewItem>(ParseTree.Count);
             rows.Clear();
 
-            foreach (var node in parseTree.GetRoots()) {
+            foreach (var node in ParseTree.GetRoots()) {
                 var item = new TreeViewItem { id = (int) node.Id, displayName = node.Name };
                 root.AddChild(item);
                 rows.Add(item);
@@ -43,14 +45,14 @@ namespace Michelangelo.Scripts {
 
         private void AddChildrenRecursive(NormalizedParseTreeModel node, TreeViewItem item, IList<TreeViewItem> rows) {
             item.children = new List<TreeViewItem>(node.Children.Length);
-            foreach (var child in node.GetChildren(parseTree)) {
+            foreach (var child in node.GetChildren(ParseTree)) {
                 var childItem = new TreeViewItem { id = (int) child.Id, displayName = child.Name };
 
                 item.AddChild(childItem);
                 rows.Add(childItem);
                 if (!child.IsLeaf) {
                     if (IsExpanded(childItem.id)) {
-                        AddChildrenRecursive(parseTree[child.Id], childItem, rows);
+                        AddChildrenRecursive(ParseTree[child.Id], childItem, rows);
                     } else {
                         childItem.children = CreateChildListForCollapsedParent();
                     }
@@ -59,10 +61,10 @@ namespace Michelangelo.Scripts {
         }
 
         protected override IList<int> GetAncestors(int id) {
-            var current = parseTree[(uint) id];
+            var current = ParseTree[(uint) id];
             var ancestors = new List<int>();
             while (current.Rule != "ROOT") {
-                current = parseTree.GetParent(current.Id);
+                current = ParseTree.GetParent(current.Id);
                 ancestors.Add((int) current.Id);
             }
             return ancestors;
@@ -76,8 +78,16 @@ namespace Michelangelo.Scripts {
             while (stack.Count > 0) {
                 var current = stack.Pop();
                 parents.Add(current);
-                foreach (var child in parseTree[(uint)current].GetChildren(parseTree)) {
-                    stack.Push((int)child.Id);
+                if (current == -1) {
+                    foreach (var root in ParseTree.GetRoots()) {
+                        stack.Push((int) root.Id);
+                    }
+                    continue;
+                }
+                foreach (var child in ParseTree[(uint)current].GetChildren(ParseTree)) {
+                    if (child.Children.Length > 0) {
+                        stack.Push((int) child.Id);
+                    }
                 }
             }
             return parents;
@@ -85,12 +95,31 @@ namespace Michelangelo.Scripts {
 
         protected override void SelectionChanged(IList<int> selectedIds) {
             base.SelectionChanged(selectedIds);
-            MeshHighlights = selectedIds.Where(id => parseTree[(uint) id].Rule != "ROOT").Select(id => {
-                var node = parseTree[(uint) id];
+            parentObject.MeshHighlights = selectedIds.Where(id => ParseTree[(uint) id].Rule != "ROOT").Select(id => {
+                var node = ParseTree[(uint) id];
                 var mesh = MeshUtilities.MeshFromGeometricModel(node.Shape);
                 mesh.RecalculateNormals();
                 return Tuple.Create(mesh, MeshUtilities.MatrixFromArray(node.Shape.Transform));
             }).ToList();
+        }
+
+        protected override void RowGUI(RowGUIArgs args) {
+            if (args.item.displayName == "ROOT") {
+                base.RowGUI(args);
+                return;
+            }
+            var contentIndent = GetContentIndent(args.item);
+
+            var labelRect = args.rowRect;
+            labelRect.x += contentIndent;
+            EditorGUI.LabelField(labelRect, args.label);
+
+            var buttonRect = args.rowRect;
+            buttonRect.x += args.rowRect.width - 100;
+            buttonRect.width = 100;
+            if (GUI.Button(buttonRect, "Attach GO")) {
+                parentObject.AttachGameObjectToNode((uint) args.item.id);
+            }
         }
     }
 }

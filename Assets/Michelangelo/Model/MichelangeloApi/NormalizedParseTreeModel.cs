@@ -12,7 +12,7 @@ namespace Michelangelo.Model.MichelangeloApi {
         public uint Id = uint.MaxValue;
         public string Rule = string.Empty;
 
-        public string Name => Ontology.Length > 0 ? Regex.Replace(Ontology.Last(), @"\s+", " ") : Rule;
+        public string Name => Ontology.Length > 0 ? Ontology.Last().Split().First() : Rule;
         public bool IsLeaf => Children.Length == 0;
         public string[] Ontology;
         public GeometricModel Shape;

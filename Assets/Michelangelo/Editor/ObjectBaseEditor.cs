@@ -22,10 +22,7 @@ namespace Michelangelo.Editor {
         private ObjectBase Object => (ObjectBase) target;
 
         private void OnEnable() {
-            TreeView = new ParseTreeView(Object.TreeViewState, Object.ParseTree);
-            if (!ReferenceEquals(Object.MeshHighlights, TreeView.MeshHighlights)) {
-                Object.MeshHighlights = TreeView.MeshHighlights;
-            }
+            TreeView = new ParseTreeView(Object);
         }
 
         public override void OnInspectorGUI() {
@@ -49,10 +46,6 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
                 TreeView.OnGUI(GUILayoutUtility.GetRect(0, 100, 100, 1000));
                 EditorGUILayout.EndVertical();
-
-                if (!ReferenceEquals(Object.MeshHighlights, TreeView.MeshHighlights)) {
-                    Object.MeshHighlights = TreeView.MeshHighlights;
-                }
             }
 
             // EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
@@ -152,7 +145,7 @@ namespace Michelangelo.Editor {
                   .Then(response => {
                       compilationOutput = response.ErrorMessage;
                       IsLoading = false;
-                      TreeView = new ParseTreeView(Object.TreeViewState, Object.ParseTree);
+                      TreeView = new ParseTreeView(Object);
                       Repaint();
                   })
                   .Catch(OnRejected);

@@ -96,6 +96,19 @@ namespace Michelangelo.Scripts {
             return GenerateCallback().Then(response => CreateMesh(response.ParseTree, response.Materials));
         }
 
+        /// <summary>
+        /// Instantiates new GameObject at the pivot of node specified by id.
+        /// </summary>
+        /// <param name="nodeId">The node Id from current parse tree.</param>
+        /// <returns>Instantiated GameObject.</returns>
+        public GameObject AttachGameObjectToNode(uint nodeId) {
+            var node = ParseTree[nodeId];
+            var newObject = new GameObject();
+            newObject.transform.SetParent(transform);
+            newObject.transform.position = MeshUtilities.MatrixFromArray(node.Shape.Transform).ExtractPosition();
+            return newObject;
+        }
+
         protected void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
             DeleteOldMeshes();
 
