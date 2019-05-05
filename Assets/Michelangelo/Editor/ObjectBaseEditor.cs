@@ -46,6 +46,15 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
                 TreeView.OnGUI(GUILayoutUtility.GetRect(0, 100, 100, 1000));
                 EditorGUILayout.EndVertical();
+
+                using(new EditorGUILayout.HorizontalScope()) {
+                    if (GUILayout.Button("Expand All", "miniButton") && (Object.ParseTree.Count < 200 || EditorUtility.DisplayDialog("Expand large tree?", $"This tree contains a total of {Object.ParseTree.Count} nodes. Expanding it may cause unity to freeze.", "Expand anyway", "Cancel"))) {
+                        TreeView.ExpandAll();
+                    }
+                    if (GUILayout.Button("Collapse All", "miniButton")) {
+                        TreeView.CollapseAll();
+                    }
+                }
             }
 
             // EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
