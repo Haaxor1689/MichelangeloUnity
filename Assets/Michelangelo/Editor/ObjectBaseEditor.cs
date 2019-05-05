@@ -57,24 +57,6 @@ namespace Michelangelo.Editor {
                 }
             }
 
-            // EditorGUILayout.LabelField("Options", EditorStyles.boldLabel);
-            // if (Object.HasMesh) {
-            //     serializedObject.FindProperty("isInEditMode").boolValue = EditorGUILayout.Toggle(
-            //         new GUIContent("Edit mode", "Allows selection of single mesh elements and displays additional info about them."),
-            //         serializedObject.FindProperty("isInEditMode").boolValue);
-            //     serializedObject.ApplyModifiedProperties();
-            //
-            //     if (!Object.IsFlatShaded
-            //       && GUILayout.Button(new GUIContent("Transform to flat shaded", "Used by default in Michelangelo online preview.")) 
-            //       && EditorUtility.DisplayDialog(
-            //             "Transform to flat shaded?",
-            //             "This action is irreversible and will cause changes to generated meshes.",
-            //             "Transform",
-            //             "Cancel")) {
-            //         Object.ToFlatShaded();
-            //     }
-            // }
-
             EditorGUILayout.Space();
             GUI.enabled = GUI.enabled && CanGenerate;
             if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {

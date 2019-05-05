@@ -10,6 +10,14 @@ namespace Michelangelo.Model.MichelangeloApi {
 
         [SerializeField]
         private List<NormalizedParseTreeModel> serializedValues = new List<NormalizedParseTreeModel>();
+        
+        private IEnumerable<NormalizedParseTreeModel> cachedRoots;
+
+        public NormalizedParseTreeModel this[uint key] => Data?[key];
+        public int Count => Data?.Count ?? 0;
+
+        public IEnumerable<NormalizedParseTreeModel> GetRoots() => cachedRoots ?? (cachedRoots = Data.Values.Where(n => n.Rule == "ROOT"));
+        public IEnumerable<NormalizedParseTreeModel> GetMeshNodes() => GetRoots().SelectMany(n => n.GetMeshNodes(this));
 
         public ParseTree(IDictionary<uint, ParseTreeModel> dict) {
             Data = dict.SelectMany(kvp => kvp.Value.ChildIndices).Concat(dict.Keys).Distinct().Select(id => {
@@ -19,37 +27,13 @@ namespace Michelangelo.Model.MichelangeloApi {
                 return new NormalizedParseTreeModel {
                     Id = id,
                     Rule = node?.Rule,
+                    Parent = parent?.ID ?? uint.MaxValue,
                     Ontology = parent?.Ontology[index.Value] ?? new string[0],
                     Shape = parent?.Shape[index.Value],
                     Children = node?.ChildIndices ?? new uint[0]
                 };
             }).ToDictionary(k => k.Id, v => v);
-            // Data = dict.Select(k => k.Value)
-            //            .Select(m => {
-            //                if (m.Rule == "ROOT") {
-            //                    return new NormalizedParseTreeModel {
-            //                        Id = m.ID,
-            //                        Rule = m.Rule,
-            //                        Ontology = new string[0],
-            //                        Shape = null,
-            //                        Children = m.ChildIndices
-            //                    };
-            //                }
-            //                var parent = dict.First(n => n.Value.ChildIndices.Any(c => c == m.ID)).Value;
-            //                var index = parent.ChildIndices.ToList().IndexOf(m.ID);
-            //                return new NormalizedParseTreeModel {
-            //                    Id = m.ID,
-            //                    Rule = m.Rule,
-            //                    Ontology = parent.Ontology[index],
-            //                    Shape = parent.Shape[index],
-            //                    Children = m.ChildIndices
-            //                };
-            //            })
-            //            .ToDictionary(k => k.Id, v => v);
         }
-
-        public NormalizedParseTreeModel this[uint key] => Data?[key];
-        public int Count => Data?.Count ?? 0;
 
         public void OnBeforeSerialize() {
             if (Data == null || serializedValues.Count == Data.Count) {
@@ -67,9 +51,5 @@ namespace Michelangelo.Model.MichelangeloApi {
                 Data.Add(model.Id, model);
             }
         }
-
-        public IEnumerable<NormalizedParseTreeModel> GetRoots() => Data.Values.Where(n => n.Rule == "ROOT");
-        public NormalizedParseTreeModel GetParent(uint id) => Data.Values.First(n => n.Children.Any(c => c == id));
-        public IEnumerable<NormalizedParseTreeModel> GetMeshNodes() => GetRoots().SelectMany(n => n.GetMeshNodes(this));
     }
 }

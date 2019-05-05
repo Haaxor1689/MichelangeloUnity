@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model;
@@ -10,80 +9,31 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
-    public abstract class ObjectBase : MonoBehaviour, IObjectBase {
+    public abstract class ObjectBase : MonoBehaviour {
         public TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
 
         [SerializeField]
         [HideInInspector]
-        private TreeViewState treeViewState; 
-
-        [SerializeField]
-        protected bool isInEditMode;
-        public bool IsInEditMode => isInEditMode;
+        private TreeViewState treeViewState;
 
         [SerializeField]
         protected Material[] Materials;
         
         [SerializeField]
         private ParseTreeData parseTreeData;
-        public ParseTree ParseTree {
-            get {
-                if (parseTreeData == null) {
-                    InitParseTreeData();
-                }
-                return parseTreeData.ParseTree;
-            }
-        }
-
-        void InitParseTreeData() {
-            var child = transform.Find("ParseTreeData");
-            if (child) {
-                parseTreeData = child.GetComponent<ParseTreeData>();
-                return;
-            }
-            var newObject = new GameObject("ParseTreeData");
-            newObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
-            newObject.transform.SetParent(transform);
-            parseTreeData = newObject.AddComponent<ParseTreeData>();
-        }
-
-        public bool HasMesh {
-            get {
-                for (var i = 0; i < transform.childCount; ++i) {
-                    if (transform.GetChild(i).GetComponent<ParseTreeNode>()) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
+        public ParseTree ParseTree => (parseTreeData ?? (parseTreeData = GetParseTreeData())).ParseTree;
         
         public IReadOnlyList<Tuple<Mesh, Matrix4x4>> MeshHighlights;
 
-        private void OnDrawGizmosSelected() {
-            if (MeshHighlights == null) {
-                return;
+        private ParseTreeData GetParseTreeData() {
+            var child = transform.Find("ParseTreeData");
+            if (child) {
+                return child.GetComponent<ParseTreeData>();
             }
-            foreach (var mesh in MeshHighlights) {
-                if (mesh.Item1.vertexCount == 0) {
-                    return;
-                }
-
-                Gizmos.color = new Color(0.97f, 0.58f, 0.11f);
-                Gizmos.DrawWireMesh(
-                    mesh.Item1,
-                    mesh.Item2.ExtractPosition() + transform.position,
-                    mesh.Item2.ExtractRotation() * transform.rotation,
-                    mesh.Item2.ExtractScale() + transform.localScale + new Vector3(0.1f, 0.1f, 0.1f)
-                );
-                Gizmos.color = new Color(0.97f, 0.58f, 0.11f, 0.3f);
-                Gizmos.DrawMesh(
-                    mesh.Item1,
-                    mesh.Item2.ExtractPosition() + transform.position,
-                    mesh.Item2.ExtractRotation() * transform.rotation,
-                    mesh.Item2.ExtractScale() + transform.localScale + new Vector3(0.1f, 0.1f, 0.1f)
-                );
-            }
+            var newObject = new GameObject("ParseTreeData");
+            newObject.transform.SetParent(transform);
+            newObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
+            return newObject.AddComponent<ParseTreeData>();
         }
 
         protected abstract IPromise<GenerateGrammarResponse> GenerateCallback();
@@ -109,12 +59,12 @@ namespace Michelangelo.Scripts {
             return newObject;
         }
 
-        protected void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
+        private void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
             DeleteOldMeshes();
 
-            InitParseTreeData();
+            GetParseTreeData();
             parseTreeData.ParseTree = parseTree;
-            Materials = materials.Select(m => MaterialFromModel(m.Value)).ToArray();
+            Materials = materials.Select(m => MeshUtilities.MaterialFromModel(m.Value)).ToArray();
 
             var nodes = parseTree.GetMeshNodes();
             foreach (var node in nodes) {
@@ -132,15 +82,30 @@ namespace Michelangelo.Scripts {
             }
         }
 
-        private static Material MaterialFromModel(MaterialModel model) {
-            model.Scalars = model.Scalars ?? new Dictionary<string, double>();
-            model.Vectors = model.Vectors ?? new Dictionary<string, double[]>();
+        private void OnDrawGizmosSelected() {
+            if (MeshHighlights == null) {
+                return;
+            }
+            foreach (var mesh in MeshHighlights) {
+                if (mesh.Item1.vertexCount == 0) {
+                    return;
+                }
 
-            var material = new Material(Shader.Find("Standard"));
-            material.SetColor("_Color", new Color((float) model.Albedo[0], (float) model.Albedo[1], (float) model.Albedo[2]));
-            material.SetFloat("_Metallic", (float) model.Scalars.GetValueOrDefault("gIi", 0.0));
-            material.SetFloat("_Glossiness", 1.0f - (float) model.Scalars.GetValueOrDefault("gR", 1.0));
-            return material;
+                Gizmos.color = new Color(0.97f, 0.58f, 0.11f);
+                Gizmos.DrawWireMesh(
+                    mesh.Item1,
+                    mesh.Item2.ExtractPosition() + transform.position,
+                    mesh.Item2.ExtractRotation() * transform.rotation,
+                    mesh.Item2.ExtractScale() + transform.localScale + new Vector3(0.1f, 0.1f, 0.1f)
+                );
+                Gizmos.color = new Color(0.97f, 0.58f, 0.11f, 0.3f);
+                Gizmos.DrawMesh(
+                    mesh.Item1,
+                    mesh.Item2.ExtractPosition() + transform.position,
+                    mesh.Item2.ExtractRotation() * transform.rotation,
+                    mesh.Item2.ExtractScale() + transform.localScale + new Vector3(0.1f, 0.1f, 0.1f)
+                );
+            }
         }
     }
 }

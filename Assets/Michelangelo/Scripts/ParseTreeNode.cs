@@ -14,7 +14,6 @@ namespace Michelangelo.Scripts {
         
         private MeshFilter MeshFilter => GetComponent<MeshFilter>();
         private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
-        // private IObjectBase parentObject => transform.parent.GetComponent<IObjectBase>();
 
         private void CreateMesh(ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
             var submeshes = new List<Tuple<Mesh, int>>();
@@ -35,37 +34,9 @@ namespace Michelangelo.Scripts {
                 materials.Add(grammarMaterials[m.Item2]);
             }
             objectMesh.CombineMeshes(finalCombine.ToArray(), false);
-            // objectMesh.CombineMeshes(finalCombine.ToArray());
             MeshFilter.sharedMesh = objectMesh;
             MeshRenderer.sharedMaterials = materials.ToArray();
-            // MeshRenderer.sharedMaterials = new []{ materials[0] };
             transform.localPosition = new Vector3(0, 0, 0);
-        }
-
-        private void OnDrawGizmosSelected() {
-            // if (!parentObject.IsInEditMode) {
-            //     if (Selection.activeGameObject == gameObject) {
-            //         Selection.objects = new Object[] { parentObject.gameObject };
-            //     }
-            //     return;
-            // }
-            //
-            // if (Selection.activeGameObject == parentObject.gameObject) {
-            //     return;
-            // }
-            //
-            // // Draw vertices and normals
-            // for (var i = 0; i < MeshFilter.sharedMesh.vertices.Length; i++) {
-            //     var sharedMeshVertex = MeshFilter.sharedMesh.vertices[i];
-            //     sharedMeshVertex.Scale(transform.localScale);
-            //     sharedMeshVertex = transform.localRotation * sharedMeshVertex;
-            //     sharedMeshVertex += transform.position;
-            //     
-            //     Gizmos.color = Color.green;
-            //     Gizmos.DrawLine(sharedMeshVertex, sharedMeshVertex + transform.localRotation * MeshFilter.sharedMesh.normals[i] * 0.2f);
-            //     Gizmos.color = Color.red;
-            //     Gizmos.DrawSphere(sharedMeshVertex, 0.02f);
-            // }
         }
 
         public static GameObject Construct(Transform parent, ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {

@@ -6,11 +6,11 @@ using Michelangelo.Utility;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using Object = System.Object;
 
 namespace Michelangelo.Scripts {
     public class ParseTreeView : TreeView {
         private readonly ObjectBase parentObject;
+
         private ParseTree ParseTree => parentObject.ParseTree;
 
         public ParseTreeView(ObjectBase parentObject) : base(parentObject.TreeViewState) {
@@ -64,7 +64,7 @@ namespace Michelangelo.Scripts {
             var current = ParseTree[(uint) id];
             var ancestors = new List<int>();
             while (current.Rule != "ROOT") {
-                current = ParseTree.GetParent(current.Id);
+                current = ParseTree[ParseTree[current.Id].Parent];
                 ancestors.Add((int) current.Id);
             }
             return ancestors;

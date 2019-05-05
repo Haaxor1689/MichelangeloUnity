@@ -57,5 +57,16 @@ namespace Michelangelo.Utility {
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
         }
+
+        public static Material MaterialFromModel(MaterialModel model) {
+            model.Scalars = model.Scalars ?? new Dictionary<string, double>();
+            model.Vectors = model.Vectors ?? new Dictionary<string, double[]>();
+
+            var material = new Material(Shader.Find("Standard"));
+            material.SetColor("_Color", new Color((float) model.Albedo[0], (float) model.Albedo[1], (float) model.Albedo[2]));
+            material.SetFloat("_Metallic", (float) model.Scalars.GetValueOrDefault("gIi", 0.0));
+            material.SetFloat("_Glossiness", 1.0f - (float) model.Scalars.GetValueOrDefault("gR", 1.0));
+            return material;
+        }
     }
 }
