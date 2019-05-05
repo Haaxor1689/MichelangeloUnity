@@ -63,7 +63,7 @@ namespace Michelangelo.Scripts {
         private void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
             DeleteOldMeshes();
 
-            GetParseTreeData();
+            parseTreeData = GetParseTreeData();
             parseTreeData.ParseTree = parseTree;
             Materials = materials.Select(m => MeshUtilities.MaterialFromModel(m.Value)).ToArray();
 

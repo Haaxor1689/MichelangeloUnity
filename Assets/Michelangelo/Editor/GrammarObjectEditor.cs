@@ -24,14 +24,5 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
             }
         }
-
-        protected void Reload() {
-            MichelangeloSession.UpdateGrammar(Object.Grammar.id)
-                               .Then(grammar => {
-                                   IsLoading = false;
-                                   Repaint();
-                               })
-                               .Catch(OnRejected);
-        }
     }
 }

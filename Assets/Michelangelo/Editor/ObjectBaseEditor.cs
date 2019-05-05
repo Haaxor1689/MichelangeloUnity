@@ -8,8 +8,6 @@ using UnityEngine;
 namespace Michelangelo.Editor {
     [CustomEditor(typeof(ObjectBase))]
     public class ObjectBaseEditor : UnityEditor.Editor {
-        protected bool IsLoading;
-
         private string compilationOutput;
         private bool parseTreeFoldout = true;
         private bool compilationFoldout = true;
@@ -30,11 +28,10 @@ namespace Michelangelo.Editor {
                 EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first.", MessageType.Warning);
                 MichelangeloEditorWindow.OpenMichelangeloWindowButton();
                 GUI.enabled = false;
-            } else if (IsLoading) {
+            } else if (WebAPI.IsLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 if (GUILayout.Button("Stop generation", GUILayout.Height(40.0f))) {
                     WebAPI.CancelGeneration = true;
-                    IsLoading = false;
                 }
                 GUI.enabled = false;
             }
@@ -60,7 +57,7 @@ namespace Michelangelo.Editor {
             EditorGUILayout.Space();
             GUI.enabled = GUI.enabled && CanGenerate;
             if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
-                Async(Generate);
+                Generate();
             }
 
             RenderCompilationOutput();
@@ -135,7 +132,6 @@ namespace Michelangelo.Editor {
             Object.Generate()
                   .Then(response => {
                       compilationOutput = response.ErrorMessage;
-                      IsLoading = false;
                       TreeView = new ParseTreeView(Object);
                       Repaint();
                   })
@@ -144,19 +140,8 @@ namespace Michelangelo.Editor {
 
         protected void OnRejected(Exception error) {
             compilationOutput = error.Message;
-            IsLoading = false;
             Repaint();
             Debug.LogError(error);
-        }
-
-        protected void Async(Action a) {
-            try {
-                IsLoading = true;
-                a();
-            } catch {
-                IsLoading = false;
-                throw;
-            }
         }
     }
 }

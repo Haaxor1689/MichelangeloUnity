@@ -102,7 +102,7 @@ namespace Michelangelo.Scripts {
                 return new MeshGizmoData {
                     Position = matrix.ExtractPosition(),
                     Rotation = matrix.ExtractRotation(),
-                    Scale = matrix.ExtractScale(),
+                    Scale = matrix.ExtractScale() + new Vector3(0.05f, 0.05f, 0.05f),
                     Model = node.Shape
                 };
             }).ToList();

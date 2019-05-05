@@ -5,8 +5,8 @@ using Michelangelo.Model.MichelangeloApi;
 using UnityEngine;
 
 namespace Michelangelo.Utility {
-    public static class MeshUtilities {
-        public static Matrix4x4 MatrixFromArray(float[] arr) {
+    internal static class MeshUtilities {
+        internal static Matrix4x4 MatrixFromArray(float[] arr) {
             return new Matrix4x4(
                 new Vector4(arr[0], arr[4], arr[8], arr[12]),
                 new Vector4(arr[1], arr[5], arr[9], arr[13]),
@@ -15,10 +15,10 @@ namespace Michelangelo.Utility {
             );
         }
 
-        public static Mesh MeshFromGeometricModel(GeometricModel model) => MeshFromData(model.Mesh) ?? MeshFromPrimitive(model.Primitive);
+        internal static Mesh MeshFromGeometricModel(GeometricModel model) => MeshFromData(model.Mesh) ?? MeshFromPrimitive(model.Primitive);
 
-        public static Mesh MeshFromData(TriangularMesh v) {
-            if (v == null || v.Points.Length == 0) {
+        private static Mesh MeshFromData(TriangularMesh v) {
+            if (v == null || v.Points == null || v.Points.Length == 0) {
                 return null;
             }
             var mesh = new Mesh();
@@ -35,7 +35,7 @@ namespace Michelangelo.Utility {
             return mesh;
         }
 
-        public static Mesh MeshFromPrimitive(string primitive) {
+        private static Mesh MeshFromPrimitive(string primitive) {
             var field = typeof(Primitives).GetField(primitive, BindingFlags.Static | BindingFlags.Public);
             if (field != null) {
                 return field.GetValue(null) as Mesh;
@@ -44,21 +44,7 @@ namespace Michelangelo.Utility {
             return new Mesh();
         }
 
-        public static void ToFlatShaded(Mesh mesh) {
-            var oldVertices = mesh.vertices;
-            var triangles = mesh.triangles;
-            var vertices = new Vector3[triangles.Length];
-            for (var i = 0; i < triangles.Length; i++) {
-                vertices[i] = oldVertices[triangles[i]];
-                triangles[i] = i;
-            }
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.RecalculateBounds();
-            mesh.RecalculateNormals();
-        }
-
-        public static Material MaterialFromModel(MaterialModel model) {
+        internal static Material MaterialFromModel(MaterialModel model) {
             model.Scalars = model.Scalars ?? new Dictionary<string, double>();
             model.Vectors = model.Vectors ?? new Dictionary<string, double[]>();
 

@@ -12,8 +12,7 @@ namespace Michelangelo.Editor {
 
         private int grammarPage;
         private int grammarsPerPage = 5;
-
-        private bool isLoading;
+        
         private bool isUnreachable;
 
         private string loginEmail;
@@ -41,7 +40,7 @@ namespace Michelangelo.Editor {
                     isUnreachable = false;
                 }
                 GUI.enabled = false;
-            } else if (isLoading) {
+            } else if (WebAPI.IsLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
@@ -79,13 +78,13 @@ namespace Michelangelo.Editor {
             EditorGUILayout.LabelField("User:", MichelangeloSession.User.username, EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Energy:", MichelangeloSession.User.energyAvailable + "/" + MichelangeloSession.User.energyCapacity, EditorStyles.boldLabel);
             if (GUILayout.Button("Log Out")) {
-                Async(LogOut);
+                LogOut();
             }
             GUILayout.Space(20.0f);
             PrintGrammarList();
             GUILayout.Space(20.0f);
             if (GUILayout.Button("Refresh")) {
-                Async(Refresh);
+                Refresh();
             }
         }
 
@@ -94,14 +93,13 @@ namespace Michelangelo.Editor {
             loginEmail = EditorGUILayout.TextField("User name or Email", loginEmail);
             loginPassword = EditorGUILayout.PasswordField("Password", loginPassword);
             if (GUILayout.Button("Log In")) {
-                Async(LogIn);
+                LogIn();
             }
         }
 
         private void LogIn() {
             MichelangeloSession.LogIn(loginEmail, loginPassword)
                                .Then(_ => {
-                                   isLoading = false;
                                    errorMessage = null;
                                    Repaint();
                                    MichelangeloSession.RefreshGrammarList();
@@ -112,7 +110,6 @@ namespace Michelangelo.Editor {
         private void LogOut() {
             MichelangeloSession.LogOut()
                                .Then(() => {
-                                   isLoading = false;
                                    errorMessage = null;
                                    Repaint();
                                })
@@ -120,7 +117,7 @@ namespace Michelangelo.Editor {
         }
 
         private void Refresh() {
-            MichelangeloSession.UpdateUserInfo().Then(_ => isLoading = false).Catch(OnRejected);
+            MichelangeloSession.UpdateUserInfo().Catch(OnRejected);
             MichelangeloSession.RefreshGrammarList();
         }
 
@@ -201,7 +198,6 @@ namespace Michelangelo.Editor {
 
         private void OnRejected(Exception error) {
             errorMessage = error.Message;
-            isLoading = false;
 
             var requestError = error as WebRequestException;
             if (requestError?.ResponseCode == 523) {
@@ -209,16 +205,6 @@ namespace Michelangelo.Editor {
             }
             Repaint();
             Debug.LogError(error);
-        }
-
-        private void Async(Action a) {
-            try {
-                isLoading = true;
-                a();
-            } catch {
-                isLoading = false;
-                throw;
-            }
         }
     }
 }

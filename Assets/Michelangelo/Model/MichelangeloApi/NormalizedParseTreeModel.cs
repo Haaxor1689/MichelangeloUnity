@@ -23,7 +23,7 @@ namespace Michelangelo.Model.MichelangeloApi {
         public IEnumerable<NormalizedParseTreeModel> GetChildren(ParseTree parseTree) => 
             cachedChildren ?? (cachedChildren = parseTree.Data.Select(kvp => kvp.Value).Where(n => Children.Any(c => c == n.Id)));
 
-        public uint GetVertexCount(ParseTree parseTree) => (uint) (cachedVertexCount ?? (cachedVertexCount = IsLeaf
+        private uint GetVertexCount(ParseTree parseTree) => (uint) (cachedVertexCount ?? (cachedVertexCount = IsLeaf
             ? Shape.GetVertexCount()
             : GetChildren(parseTree).Aggregate(0u, (sum, node) => sum + node.GetVertexCount(parseTree))));
 

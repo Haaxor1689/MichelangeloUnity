@@ -41,8 +41,8 @@ namespace Michelangelo.Scripts {
 
         public static GameObject Construct(Transform parent, ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
             var newObject = new GameObject(node.Name);
-            newObject.hideFlags = HideFlags.NotEditable;
             newObject.transform.SetParent(parent);
+            newObject.hideFlags = HideFlags.NotEditable;
             var nodeScript = newObject.AddComponent<ParseTreeNode>();
             nodeScript.MeshFilter.hideFlags = HideFlags.HideInInspector;
             nodeScript.MeshRenderer.hideFlags = HideFlags.HideInInspector;
