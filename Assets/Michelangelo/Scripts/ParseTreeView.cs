@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Michelangelo.Model;
 using Michelangelo.Model.MichelangeloApi;
 using Michelangelo.Utility;
 using UnityEditor;
@@ -97,9 +98,13 @@ namespace Michelangelo.Scripts {
             base.SelectionChanged(selectedIds);
             parentObject.MeshHighlights = selectedIds.Where(id => ParseTree[(uint) id].Rule != "ROOT").Select(id => {
                 var node = ParseTree[(uint) id];
-                var mesh = MeshUtilities.MeshFromGeometricModel(node.Shape);
-                mesh.RecalculateNormals();
-                return Tuple.Create(mesh, MeshUtilities.MatrixFromArray(node.Shape.Transform));
+                var matrix = MeshUtilities.MatrixFromArray(node.Shape.Transform);
+                return new MeshGizmoData {
+                    Position = matrix.ExtractPosition(),
+                    Rotation = matrix.ExtractRotation(),
+                    Scale = matrix.ExtractScale(),
+                    Model = node.Shape
+                };
             }).ToList();
         }
 

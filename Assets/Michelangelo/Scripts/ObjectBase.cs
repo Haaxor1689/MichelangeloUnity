@@ -23,7 +23,8 @@ namespace Michelangelo.Scripts {
         private ParseTreeData parseTreeData;
         public ParseTree ParseTree => (parseTreeData ?? (parseTreeData = GetParseTreeData())).ParseTree;
         
-        public IReadOnlyList<Tuple<Mesh, Matrix4x4>> MeshHighlights;
+        [SerializeField]
+        public List<MeshGizmoData> MeshHighlights;
 
         private ParseTreeData GetParseTreeData() {
             var child = transform.Find("ParseTreeData");
@@ -86,24 +87,24 @@ namespace Michelangelo.Scripts {
             if (MeshHighlights == null) {
                 return;
             }
-            foreach (var mesh in MeshHighlights) {
-                if (mesh.Item1.vertexCount == 0) {
+            foreach (var data in MeshHighlights) {
+                if (data.Mesh.vertexCount == 0) {
                     return;
                 }
 
                 Gizmos.color = new Color(0.97f, 0.58f, 0.11f);
                 Gizmos.DrawWireMesh(
-                    mesh.Item1,
-                    mesh.Item2.ExtractPosition() + transform.position,
-                    mesh.Item2.ExtractRotation() * transform.rotation,
-                    mesh.Item2.ExtractScale() + transform.localScale + new Vector3(0.1f, 0.1f, 0.1f)
+                    data.Mesh,
+                    data.Position + transform.position,
+                    data.Rotation * transform.rotation,
+                    data.Scale + transform.localScale
                 );
                 Gizmos.color = new Color(0.97f, 0.58f, 0.11f, 0.3f);
                 Gizmos.DrawMesh(
-                    mesh.Item1,
-                    mesh.Item2.ExtractPosition() + transform.position,
-                    mesh.Item2.ExtractRotation() * transform.rotation,
-                    mesh.Item2.ExtractScale() + transform.localScale + new Vector3(0.1f, 0.1f, 0.1f)
+                    data.Mesh,
+                    data.Position + transform.position,
+                    data.Rotation * transform.rotation,
+                    data.Scale + transform.localScale
                 );
             }
         }
