@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Utility;
 using UnityEditor.IMGUI.Controls;
+using UnityEngine;
 
 namespace Michelangelo.Scripts {
     public class ParseTreeView : TreeView {
         private readonly ParseTree parseTree;
+        public IReadOnlyList<Tuple<Mesh, Matrix4x4>> MeshHighlights { get; private set; } = new List<Tuple<Mesh, Matrix4x4>>();
 
         public ParseTreeView(TreeViewState state, ParseTree parseTree) : base(state) {
             this.parseTree = parseTree;
@@ -81,6 +85,12 @@ namespace Michelangelo.Scripts {
 
         protected override void SelectionChanged(IList<int> selectedIds) {
             base.SelectionChanged(selectedIds);
+            MeshHighlights = selectedIds.Where(id => parseTree[(uint) id].Rule != "ROOT").Select(id => {
+                var node = parseTree[(uint) id];
+                var mesh = MeshUtilities.MeshFromGeometricModel(node.Shape);
+                mesh.RecalculateNormals();
+                return Tuple.Create(mesh, MeshUtilities.MatrixFromArray(node.Shape.Transform));
+            }).ToList();
         }
     }
 }

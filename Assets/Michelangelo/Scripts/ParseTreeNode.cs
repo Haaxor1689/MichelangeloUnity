@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Michelangelo.Model;
 using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Utility;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
@@ -15,7 +14,7 @@ namespace Michelangelo.Scripts {
         
         private MeshFilter MeshFilter => GetComponent<MeshFilter>();
         private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
-        private IObjectBase parentObject => transform.parent.GetComponent<IObjectBase>();
+        // private IObjectBase parentObject => transform.parent.GetComponent<IObjectBase>();
 
         private void CreateMesh(ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
             var submeshes = new List<Tuple<Mesh, int>>();
@@ -23,8 +22,8 @@ namespace Michelangelo.Scripts {
                                      .GroupBy(p => p.MaterialID, p => p, (key, p) => new { Material = key, GeometricModel = p })) {
                 var mesh = new Mesh();
                 mesh.CombineMeshes(pair.GeometricModel.Select(model => new CombineInstance {
-                    mesh = MeshFromGeometricModel(model),
-                    transform = MatrixFromArray(model.Transform)
+                    mesh = MeshUtilities.MeshFromGeometricModel(model),
+                    transform = MeshUtilities.MatrixFromArray(model.Transform)
                 }).ToArray());
                 submeshes.Add(Tuple.Create(mesh, pair.Material));
             }
@@ -80,44 +79,6 @@ namespace Michelangelo.Scripts {
             nodeScript.CreateMesh(parseTree, node, grammarMaterials);
             
             return newObject;
-        }
-
-        private static Matrix4x4 MatrixFromArray(float[] arr) {
-            return new Matrix4x4(
-                new Vector4(arr[0], arr[4], arr[8], arr[12]),
-                new Vector4(arr[1], arr[5], arr[9], arr[13]),
-                new Vector4(arr[2], arr[6], arr[10], arr[14]),
-                new Vector4(arr[3], arr[7], arr[11], arr[15])
-            );
-        }
-
-        private static Mesh MeshFromGeometricModel(GeometricModel model) => MeshFromData(model.Mesh) ?? MeshFromPrimitive(model.Primitive);
-
-        private static Mesh MeshFromData(TriangularMesh v) {
-            if (v == null) {
-                return null;
-            }
-            var mesh = new Mesh();
-
-            var vertices = new List<Vector3>();
-            for (var i = 0; i < v.Points.Length; i += 3) {
-                vertices.Add(new Vector3((float)v.Points[i], (float)v.Points[i + 1], (float)v.Points[i + 2]));
-            }
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = v.Indices;
-
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            return mesh;
-        }
-
-        private static Mesh MeshFromPrimitive(string primitive) {
-            var field = typeof(Primitives).GetField(primitive, BindingFlags.Static | BindingFlags.Public);
-            if (field != null) {
-                return field.GetValue(null) as Mesh;
-            }
-            Debug.LogError("Unknown primitive type " + primitive);
-            return new Mesh();
         }
     }
 }
