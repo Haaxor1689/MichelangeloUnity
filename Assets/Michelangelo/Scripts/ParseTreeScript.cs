@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Michelangelo.Models.MichelangeloApi;
+using Michelangelo.Models;
 using Michelangelo.Utility;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class ParseTreeNode : MonoBehaviour {
+    public class ParseTreeScript : MonoBehaviour {
         [SerializeField]
         private Mesh objectMesh;
         
         private MeshFilter MeshFilter => GetComponent<MeshFilter>();
         private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
 
-        private void CreateMesh(ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
+        private void CreateMesh(ParseTree parseTree, Models.ParseTreeNode node, IReadOnlyList<Material> grammarMaterials) {
             var submeshes = new List<Tuple<Mesh, int>>();
             foreach (var pair in node.GetLeafNodes(parseTree).Select(n => n.Shape)
                                      .GroupBy(p => p.MaterialID, p => p, (key, p) => new { Material = key, GeometricModel = p })) {
@@ -39,11 +39,11 @@ namespace Michelangelo.Scripts {
             transform.localPosition = new Vector3(0, 0, 0);
         }
 
-        public static GameObject Construct(Transform parent, ParseTree parseTree, NormalizedParseTreeModel node, Material[] grammarMaterials) {
+        public static GameObject Construct(Transform parent, ParseTree parseTree, Models.ParseTreeNode node, Material[] grammarMaterials) {
             var newObject = new GameObject(node.Name);
             newObject.transform.SetParent(parent);
             newObject.hideFlags = HideFlags.NotEditable;
-            var nodeScript = newObject.AddComponent<ParseTreeNode>();
+            var nodeScript = newObject.AddComponent<ParseTreeScript>();
             nodeScript.MeshFilter.hideFlags = HideFlags.HideInInspector;
             nodeScript.MeshRenderer.hideFlags = HideFlags.HideInInspector;
 

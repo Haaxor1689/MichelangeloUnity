@@ -1,3 +1,4 @@
+#pragma warning disable 1591
 /* * * * *
  * A simple JSON Parser / builder
  * ------------------------------
@@ -112,7 +113,7 @@ using System.Linq;
 using System.Text;
 
 namespace SimpleJSON {
-    public enum JSONNodeType {
+    internal enum JSONNodeType {
         Array = 1,
         Object = 2,
         String = 3,
@@ -122,12 +123,12 @@ namespace SimpleJSON {
         None = 7,
         Custom = 0xFF,
     }
-    public enum JSONTextMode {
+    internal enum JSONTextMode {
         Compact,
         Indent
     }
 
-    public abstract partial class JSONNode {
+    internal abstract partial class JSONNode {
         #region Enumerators
         public struct Enumerator {
             private enum Type { None, Array, Object }
@@ -623,7 +624,7 @@ namespace SimpleJSON {
     }
     // End of JSONNode
 
-    public partial class JSONArray : JSONNode {
+    internal partial class JSONArray : JSONNode {
         private List<JSONNode> m_List = new List<JSONNode>();
         private bool inline = false;
         public override bool Inline {
@@ -712,7 +713,7 @@ namespace SimpleJSON {
     }
     // End of JSONArray
 
-    public partial class JSONObject : JSONNode {
+    internal partial class JSONObject : JSONNode {
         private Dictionary<string, JSONNode> m_Dict = new Dictionary<string, JSONNode>();
 
         private bool inline = false;
@@ -837,7 +838,7 @@ namespace SimpleJSON {
     }
     // End of JSONObject
 
-    public partial class JSONString : JSONNode {
+    internal partial class JSONString : JSONNode {
         private string m_Data;
 
         public override JSONNodeType Tag { get { return JSONNodeType.String; } }
@@ -876,7 +877,7 @@ namespace SimpleJSON {
     }
     // End of JSONString
 
-    public partial class JSONNumber : JSONNode {
+    internal partial class JSONNumber : JSONNode {
         private double m_Data;
 
         public override JSONNodeType Tag { get { return JSONNodeType.Number; } }
@@ -934,7 +935,7 @@ namespace SimpleJSON {
     }
     // End of JSONNumber
 
-    public partial class JSONBool : JSONNode {
+    internal partial class JSONBool : JSONNode {
         private bool m_Data;
 
         public override JSONNodeType Tag { get { return JSONNodeType.Boolean; } }
@@ -978,7 +979,7 @@ namespace SimpleJSON {
     }
     // End of JSONBool
 
-    public partial class JSONNull : JSONNode {
+    internal partial class JSONNull : JSONNode {
         static JSONNull m_StaticInstance = new JSONNull();
         public static bool reuseSameInstance = true;
         public static JSONNull CreateOrGet() {
@@ -1164,9 +1165,10 @@ namespace SimpleJSON {
     }
     // End of JSONLazyCreator
 
-    public static class JSON {
+    internal static class JSON {
         public static JSONNode Parse(string aJSON) {
             return JSONNode.Parse(aJSON);
         }
     }
 }
+#pragma warning restore 1591

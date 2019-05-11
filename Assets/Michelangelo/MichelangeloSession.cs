@@ -11,9 +11,12 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Michelangelo {
+    /// <summary>
+    ///   Static class providing scripting API for communication with Michelangelo service.
+    /// </summary>
     public static class MichelangeloSession {
-        private const string UserInfoPrefsKey = Constants.EditorPrefsPrefix + "UserInfo";
-        private const string GrammarListPrefsKey = Constants.EditorPrefsPrefix + "GrammarList";
+        private const string UserInfoPrefsKey = "Michelangelo_UserInfo";
+        private const string GrammarListPrefsKey = "Michelangelo_GrammarList";
 
         private static UserInfo user;
         private static Dictionary<string, Grammar> grammarList;
@@ -40,6 +43,11 @@ namespace Michelangelo {
         ///   True if there is a request currently being sent to Michelangelo service.
         /// </summary>
         public static bool IsLoading => WebAPI.IsLoading;
+
+        /// <summary>
+        ///  True if Michelangelo service is currently not responding.
+        /// </summary>
+        public static bool IsUnreachable => WebAPI.IsUnreachable;
 
         private static void SaveGrammarList() => EditorPrefs.SetString(GrammarListPrefsKey, JsonArray.ToJsonArray(grammarList.Values.ToArray()));
 
@@ -139,7 +147,7 @@ namespace Michelangelo {
         }
 
         /// <summary>
-        ///   Instantiates new <see cref="GrammarObject" /> linked to grammar with <see cref="grammarId" /> id.
+        ///   Instantiates new <see cref="GrammarObject" /> linked to grammar with id.
         /// </summary>
         /// <param name="grammarId">Id of grammar that should be linked to newly instantiated <see cref="GrammarObject" />.</param>
         /// <returns>
@@ -161,7 +169,7 @@ namespace Michelangelo {
             return !GrammarList.ContainsKey(grammarId)
                 ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate grammar request error:\nRequested grammar not found."))
                 : WebAPI.GenerateGrammar(GrammarList[grammarId])
-                        .Then(_ => { 
+                        .Then(_ => {
                             UpdateUserInfo();
                             return _;
                         });
@@ -169,13 +177,14 @@ namespace Michelangelo {
 
         internal static IPromise<GenerateGrammarResponse> GenerateScene(string code) {
             return WebAPI.GenerateScene(code)
-                         .Then(_ => { 
+                         .Then(_ => {
                              UpdateUserInfo();
-                             return _; });
+                             return _;
+                         });
         }
 
         /// <summary>
-        ///   Deletes grammar with <see cref="grammarId" /> id.
+        ///   Deletes grammar with id.
         /// </summary>
         /// <param name="grammarId">Id of grammar that should be deleted.</param>
         /// <returns>
@@ -193,7 +202,7 @@ namespace Michelangelo {
         }
 
         /// <summary>
-        ///   Updates local data about grammar with <see cref="grammarId" /> id.
+        ///   Updates local data about grammar with id.
         /// </summary>
         /// <param name="grammarId">Id of grammar that should updated.</param>
         /// <returns>

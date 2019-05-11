@@ -1,7 +1,7 @@
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Michelangelo.Models {
+namespace Michelangelo.Utility {
     internal static class Primitives {
         public static readonly Mesh Box = _box();
         public static readonly Mesh Sphere = _sphere();
@@ -94,7 +94,7 @@ namespace Michelangelo.Models {
             var left = Vector3.left;
             var right = Vector3.right;
 
-            Vector3[] normales = {
+            Vector3[] normals = {
                 // Bottom
                 down,
                 down,
@@ -231,7 +231,7 @@ namespace Michelangelo.Models {
             #endregion
 
             mesh.vertices = vertices;
-            mesh.normals = normales;
+            mesh.normals = normals;
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
@@ -242,11 +242,11 @@ namespace Michelangelo.Models {
         private static Mesh _sphere() {
             var mesh = new Mesh();
 
-            var radius = 0.5f;
+            const float radius = 0.5f;
             // Longitude |||
-            var nbLong = 24;
+            const int nbLong = 24;
             // Latitude ---
-            var nbLat = 16;
+            const int nbLat = 16;
 
             #region Vertices
             var vertices = new Vector3[(nbLong + 1) * nbLat + 2];
@@ -270,9 +270,9 @@ namespace Michelangelo.Models {
             #endregion
 
             #region Normales		
-            var normales = new Vector3[vertices.Length];
+            var normals = new Vector3[vertices.Length];
             for (var n = 0; n < vertices.Length; n++) {
-                normales[n] = vertices[n].normalized;
+                normals[n] = vertices[n].normalized;
             }
             #endregion
 
@@ -326,7 +326,7 @@ namespace Michelangelo.Models {
             #endregion
 
             mesh.vertices = vertices;
-            mesh.normals = normales;
+            mesh.normals = normals;
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
@@ -346,15 +346,15 @@ namespace Michelangelo.Models {
             var vertices = new Vector3[(nbRadSeg + 1) * (nbSides + 1)];
             var _2pi = Mathf.PI * 2f;
             for (var seg = 0; seg <= nbRadSeg; seg++) {
-                var currSeg = seg == nbRadSeg ? 0 : seg;
+                var currentSeg = seg == nbRadSeg ? 0 : seg;
 
-                var t1 = (float) currSeg / nbRadSeg * _2pi;
+                var t1 = (float) currentSeg / nbRadSeg * _2pi;
                 var r1 = new Vector3(Mathf.Cos(t1) * radius1, 0f, Mathf.Sin(t1) * radius1);
 
                 for (var side = 0; side <= nbSides; side++) {
-                    var currSide = side == nbSides ? 0 : side;
+                    var currentSide = side == nbSides ? 0 : side;
 
-                    var t2 = (float) currSide / nbSides * _2pi;
+                    var t2 = (float) currentSide / nbSides * _2pi;
                     var r2 = Quaternion.AngleAxis(-t1 * Mathf.Rad2Deg, Vector3.up) * new Vector3(Mathf.Sin(t2) * radius2, Mathf.Cos(t2) * radius2);
 
                     vertices[side + seg * (nbSides + 1)] = r1 + r2;
@@ -363,15 +363,15 @@ namespace Michelangelo.Models {
             #endregion
 
             #region Normales		
-            var normales = new Vector3[vertices.Length];
+            var normals = new Vector3[vertices.Length];
             for (var seg = 0; seg <= nbRadSeg; seg++) {
-                var currSeg = seg == nbRadSeg ? 0 : seg;
+                var currentSeg = seg == nbRadSeg ? 0 : seg;
 
-                var t1 = (float) currSeg / nbRadSeg * _2pi;
+                var t1 = (float) currentSeg / nbRadSeg * _2pi;
                 var r1 = new Vector3(Mathf.Cos(t1) * radius1, 0f, Mathf.Sin(t1) * radius1);
 
                 for (var side = 0; side <= nbSides; side++) {
-                    normales[side + seg * (nbSides + 1)] = (vertices[side + seg * (nbSides + 1)] - r1).normalized;
+                    normals[side + seg * (nbSides + 1)] = (vertices[side + seg * (nbSides + 1)] - r1).normalized;
                 }
             }
             #endregion
@@ -411,7 +411,7 @@ namespace Michelangelo.Models {
             #endregion
 
             mesh.vertices = vertices;
-            mesh.normals = normales;
+            mesh.normals = normals;
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
@@ -431,68 +431,68 @@ namespace Michelangelo.Models {
             #region Vertices
             // bottom + top + sides
             var vertices = new Vector3[nbVerticesCap + nbVerticesCap + nbSides * nbHeightSeg * 2 + 2];
-            var vert = 0;
+            var vertex = 0;
             var _2pi = Mathf.PI * 2f;
 
             // Bottom cap
-            vertices[vert++] = new Vector3(0f, 0f, 0f);
-            while (vert <= nbSides) {
-                var rad = (float) vert / nbSides * _2pi;
-                vertices[vert] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
-                vert++;
+            vertices[vertex++] = new Vector3(0f, 0f, 0f);
+            while (vertex <= nbSides) {
+                var rad = (float) vertex / nbSides * _2pi;
+                vertices[vertex] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
+                vertex++;
             }
 
             // Top cap
-            vertices[vert++] = new Vector3(0f, height / 2.0f, 0f);
-            while (vert <= nbSides * 2 + 1) {
-                var rad = (float) (vert - nbSides - 1) / nbSides * _2pi;
-                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
-                vert++;
+            vertices[vertex++] = new Vector3(0f, height / 2.0f, 0f);
+            while (vertex <= nbSides * 2 + 1) {
+                var rad = (float) (vertex - nbSides - 1) / nbSides * _2pi;
+                vertices[vertex] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
+                vertex++;
             }
 
             // Sides
             var v = 0;
-            while (vert <= vertices.Length - 4) {
+            while (vertex <= vertices.Length - 4) {
                 var rad = (float) v / nbSides * _2pi;
-                vertices[vert] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
-                vertices[vert + 1] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
-                vert += 2;
+                vertices[vertex] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
+                vertices[vertex + 1] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
+                vertex += 2;
                 v++;
             }
-            vertices[vert] = vertices[nbSides * 2 + 2];
-            vertices[vert + 1] = vertices[nbSides * 2 + 3];
+            vertices[vertex] = vertices[nbSides * 2 + 2];
+            vertices[vertex + 1] = vertices[nbSides * 2 + 3];
             #endregion
 
             #region Normales
             // bottom + top + sides
-            var normales = new Vector3[vertices.Length];
-            vert = 0;
+            var normals = new Vector3[vertices.Length];
+            vertex = 0;
 
             // Bottom cap
-            while (vert <= nbSides) {
-                normales[vert++] = Vector3.down;
+            while (vertex <= nbSides) {
+                normals[vertex++] = Vector3.down;
             }
 
             // Top cap
-            while (vert <= nbSides * 2 + 1) {
-                normales[vert++] = Vector3.up;
+            while (vertex <= nbSides * 2 + 1) {
+                normals[vertex++] = Vector3.up;
             }
 
             // Sides
             v = 0;
-            while (vert <= vertices.Length - 4) {
+            while (vertex <= vertices.Length - 4) {
                 var rad = (float) v / nbSides * _2pi;
                 var cos = Mathf.Cos(rad);
                 var sin = Mathf.Sin(rad);
 
-                normales[vert] = new Vector3(cos, 0f, sin);
-                normales[vert + 1] = normales[vert];
+                normals[vertex] = new Vector3(cos, 0f, sin);
+                normals[vertex + 1] = normals[vertex];
 
-                vert += 2;
+                vertex += 2;
                 v++;
             }
-            normales[vert] = normales[nbSides * 2 + 2];
-            normales[vert + 1] = normales[nbSides * 2 + 3];
+            normals[vertex] = normals[nbSides * 2 + 2];
+            normals[vertex + 1] = normals[nbSides * 2 + 3];
             #endregion
 
             #region UVs
@@ -582,7 +582,7 @@ namespace Michelangelo.Models {
             #endregion
 
             mesh.vertices = vertices;
-            mesh.normals = normales;
+            mesh.normals = normals;
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
@@ -612,9 +612,9 @@ namespace Michelangelo.Models {
             #endregion
 
             #region Normales
-            var normales = new Vector3[vertices.Length];
-            for (var n = 0; n < normales.Length; n++) {
-                normales[n] = Vector3.up;
+            var normals = new Vector3[vertices.Length];
+            for (var n = 0; n < normals.Length; n++) {
+                normals[n] = Vector3.up;
             }
             #endregion
 
@@ -646,7 +646,7 @@ namespace Michelangelo.Models {
             #endregion
 
             mesh.vertices = vertices;
-            mesh.normals = normales;
+            mesh.normals = normals;
             mesh.uv = uvs;
             mesh.triangles = triangles;
 

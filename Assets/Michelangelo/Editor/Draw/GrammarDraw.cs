@@ -5,7 +5,7 @@ using Michelangelo.Models;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo.Editor.Draw {
     internal static class GrammarDraw {
         internal static void Draw(this Grammar grammar, Action onResolved, Action<Exception> onRejected, bool showInstantiate = false) {
             EditorGUILayout.BeginVertical("Box");

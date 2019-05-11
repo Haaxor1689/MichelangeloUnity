@@ -1,9 +1,9 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Utility {
-    public static class LinkLabel {
-        public static GUIStyle LinkStyle { get; private set; }
+namespace Michelangelo.Editor.Utility {
+    internal static class LinkLabel {
+        private static GUIStyle LinkStyle { get; }
 
         static LinkLabel() {
             LinkStyle = new GUIStyle(EditorStyles.label) {
@@ -16,8 +16,8 @@ namespace Michelangelo.Utility {
         }
 
         public static bool Draw(string text, params GUILayoutOption[] options) => Draw(new GUIContent(text), options);
-     
-        public static bool Draw(GUIContent label, params GUILayoutOption[] options) {
+
+        private static bool Draw(GUIContent label, params GUILayoutOption[] options) {
             var position = GUILayoutUtility.GetRect(label, LinkStyle, options);
          
             Handles.BeginGUI();

@@ -1,12 +1,8 @@
 using System;
 
 namespace Michelangelo.Utility {
-    public class WebRequestException : Exception {
-        public readonly long ResponseCode;
-
-        public WebRequestException(string message, long responseCode) : base(message + MessageFromResponseCode(responseCode)) {
-            ResponseCode = responseCode;
-        }
+    internal class WebRequestException : Exception {
+        public WebRequestException(string message, long responseCode) : base(message + MessageFromResponseCode(responseCode)) {}
 
         private static string MessageFromResponseCode(long responseCode) {
             switch (responseCode) {

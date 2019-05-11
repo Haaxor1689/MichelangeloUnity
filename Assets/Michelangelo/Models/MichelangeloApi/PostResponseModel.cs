@@ -2,70 +2,49 @@
 using MessagePack;
 
 namespace Michelangelo.Models.MichelangeloApi {
+    /// <summary>
+    ///   Backend model of generate request response.
+    /// </summary>
     [MessagePackObject(true)]
     public class PostResponseModel {
         /// <summary>
-        /// Material Library - IDs and materials for the created model
+        ///   Errors from grammar compilation.
         /// </summary>
-        public Dictionary<int, MaterialModel> Materials;
+        public readonly string Errors;
 
         /// <summary>
-        /// List of generated objects
+        ///   Path traced image.
         /// </summary>
-        public GeometricModel[] Objects;
+        public readonly string IMG;
 
         /// <summary>
-        /// Errors at grammar compilation
+        ///   Extra information.
         /// </summary>
-        public string Errors;
+        public readonly string Info;
 
         /// <summary>
-        /// Path traced image
+        ///   Material Library containing IDs and materials for the created model.
         /// </summary>
-        public string IMG;
+        public readonly IReadOnlyDictionary<int, MaterialModel> Materials;
 
         /// <summary>
-        /// Parsed grammar code (by Roslyn)
+        ///   Parse trees produced by this grammar.
         /// </summary>
-        public string Parsed = "";
+        public readonly IReadOnlyDictionary<uint, ParseTreeModel> ParseTree;
 
         /// <summary>
-        /// Extra information (
+        ///   Dictionary with infos about the applied rules.
         /// </summary>
-        public string Info = "";
+        public readonly IReadOnlyDictionary<string, RuleExtraInfo> Rules;
 
-        /// <summary>
-        /// Parse trees produced by this grammar
-        /// </summary>
-        public Dictionary<uint, ParseTreeModel> ParseTree = null;
-
-        /// <summary>
-        /// Dictionary with infos about the applied rules
-        /// </summary>
-        public Dictionary<string, RuleExtraInfo> Rules = null;
-
-        /// <summary>
-        /// Locks to Root
-        /// </summary>
-        public uint[] RootLocks = null;
-
-        /// <summary>
-        /// Locks to Leafs
-        /// </summary>
-        public uint[] LeafLocks = null;
-
-        public SceneEnvironment ENV = null;
-
-        public List<AxiomPostModel> Models = null;
-
-        /// <summary>
-        /// ID of the compilation in order to generate files on demand (like renderings, exports etc.)
-        /// </summary>
-        public string DL = null;
-
-        /// <summary>
-        /// Does this parsing result contain an animation?
-        /// </summary>
-        public bool HasAnim = false;
+        /// <inheritdoc />
+        public PostResponseModel(IReadOnlyDictionary<string, RuleExtraInfo> rules, IReadOnlyDictionary<uint, ParseTreeModel> parseTree, IReadOnlyDictionary<int, MaterialModel> materials, string info, string img, string errors) {
+            Rules = rules;
+            ParseTree = parseTree;
+            Materials = materials;
+            Info = info;
+            IMG = img;
+            Errors = errors;
+        }
     }
 }

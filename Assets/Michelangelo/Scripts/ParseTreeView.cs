@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Models;
-using Michelangelo.Models.MichelangeloApi;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -44,7 +42,7 @@ namespace Michelangelo.Scripts {
             return rows;
         }
 
-        private void AddChildrenRecursive(NormalizedParseTreeModel node, TreeViewItem item, IList<TreeViewItem> rows) {
+        private void AddChildrenRecursive(Michelangelo.Models.ParseTreeNode node, TreeViewItem item, ICollection<TreeViewItem> rows) {
             item.children = new List<TreeViewItem>(node.Children.Length);
             foreach (var child in node.GetChildren(ParseTree)) {
                 var childItem = new TreeViewItem { id = (int) child.Id, displayName = child.Name };

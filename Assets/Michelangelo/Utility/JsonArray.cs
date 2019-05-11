@@ -4,7 +4,7 @@ using UnityEngine;
 // Disable warning for unused array variable
 #pragma warning disable 0649
 namespace Michelangelo.Utility {
-    public static class JsonArray {
+    internal static class JsonArray {
         private const string Prefix = "{\"array\":";
 
         public static T[] FromJsonArray<T>(string json) {

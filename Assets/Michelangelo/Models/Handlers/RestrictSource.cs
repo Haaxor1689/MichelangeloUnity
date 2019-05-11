@@ -1,57 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Michelangelo.Utility;
-using UnityEditor;
-using UnityEngine;
 
 namespace Michelangelo.Models.Handlers {
+    /// <summary>
+    /// Restriction types for grammar rule sources.
+    /// </summary>
     [Flags]
     public enum SourceType {
+        /// <summary>
+        /// Allows all sources.
+        /// </summary>
         Unrestricted = 0,
+        /// <summary>
+        /// Restricts sources to only rules in grammars owned by requesting user.
+        /// </summary>
         Mine = 1,
+        /// <summary>
+        /// Restricts sources to only rules in grammars owned by listed teams.
+        /// </summary>
         Team = 2,
+        /// <summary>
+        /// Restricts sources to only rules in grammars owned by listed projects.
+        /// </summary>
         Project = 4,
+        /// <summary>
+        /// Restricts to only rules from current grammar.
+        /// </summary>
         All = ~0
     }
 
+    /// <summary>
+    /// Contains info about restrictions for possible rule origins.
+    /// </summary>
     [Serializable]
     public class RestrictSource : IHandler {
+        /// <summary>
+        /// Flags field restricting sources.
+        /// </summary>
         public SourceType SourceType;
+
+        /// <summary>
+        /// List of whitelisted teams to source from if Team flag is present in <see cref="SourceType"/>.
+        /// </summary>
         public string[] Teams = new string[1];
+
+        /// <summary>
+        /// List of whitelisted projects to source from if Project flag is present in <see cref="SourceType"/>.
+        /// </summary>
         public string[] Projects = new string[1];
 
-        public const int ButtonWidth = 40;
-
-        public void Draw() {
-            EditorGUILayout.LabelField("Restrict", EditorStyles.boldLabel);
-            SourceType = (SourceType) EditorGUILayout.EnumFlagsField("Source", SourceType);
-            if (SourceType.HasFlag(SourceType.Team)) {
-                DrawArray("Team", ref Teams);
-            }
-            if (SourceType.HasFlag(SourceType.Project)) {
-                DrawArray("Project", ref Projects);
-            }
-        }
-
-        private void DrawArray(string label, ref string[] values) {
-            for (var i = 0; i < values.Length; ++i) {
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(label, GUILayout.Width(EditorGUIUtility.labelWidth - GUI.skin.box.padding.left));
-                values[i] = GUILayout.TextField(values[i], GUILayout.ExpandWidth(true));
-                if (values.Length > 1 && GUILayout.Button("-", GUILayout.Width(ButtonWidth))) {
-                    values = values.RemoveAt(i);
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("+", GUILayout.Width(ButtonWidth))) {
-                values = values.Add("");
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
+        /// <inheritdoc />
         public string ToCode() {
             if (SourceType == 0) {
                 return "";

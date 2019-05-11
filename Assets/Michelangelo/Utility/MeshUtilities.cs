@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Michelangelo.Models;
 using Michelangelo.Models.MichelangeloApi;
 using UnityEngine;
 
 namespace Michelangelo.Utility {
     internal static class MeshUtilities {
-        internal static Matrix4x4 MatrixFromArray(float[] arr) {
+        internal static Matrix4x4 MatrixFromArray(IReadOnlyList<float> arr) {
             return new Matrix4x4(
                 new Vector4(arr[0], arr[4], arr[8], arr[12]),
                 new Vector4(arr[1], arr[5], arr[9], arr[13]),
@@ -45,9 +44,6 @@ namespace Michelangelo.Utility {
         }
 
         internal static Material MaterialFromModel(MaterialModel model) {
-            model.Scalars = model.Scalars ?? new Dictionary<string, double>();
-            model.Vectors = model.Vectors ?? new Dictionary<string, double[]>();
-
             var material = new Material(Shader.Find("Standard"));
             material.SetColor("_Color", new Color((float) model.Albedo[0], (float) model.Albedo[1], (float) model.Albedo[2]));
             material.SetFloat("_Metallic", (float) model.Scalars.GetValueOrDefault("gIi", 0.0));

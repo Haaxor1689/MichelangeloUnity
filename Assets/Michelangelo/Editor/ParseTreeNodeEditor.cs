@@ -3,10 +3,10 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
-    [CustomEditor(typeof(ParseTreeNode))]
+    [CustomEditor(typeof(ParseTreeScript))]
     internal class ParseTreeNodeEditor : UnityEditor.Editor {
 
-        private ParseTreeNode Script => (ParseTreeNode) target;
+        private ParseTreeScript Script => (ParseTreeScript) target;
 
         public override void OnInspectorGUI() {
             GUI.enabled = true;

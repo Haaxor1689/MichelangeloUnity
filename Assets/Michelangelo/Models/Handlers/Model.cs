@@ -27,10 +27,7 @@ namespace Michelangelo.Models.Handlers {
         /// </summary>
         public Vector3 Size = Vector3.one;
 
-        /// <summary>
-        ///   Serializes the handler into it's Michelangelo's C# grammar script representation.
-        /// </summary>
-        /// <returns>A string containing code representing this object.</returns>
+        /// <inheritdoc />
         public string ToCode() => $"new Model(\"{Goal}\").With(Size{Size.ToString()}, Position{(CenterOnPivot ? new Vector3(-Size.x / 2, 0, -Size.z / 2).ToString() : Vector3.zero.ToString())}){RestrictSources.ToCode()};";
     }
 }

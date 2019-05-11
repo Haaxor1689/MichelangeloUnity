@@ -2,8 +2,8 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Utility {
-    public static class RequestErrorMessage {
+namespace Michelangelo.Editor.Utility {
+    internal static class RequestErrorMessage {
         private static readonly Regex MatchRegex = new Regex(" request error:\\n");
         private static readonly GUIStyle TitleStyle = new GUIStyle { normal = { textColor = Color.red }, fontStyle = FontStyle.Bold };
 

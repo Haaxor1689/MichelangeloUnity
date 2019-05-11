@@ -9,16 +9,22 @@ namespace Michelangelo.Models {
         /// <summary>
         ///   Contains output from grammar compilation on Michelangelo backend.
         /// </summary>
-        public string ErrorMessage;
+        public readonly string ErrorMessage;
 
         /// <summary>
         ///   Dictionary of all materials used by the resulting meshes.
         /// </summary>
-        public Dictionary<int, MaterialModel> Materials;
+        public readonly IReadOnlyDictionary<int, MaterialModel> Materials;
 
         /// <summary>
         ///   Parse tree containing all the information about how the result was generated and the raw mesh data.
         /// </summary>
-        public ParseTree ParseTree;
+        public readonly ParseTree ParseTree;
+
+        public GenerateGrammarResponse(string errorMessage, IReadOnlyDictionary<int, MaterialModel> materials, ParseTree parseTree) {
+            ErrorMessage = errorMessage;
+            Materials = materials;
+            ParseTree = parseTree;
+        }
     }
 }

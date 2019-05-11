@@ -1,3 +1,6 @@
+using System;
+using Michelangelo.Editor.Draw;
+using Michelangelo.Editor.Utility;
 using Michelangelo.Models;
 using Michelangelo.Scripts;
 using UnityEditor;
@@ -18,11 +21,12 @@ namespace Michelangelo.Editor {
             }
 
             Object.Grammar.Draw(Repaint, OnRejected);
-            
-            if (string.IsNullOrEmpty(Object.Grammar.code)) {
-                EditorGUILayout.Space();
-                EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
+
+            if (!String.IsNullOrEmpty(Object.Grammar.code)) {
+                return;
             }
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
         }
     }
 }

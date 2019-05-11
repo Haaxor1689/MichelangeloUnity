@@ -9,22 +9,34 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
+    /// <summary>
+    ///   Base class for all Michelangelo objects.
+    /// </summary>
     public abstract class ObjectBase : MonoBehaviour {
-        public TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
+        [SerializeField]
+        private Material[] materials;
+
+        [SerializeField]
+        internal IReadOnlyList<MeshGizmoData> MeshHighlights;
+
+        [SerializeField]
+        private ParseTreeData parseTreeData;
 
         [SerializeField]
         [HideInInspector]
         private TreeViewState treeViewState;
 
-        [SerializeField]
-        protected Material[] Materials;
-        
-        [SerializeField]
-        private ParseTreeData parseTreeData;
+        internal TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
+
+        /// <summary>
+        ///   Parse tree of this object.
+        /// </summary>
         public ParseTree ParseTree => (parseTreeData ? parseTreeData : parseTreeData = GetParseTreeData()).ParseTree;
-        
-        [SerializeField]
-        public List<MeshGizmoData> MeshHighlights;
+
+        /// <summary>
+        ///   Returns true if object can be sent for generation.
+        /// </summary>
+        public virtual bool CanGenerate => true;
 
         private ParseTreeData GetParseTreeData() {
             var child = transform.Find("ParseTreeData");
@@ -37,23 +49,26 @@ namespace Michelangelo.Scripts {
             return newObject.AddComponent<ParseTreeData>();
         }
 
-        public virtual bool CanGenerate => true;
-
-        protected abstract IPromise<GenerateGrammarResponse> GenerateCallback();
-        
         /// <summary>
-        /// Generates new mesh for Michelangelo object asynchronously.
+        ///   API callback to Michelangelo service.
         /// </summary>
-        /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
-        public IPromise<GenerateGrammarResponse> Generate() => !CanGenerate 
-            ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate request error:\nThis object can't be generated right now.")) 
-            : GenerateCallback().Then(response => {
-                CreateMesh(response.ParseTree, response.Materials);
-                return response;
-            });
+        /// <returns>Generated response.</returns>
+        protected abstract IPromise<GenerateGrammarResponse> GenerateCallback();
 
         /// <summary>
-        /// Instantiates new GameObject at the pivot of node specified by id.
+        ///   Generates new mesh for Michelangelo object asynchronously.
+        /// </summary>
+        /// <returns><see cref="IPromise" /> that contains mesh info and response message from server.</returns>
+        public IPromise<GenerateGrammarResponse> Generate() => !CanGenerate
+            ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate request error:\nThis object can't be generated right now."))
+            : GenerateCallback()
+                .Then(response => {
+                    CreateMesh(response.ParseTree, response.Materials);
+                    return response;
+                });
+
+        /// <summary>
+        ///   Instantiates new GameObject at the pivot of node specified by id.
         /// </summary>
         /// <param name="nodeId">The node Id from current parse tree.</param>
         /// <returns>Instantiated GameObject.</returns>
@@ -65,23 +80,23 @@ namespace Michelangelo.Scripts {
             return newObject;
         }
 
-        private void CreateMesh(ParseTree parseTree, IDictionary<int, MaterialModel> materials) {
+        private void CreateMesh(ParseTree parseTree, IReadOnlyDictionary<int, MaterialModel> materialsDictionary) {
             DeleteOldMeshes();
 
             parseTreeData = GetParseTreeData();
             parseTreeData.ParseTree = parseTree;
-            Materials = materials.Select(m => MeshUtilities.MaterialFromModel(m.Value)).ToArray();
-            
+            materials = materialsDictionary.Select(m => MeshUtilities.MaterialFromModel(m.Value)).ToArray();
+
             var nodes = ParseTree.GetMeshNodes();
             foreach (var node in nodes) {
-                ParseTreeNode.Construct(transform, ParseTree, node, Materials);
+                ParseTreeScript.Construct(transform, ParseTree, node, materials);
             }
         }
 
         private void DeleteOldMeshes() {
             for (var i = 0; i < transform.childCount; ++i) {
                 var child = transform.GetChild(i);
-                if (child.GetComponent<ParseTreeNode>()) {
+                if (child.GetComponent<ParseTreeScript>()) {
                     DestroyImmediate(child.gameObject);
                     --i;
                 }
@@ -98,19 +113,15 @@ namespace Michelangelo.Scripts {
                 }
 
                 Gizmos.color = new Color(0.97f, 0.58f, 0.11f);
-                Gizmos.DrawWireMesh(
-                    data.Mesh,
+                Gizmos.DrawWireMesh(data.Mesh,
                     data.Position + transform.position,
                     data.Rotation * transform.rotation,
-                    data.Scale + transform.localScale
-                );
+                    data.Scale + transform.localScale);
                 Gizmos.color = new Color(0.97f, 0.58f, 0.11f, 0.3f);
-                Gizmos.DrawMesh(
-                    data.Mesh,
+                Gizmos.DrawMesh(data.Mesh,
                     data.Position + transform.position,
                     data.Rotation * transform.rotation,
-                    data.Scale + transform.localScale
-                );
+                    data.Scale + transform.localScale);
             }
         }
     }

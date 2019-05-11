@@ -2,7 +2,7 @@
 using Michelangelo.Models.Handlers;
 using UnityEditor;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo.Editor.Draw {
     internal static class ModelDraw {
         public static void Draw(this Model model) {
             EditorGUILayout.BeginVertical("Box");

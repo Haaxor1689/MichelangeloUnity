@@ -2,10 +2,31 @@
 using MessagePack;
 
 namespace Michelangelo.Models.MichelangeloApi {
+    /// <summary>
+    /// Michelangelo's material properties.
+    /// </summary>
     [MessagePackObject(true)]
     public class MaterialModel {
-        public double[] Albedo;
-        public Dictionary<string, double> Scalars;
-        public Dictionary<string, double[]> Vectors;
+        /// <summary>
+        /// RGBA value of base material color.
+        /// </summary>
+        public readonly IReadOnlyList<double> Albedo;
+
+        /// <summary>
+        /// Dictionary of all scalar properties for material shader.
+        /// </summary>
+        public readonly IReadOnlyDictionary<string, double> Scalars;
+
+        /// <summary>
+        /// Dictionary of all vector properties for material shader.
+        /// </summary>
+        public readonly IReadOnlyDictionary<string, double[]> Vectors;
+
+        /// <inheritdoc />
+        public MaterialModel(IReadOnlyList<double> albedo, IReadOnlyDictionary<string, double> scalars, IReadOnlyDictionary<string, double[]> vectors) {
+            Albedo = albedo;
+            Scalars = scalars ?? new Dictionary<string, double>();
+            Vectors = vectors ?? new Dictionary<string, double[]>();
+        }
     }
 }

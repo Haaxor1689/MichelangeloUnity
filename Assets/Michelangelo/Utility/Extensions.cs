@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -6,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Michelangelo.Utility {
-    public static class Extensions {
+    internal static class Extensions {
         public static UnityWebRequest NoRedirect(this UnityWebRequest request) {
             request.redirectLimit = 0;
             return request;
@@ -50,7 +49,7 @@ namespace Michelangelo.Utility {
             return builder.ToString();
         }
 
-        public static bool HasNegativeScale(this Matrix4x4 mat) {
+        private static bool HasNegativeScale(this Matrix4x4 mat) {
             var x0 = new Vector3(Matrix4x4.identity.GetColumn(0).x, Matrix4x4.identity.GetColumn(0).y, Matrix4x4.identity.GetColumn(0).z);
             var y0 = new Vector3(Matrix4x4.identity.GetColumn(1).x, Matrix4x4.identity.GetColumn(1).y, Matrix4x4.identity.GetColumn(1).z);
             var z0 = new Vector3(Matrix4x4.identity.GetColumn(2).x, Matrix4x4.identity.GetColumn(2).y, Matrix4x4.identity.GetColumn(2).z);
@@ -111,26 +110,7 @@ namespace Michelangelo.Utility {
             return scale;
         }
 
-        public static T[] RemoveAt<T>(this T[] source, int index) {
-            var dest = new T[source.Length - 1];
-            if (index > 0) {
-                Array.Copy(source, 0, dest, 0, index);
-            }
-
-            if (index < source.Length - 1) {
-                Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
-            }
-
-            return dest;
-        }
-
-        public static T[] Add<T>(this T[] source, T value) {
-            var dest = new List<T>(source);
-            dest.Add(value);
-            return dest.ToArray();
-        }
-
-        public static Value GetValueOrDefault<Key, Value>(this IDictionary<Key, Value> dictionary, Key key, Value defaultValue) {
+        public static Value GetValueOrDefault<Key, Value>(this IReadOnlyDictionary<Key, Value> dictionary, Key key, Value defaultValue) {
             Value value;
             return dictionary.TryGetValue(key, out value) ? value : defaultValue;
         }

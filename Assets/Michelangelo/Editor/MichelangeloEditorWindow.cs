@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Michelangelo.Editor.Draw;
+using Michelangelo.Editor.Models;
+using Michelangelo.Editor.Utility;
 using Michelangelo.Models;
-using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,8 +16,6 @@ namespace Michelangelo.Editor {
 
         private int grammarPage;
         private int grammarsPerPage = 5;
-        
-        private bool isUnreachable;
 
         private string loginEmail;
         private string loginPassword;
@@ -36,10 +36,10 @@ namespace Michelangelo.Editor {
         }
 
         private void OnGUI() {
-            if (isUnreachable) {
+            if (MichelangeloSession.IsUnreachable) {
                 EditorGUILayout.HelpBox("Michelangelo web server seems to be unreachable\nPlease try again later...", MessageType.Error);
                 if (GUILayout.Button("Refresh")) {
-                    isUnreachable = false;
+                    Refresh();
                 }
                 GUI.enabled = false;
             } else if (MichelangeloSession.IsLoading) {
@@ -139,7 +139,7 @@ namespace Michelangelo.Editor {
                     grammar.Draw(Repaint, OnRejected, true);
                 }
             } else {
-                pageCount = (filteredGrammarList.Count() - 1) / grammarsPerPage;
+                pageCount = (filteredGrammarList.Count - 1) / grammarsPerPage;
                 if (pageCount < grammarPage) {
                     grammarPage = pageCount;
                 }
@@ -198,11 +198,6 @@ namespace Michelangelo.Editor {
 
         private void OnRejected(Exception error) {
             errorMessage = error.Message;
-
-            var requestError = error as WebRequestException;
-            if (requestError?.ResponseCode == 523) {
-                isUnreachable = true;
-            }
             Repaint();
             Debug.LogError(error);
         }

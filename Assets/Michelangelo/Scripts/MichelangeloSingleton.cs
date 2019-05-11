@@ -3,7 +3,7 @@ using MessagePack.Resolvers;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
-    public class MichelangeloSingleton : MonoBehaviour {
+    internal class MichelangeloSingleton : MonoBehaviour {
         private const string MichelangeloSingletonName = "MichelangeloSingleton";
 
         private static MichelangeloSingleton instance;

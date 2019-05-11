@@ -1,24 +1,44 @@
-﻿using MessagePack;
+﻿using System.Collections.Generic;
+using MessagePack;
 
 namespace Michelangelo.Models.MichelangeloApi {
+    /// <summary>
+    ///   Backed model of parse tree node.
+    /// </summary>
     [MessagePackObject(true)]
     public class ParseTreeModel {
-        public uint[] ChildIndices;
+        /// <summary>
+        ///   Child nodes.
+        /// </summary>
+        public readonly uint[] ChildIndices;
 
         /// <summary>
-        /// My id within the tree
+        ///   Node`s id within parse tree.
         /// </summary>
-        public uint ID = uint.MaxValue;
+        public readonly uint ID;
 
-        public string[][] Ontology;
+        /// <summary>
+        ///   Ontology of child nodes.
+        /// </summary>
+        public readonly IReadOnlyList<string[]> Ontology;
 
-        // Id of the rule which created this shape
-        // public uint R = uint.MaxValue;
-        public string Rule = string.Empty;
+        /// <summary>
+        ///   Id of the rule which created this shape.
+        /// </summary>
+        public readonly string Rule;
 
-        // Human readable nme of the rule
-        // public string RN = string.Empty;
+        /// <summary>
+        ///   Geometric models of child nodes.
+        /// </summary>
+        public readonly IReadOnlyList<GeometricModel> Shape;
 
-        public GeometricModel[] Shape;
+        /// <inheritdoc />
+        public ParseTreeModel(uint id, string rule, uint[] childIndices, IReadOnlyList<string[]> ontology, IReadOnlyList<GeometricModel> shape) {
+            ID = id;
+            Rule = rule;
+            ChildIndices = childIndices;
+            Ontology = ontology;
+            Shape = shape;
+        }
     }
 }

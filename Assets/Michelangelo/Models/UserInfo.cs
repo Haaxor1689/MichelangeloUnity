@@ -1,26 +1,27 @@
 ﻿using System;
-using System.Text;
 using UnityEngine;
 
 namespace Michelangelo.Models {
+    /// <summary>
+    /// Holds information about Michelangelo user.
+    /// </summary>
     [Serializable]
     public class UserInfo {
+        /// <summary>
+        /// Energy available to the user.
+        /// </summary>
         public int energyAvailable;
+
+        /// <summary>
+        /// Maximum energy available to user.
+        /// </summary>
         public int energyCapacity;
+
+        /// <summary>
+        /// Username of the user.
+        /// </summary>
         public string username;
         
-        public static UserInfo FromJson(string json) => JsonUtility.FromJson<UserInfo>(json);
-
-        public new string ToString() {
-            var builder = new StringBuilder();
-            builder.Append("[Username: ");
-            builder.Append(username);
-            builder.Append(", Energy: ");
-            builder.Append(energyAvailable);
-            builder.Append("/");
-            builder.Append(energyCapacity);
-            builder.Append("]");
-            return builder.ToString();
-        }
+        internal static UserInfo FromJson(string json) => JsonUtility.FromJson<UserInfo>(json);
     }
 }
