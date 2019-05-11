@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Michelangelo.Model;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
 using Michelangelo.Utility;
@@ -9,7 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Michelangelo.Model {
+namespace Michelangelo {
     public static class MichelangeloSession {
         private const string UserInfoPrefsKey = Constants.EditorPrefsPrefix + "UserInfo";
         private const string GrammarListPrefsKey = Constants.EditorPrefsPrefix + "GrammarList";
@@ -167,14 +168,13 @@ namespace Michelangelo.Model {
                              SaveGrammarList();
                          });
         }
-        
 
         /// <summary>
         ///   Updates local data about grammar with <see cref="grammarId" /> id.
         /// </summary>
         /// <param name="grammarId">Id of grammar that should updated.</param>
         /// <returns>
-        ///   When resolved, an updated <see cref="Grammar"/> object. When rejected, an
+        ///   When resolved, an updated <see cref="Grammar" /> object. When rejected, an
         ///   <see cref="Exception" /> with info about error that occured.
         /// </returns>
         public static IPromise<Grammar> GetGrammar(string grammarId) {
