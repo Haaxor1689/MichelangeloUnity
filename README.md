@@ -2,6 +2,22 @@
 
 This package brings Michelangelo service to Unity editor with many features that make it easier for developers to integrate procedural models into their projects.
 
+## Contents
+
+- [MichelangeloUnity](#michelangelounity)
+  - [Contents](#contents)
+  - [Installation](#installation)
+  - [Quick Start](#quick-start)
+    - [Log in](#log-in)
+    - [Log out](#log-out)
+  - [Creating Michelangelo objects](#creating-michelangelo-objects)
+    - [SceneObject](#sceneobject)
+    - [GrammarObject](#grammarobject)
+  - [Generating meshes](#generating-meshes)
+    - [Parse tree](#parse-tree)
+    - [Compilation output](#compilation-output)
+  - [Account info and energy](#account-info-and-energy)
+
 ## Installation
 
 Extract provided `.unitypackage` into you project. This package uses dependencies [MessagePack](https://github.com/neuecc/MessagePack-CSharp) library, [RSG.Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) library and [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640) package that are all outside of Michelangelo's main folder so they can be potentially shared with other packages.
