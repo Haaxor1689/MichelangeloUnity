@@ -48,7 +48,7 @@ namespace Michelangelo.Editor {
             if (WebAPI.IsAuthenticated) {
                 if (MichelangeloSession.User == null) {
                     MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(OnRejected);
-                    MichelangeloSession.RefreshGrammarList();
+                    MichelangeloSession.UpdateGrammarList();
                     return;
                 }
 
@@ -100,7 +100,7 @@ namespace Michelangelo.Editor {
                                .Then(_ => {
                                    errorMessage = null;
                                    Repaint();
-                                   MichelangeloSession.RefreshGrammarList();
+                                   MichelangeloSession.UpdateGrammarList();
                                })
                                .Catch(OnRejected);
         }
@@ -116,7 +116,7 @@ namespace Michelangelo.Editor {
 
         private void Refresh() {
             MichelangeloSession.UpdateUserInfo().Catch(OnRejected);
-            MichelangeloSession.RefreshGrammarList();
+            MichelangeloSession.UpdateGrammarList();
         }
 
         private void PrintGrammarList() {

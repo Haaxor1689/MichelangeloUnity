@@ -69,7 +69,7 @@ namespace Michelangelo.Model {
 
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
             if (showInstantiate && GUILayout.Button("Instantiate")) {
-                MichelangeloSession.InstantiateGrammar(id).Then(onResolved).Catch(onRejected);
+                MichelangeloSession.InstantiateGrammar(id).Then(_ => onResolved()).Catch(onRejected);
             }
             if (isOwner && GUILayout.Button("Delete Grammar") && EditorUtility.DisplayDialog("Delete grammar?", $"Are you sure you want to delete grammar \"{name}\"?", "Delete", "Cancel")) {
                 MichelangeloSession.DeleteGrammar(id).Then(onResolved).Catch(onRejected);
@@ -94,7 +94,7 @@ namespace Michelangelo.Model {
                      "Any unsaved local changes to the grammar will be lost.",
                      "Download",
                      "Cancel"))) {
-                MichelangeloSession.UpdateGrammar(id).Then(g => {
+                MichelangeloSession.GetGrammar(id).Then(g => {
                     g.SaveSourceCodeFile();
                     onResolved();
                 }).Catch(onRejected);

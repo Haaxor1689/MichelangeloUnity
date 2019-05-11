@@ -13,23 +13,47 @@ namespace Michelangelo.Model {
     public static class MichelangeloSession {
         private const string UserInfoPrefsKey = Constants.EditorPrefsPrefix + "UserInfo";
         private const string GrammarListPrefsKey = Constants.EditorPrefsPrefix + "GrammarList";
+
         private static UserInfo user;
         private static Dictionary<string, Grammar> grammarList;
 
+        /// <summary>
+        ///   Contains info about currently logged in user. Can be updated by calling <see cref="UpdateUserInfo" />.
+        /// </summary>
         public static UserInfo User => user ?? (user = UserInfoFromPrefs);
 
         private static UserInfo UserInfoFromPrefs => UserInfo.FromJson(EditorPrefs.GetString(UserInfoPrefsKey));
 
+        /// <summary>
+        ///   Dictionary of currently downloaded grammars with their ids as keys. Can be updated by calling
+        ///   <see cref="UpdateGrammarList" />.
+        /// </summary>
         public static IReadOnlyDictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = GrammarListFromPrefs);
 
         private static Dictionary<string, Grammar> GrammarListFromPrefs => JsonArray.FromJsonArray<Grammar>(EditorPrefs.GetString(GrammarListPrefsKey)).ToDictionary(x => x.id);
 
         private static void SaveGrammarList() => EditorPrefs.SetString(GrammarListPrefsKey, JsonArray.ToJsonArray(grammarList.Values.ToArray()));
 
-        public static IPromise<UserInfo> LogIn(string loginEmail, string loginPassword) {
-            return WebAPI.Login(loginEmail, loginPassword).Then(() => UpdateUserInfo());
+        /// <summary>
+        ///   Logs in user to Michelangelo service. This is required to do before any other requests to Michelangelo service are
+        ///   done.
+        /// </summary>
+        /// <param name="loginUsername">Username of Michelangelo account.</param>
+        /// <param name="loginPassword">Password for Michelangelo account.</param>
+        /// <returns>
+        ///   When resolved, a <see cref="UserInfo" /> about logged in user. When rejected, an
+        ///   <see cref="Exception" /> with info about error that occured.
+        /// </returns>
+        public static IPromise<UserInfo> LogIn(string loginUsername, string loginPassword) {
+            return WebAPI.Login(loginUsername, loginPassword).Then(() => UpdateUserInfo());
         }
 
+        /// <summary>
+        ///   Logs out current user from Michelangelo service and removes saved user info and grammar data.
+        /// </summary>
+        /// <returns>
+        ///   When rejected, an <see cref="Exception" /> with info about error that occured.
+        /// </returns>
         public static IPromise LogOut() {
             return WebAPI.Logout()
                          .Then(() => {
@@ -40,6 +64,13 @@ namespace Michelangelo.Model {
                          });
         }
 
+        /// <summary>
+        ///   Creates new grammar.
+        /// </summary>
+        /// <returns>
+        ///   When resolved, a newly created <see cref="Grammar" /> object. When rejected, an
+        ///   <see cref="Exception" /> with info about error that occured.
+        /// </returns>
         public static IPromise<Grammar> CreateGrammar() {
             return WebAPI.CreateGrammar()
                          .Then(grammar => {
@@ -48,6 +79,13 @@ namespace Michelangelo.Model {
                          });
         }
 
+        /// <summary>
+        ///   Updates <see cref="User" />.
+        /// </summary>
+        /// <returns>
+        ///   When resolved, an updated <see cref="UserInfo" /> object. When rejected, an
+        ///   <see cref="Exception" /> with info about error that occured.
+        /// </returns>
         public static IPromise<UserInfo> UpdateUserInfo() {
             return WebAPI.GetUserInfo()
                          .Then(newUser => {
@@ -56,7 +94,14 @@ namespace Michelangelo.Model {
                          });
         }
 
-        public static IPromise<IReadOnlyDictionary<string, Grammar>> RefreshGrammarList() {
+        /// <summary>
+        ///   Updates <see cref="GrammarList" />.
+        /// </summary>
+        /// <returns>
+        ///   When resolved, an updated grammar dictionary object. When rejected, an
+        ///   <see cref="Exception" /> with info about error that occured.
+        /// </returns>
+        public static IPromise<IReadOnlyDictionary<string, Grammar>> UpdateGrammarList() {
             grammarList = new Dictionary<string, Grammar>();
 
             Action<Grammar[]> appendGrammars = retrievedGrammars => {
@@ -74,31 +119,44 @@ namespace Michelangelo.Model {
                                      .Then<IReadOnlyDictionary<string, Grammar>>(_ => grammarList);
         }
 
-        public static IPromise InstantiateGrammar(string grammarId) {
+        /// <summary>
+        ///   Instantiates new <see cref="GrammarObject" /> linked to grammar with <see cref="grammarId" /> id.
+        /// </summary>
+        /// <param name="grammarId">Id of grammar that should be linked to newly instantiated <see cref="GrammarObject" />.</param>
+        /// <returns>
+        ///   When resolved, a reference to newly created <see cref="GameObject" />. When rejected, an
+        ///   <see cref="Exception" /> with info about error that occured.
+        /// </returns>
+        public static IPromise<GameObject> InstantiateGrammar(string grammarId) {
             if (!GrammarList.ContainsKey(grammarId)) {
-                return Promise.Rejected(new ApplicationException("Instantiate grammar request error:\nRequested grammar not found."));
+                return Promise<GameObject>.Rejected(new ApplicationException("Instantiate grammar request error:\nRequested grammar not found."));
             }
             var grammar = GrammarList[grammarId];
 
             var newObject = GrammarObject.Construct(grammar);
             Selection.objects = new Object[] { newObject };
-            return Promise.Resolved();
+            return Promise<GameObject>.Resolved(newObject);
         }
 
-        public static IPromise<GenerateGrammarResponse> GenerateGrammar(string grammarId) {
+        internal static IPromise<GenerateGrammarResponse> GenerateGrammar(string grammarId) {
             return !GrammarList.ContainsKey(grammarId)
                 ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate grammar request error:\nRequested grammar not found."))
                 : WebAPI.GenerateGrammar(GrammarList[grammarId])
                         .Then(_ => { UpdateUserInfo(); });
         }
 
-        public static IPromise<GenerateGrammarResponse> GenerateScene(string code) {
+        internal static IPromise<GenerateGrammarResponse> GenerateScene(string code) {
             return WebAPI.GenerateScene(code)
                          .Then(_ => { UpdateUserInfo(); });
         }
 
-        public static Grammar GetGrammar(string grammarId) => GrammarList.ContainsKey(grammarId) ? GrammarList[grammarId] : Grammar.Placeholder;
-
+        /// <summary>
+        ///   Deletes grammar with <see cref="grammarId" /> id.
+        /// </summary>
+        /// <param name="grammarId">Id of grammar that should be deleted.</param>
+        /// <returns>
+        ///   When rejected, an <see cref="Exception" /> with info about error that occured.
+        /// </returns>
         public static IPromise DeleteGrammar(string grammarId) {
             if (!GrammarList.ContainsKey(grammarId)) {
                 return Promise.Rejected(new ApplicationException("Delete grammar request error:\nRequested grammar not found."));
@@ -109,8 +167,17 @@ namespace Michelangelo.Model {
                              SaveGrammarList();
                          });
         }
+        
 
-        public static IPromise<Grammar> UpdateGrammar(string grammarId) {
+        /// <summary>
+        ///   Updates local data about grammar with <see cref="grammarId" /> id.
+        /// </summary>
+        /// <param name="grammarId">Id of grammar that should updated.</param>
+        /// <returns>
+        ///   When resolved, an updated <see cref="Grammar"/> object. When rejected, an
+        ///   <see cref="Exception" /> with info about error that occured.
+        /// </returns>
+        public static IPromise<Grammar> GetGrammar(string grammarId) {
             if (!GrammarList.ContainsKey(grammarId)) {
                 return Promise<Grammar>.Rejected(new ApplicationException("Update grammar request error:\nRequested grammar not found."));
             }
