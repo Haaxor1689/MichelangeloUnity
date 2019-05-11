@@ -18,20 +18,28 @@ namespace Michelangelo {
         private static UserInfo user;
         private static Dictionary<string, Grammar> grammarList;
 
+        private static UserInfo UserInfoFromPrefs => UserInfo.FromJson(EditorPrefs.GetString(UserInfoPrefsKey));
+        private static Dictionary<string, Grammar> GrammarListFromPrefs => JsonArray.FromJsonArray<Grammar>(EditorPrefs.GetString(GrammarListPrefsKey)).ToDictionary(x => x.id);
+
         /// <summary>
         ///   Contains info about currently logged in user. Can be updated by calling <see cref="UpdateUserInfo" />.
         /// </summary>
         public static UserInfo User => user ?? (user = UserInfoFromPrefs);
 
-        private static UserInfo UserInfoFromPrefs => UserInfo.FromJson(EditorPrefs.GetString(UserInfoPrefsKey));
-
         /// <summary>
-        ///   Dictionary of currently downloaded grammars with their ids as keys. Can be updated by calling
-        ///   <see cref="UpdateGrammarList" />.
+        ///   Dictionary of currently downloaded grammars. Can be updated by calling <see cref="UpdateGrammarList" />.
         /// </summary>
         public static IReadOnlyDictionary<string, Grammar> GrammarList => grammarList ?? (grammarList = GrammarListFromPrefs);
 
-        private static Dictionary<string, Grammar> GrammarListFromPrefs => JsonArray.FromJsonArray<Grammar>(EditorPrefs.GetString(GrammarListPrefsKey)).ToDictionary(x => x.id);
+        /// <summary>
+        ///   True if session is currently authenticated with Michelangelo service.
+        /// </summary>
+        public static bool IsAuthenticated => WebAPI.IsAuthenticated;
+
+        /// <summary>
+        ///   True if there is a request currently being sent to Michelangelo service.
+        /// </summary>
+        public static bool IsLoading => WebAPI.IsLoading;
 
         private static void SaveGrammarList() => EditorPrefs.SetString(GrammarListPrefsKey, JsonArray.ToJsonArray(grammarList.Values.ToArray()));
 
