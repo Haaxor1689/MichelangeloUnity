@@ -126,11 +126,11 @@ After generation is successful, object will have it's parse tree preview availab
 
 Parse tree can be useful when viewing how the final scene was built from partial goals. After selecting a node in the parse tree, relevant part of the mesh in the scene will be highlighted.
 
-![Selected mesh of one ParseTreeNode](Screenshots/NodeHighlight.png)
+![Highlight of selected parse tree node](Screenshots/NodeHighlight.png)
 
 Parse tree is also used to split the raw mesh data into smaller meshes that fit into Unity's mesh vertex count in such a way that Unity can optimize and not render parts of the scene not in camera's view (which would be not possible with smaller ammount of bigger meshes).
 
-![Selected mesh of one ParseTreeNode](Screenshots/ParseTree.png)
+![Parse tree preview in inspector](Screenshots/ParseTree.png)
 
 You can also create an empty game object at the pivot of any node from the parse tree by clicking **Attach GO** next to node. From a C# script interface you can also do this by providing an `nodeId` to `AttachGameObjectToNode` and the node id can be obtained from `ParseTree` attribute of grammar/scene object.
 
@@ -146,7 +146,7 @@ foreach (var node in nodes) {
 
 You can see compilation output at the bottom of grammar/scene object's inspector. It can contain warnings, suggestions or fatal errors in case of unsuccessful compilation.
 
-![Selected mesh of one ParseTreeNode](Screenshots/CompilationOutput.png)
+![Compilation output in inspector](Screenshots/CompilationOutput.png)
 
 If you are using C# scripting interface, compilation output can be accessed through `response.ErrorMessage` for successful requests and through `error.Message` for unsuccessful requests.
 
