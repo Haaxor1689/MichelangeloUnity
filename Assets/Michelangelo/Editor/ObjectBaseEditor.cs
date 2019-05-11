@@ -23,14 +23,14 @@ namespace Michelangelo.Editor {
         }
 
         public override void OnInspectorGUI() {
-            if (!WebAPI.IsAuthenticated) {
+            if (!MichelangeloSession.IsAuthenticated) {
                 EditorGUILayout.HelpBox("To use this feature, please log in to Michelangelo first.", MessageType.Warning);
                 MichelangeloEditorWindow.OpenMichelangeloWindowButton();
                 GUI.enabled = false;
-            } else if (WebAPI.IsLoading) {
+            } else if (MichelangeloSession.IsLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 if (GUILayout.Button("Stop generation", GUILayout.Height(40.0f))) {
-                    WebAPI.CancelGeneration = true;
+                    MichelangeloSession.CancelGeneration();
                 }
                 GUI.enabled = false;
             }

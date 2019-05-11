@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Michelangelo.Editor {
     public class MichelangeloEditorWindow : EditorWindow {
+        private const string ForgottenPasswordUrl = @"https://michelangelo.graphics/Account/ForgotPassword";
+        private const string RegisterUrl = @"https://michelangelo.graphics/Account/Register";
+
         private string errorMessage;
 
         private int grammarPage;
@@ -40,12 +43,12 @@ namespace Michelangelo.Editor {
                     isUnreachable = false;
                 }
                 GUI.enabled = false;
-            } else if (WebAPI.IsLoading) {
+            } else if (MichelangeloSession.IsLoading) {
                 EditorGUILayout.HelpBox("Loading, please wait...", MessageType.Info);
                 GUI.enabled = false;
             }
 
-            if (WebAPI.IsAuthenticated) {
+            if (MichelangeloSession.IsAuthenticated) {
                 if (MichelangeloSession.User == null) {
                     MichelangeloSession.UpdateUserInfo().Then(_ => { Repaint(); }).Catch(OnRejected);
                     MichelangeloSession.UpdateGrammarList();
@@ -88,10 +91,10 @@ namespace Michelangelo.Editor {
             }
             EditorGUILayout.Space();
             if (LinkLabel.Draw("Register as a new user.")) {
-                Application.OpenURL(URLConstants.RegisterAPI);
+                Application.OpenURL(RegisterUrl);
             }
             if (LinkLabel.Draw("Forgot your password?")) {
-                Application.OpenURL(URLConstants.ForgottenPasswordAPI);
+                Application.OpenURL(ForgottenPasswordUrl);
             }
         }
 

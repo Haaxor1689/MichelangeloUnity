@@ -44,6 +44,11 @@ namespace Michelangelo {
         private static void SaveGrammarList() => EditorPrefs.SetString(GrammarListPrefsKey, JsonArray.ToJsonArray(grammarList.Values.ToArray()));
 
         /// <summary>
+        ///   Cancels any running Michelangelo service requests.
+        /// </summary>
+        public static void CancelGeneration() => WebAPI.CancelGeneration = true;
+
+        /// <summary>
         ///   Logs in user to Michelangelo service. This is required to do before any other requests to Michelangelo service are
         ///   done.
         /// </summary>

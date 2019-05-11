@@ -13,7 +13,7 @@ using MessagePack;
 using Michelangelo.Model.MichelangeloApi;
 
 namespace Michelangelo.Session {
-    public static class WebAPI {
+    internal static class WebAPI {
         private static readonly Regex RequestTokenRegex = new Regex("<form action=\"\\/Account\\/Log(in|Off)\" .*><input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"[^\"]*");
 
         private const string SetCookieName = "Set-Cookie";
