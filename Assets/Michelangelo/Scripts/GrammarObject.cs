@@ -9,6 +9,8 @@ namespace Michelangelo.Scripts {
         [SerializeField]
         private string id = "";
         public Grammar Grammar => MichelangeloSession.GetGrammar(id) ?? Grammar.Placeholder;
+
+        public override bool CanGenerate => !string.IsNullOrEmpty(Grammar.code);
         
         protected override IPromise<GenerateGrammarResponse> GenerateCallback() => MichelangeloSession.GenerateGrammar(Grammar.id);
 

@@ -8,8 +8,7 @@ namespace Michelangelo.Editor {
     public class SceneObjectEditor : ObjectBaseEditor {
         private SceneObject Object => (SceneObject) target;
 
-        protected override bool CanGenerate => !String.IsNullOrWhiteSpace(Object.Goal.Name);
-        protected override string GenerateButtonTooltip => CanGenerate ? base.GenerateButtonTooltip : "You can't generate a scene with no valid goals.";
+        protected override string GenerateButtonTooltip => Object.CanGenerate ? base.GenerateButtonTooltip : "You can't generate a scene with no valid goals or zero size.";
 
         protected override void RenderBody() {
             Object.Goal.Draw();

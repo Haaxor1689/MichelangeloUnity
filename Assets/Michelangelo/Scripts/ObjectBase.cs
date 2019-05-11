@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model;
 using Michelangelo.Model.MichelangeloApi;
@@ -20,7 +21,7 @@ namespace Michelangelo.Scripts {
         
         [SerializeField]
         private ParseTreeData parseTreeData;
-        public ParseTree ParseTree => (parseTreeData ?? (parseTreeData = GetParseTreeData())).ParseTree;
+        public ParseTree ParseTree => (parseTreeData ? parseTreeData : parseTreeData = GetParseTreeData()).ParseTree;
         
         [SerializeField]
         public List<MeshGizmoData> MeshHighlights;
@@ -36,15 +37,17 @@ namespace Michelangelo.Scripts {
             return newObject.AddComponent<ParseTreeData>();
         }
 
+        public virtual bool CanGenerate => true;
+
         protected abstract IPromise<GenerateGrammarResponse> GenerateCallback();
         
         /// <summary>
         /// Generates new mesh for Michelangelo object asynchronously.
         /// </summary>
         /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
-        public IPromise<GenerateGrammarResponse> Generate() => GenerateCallback().Then(response => {
-            CreateMesh(response.ParseTree, response.Materials);
-        });
+        public IPromise<GenerateGrammarResponse> Generate() => !CanGenerate 
+            ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate request error:\nThis object can't be generated right now.")) 
+            : GenerateCallback().Then(response => { CreateMesh(response.ParseTree, response.Materials); });
 
         /// <summary>
         /// Instantiates new GameObject at the pivot of node specified by id.

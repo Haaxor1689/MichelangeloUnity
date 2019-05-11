@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
 using Michelangelo.Utility;
@@ -15,7 +14,6 @@ namespace Michelangelo.Editor {
         private Vector2 scrollPos;
         public ParseTreeView TreeView { get; private set; }
 
-        protected virtual bool CanGenerate => true;
         protected virtual string GenerateButtonTooltip => "Sends a request to Michelangelo API to generate new mesh. This will replace current mesh of the object if it has any.";
 
         private ObjectBase Object => (ObjectBase) target;
@@ -40,7 +38,7 @@ namespace Michelangelo.Editor {
             RenderBody();
             
             EditorGUILayout.Space();
-            GUI.enabled = GUI.enabled && CanGenerate;
+            GUI.enabled = GUI.enabled && Object.CanGenerate;
             if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
                 Generate();
             }
@@ -49,7 +47,7 @@ namespace Michelangelo.Editor {
             parseTreeFoldout = EditorGUILayout.Foldout(parseTreeFoldout, "Parse tree");
             if (parseTreeFoldout) {
                 EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
-                TreeView.OnGUI(GUILayoutUtility.GetRect(0, 100, 200, 2000));
+                TreeView.OnGUI(GUILayoutUtility.GetRect(0, 100, 100, 2000));
                 EditorGUILayout.EndVertical();
 
                 using(new EditorGUILayout.HorizontalScope()) {

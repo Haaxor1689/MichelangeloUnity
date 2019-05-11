@@ -10,6 +10,8 @@ namespace Michelangelo.Scripts {
     public class SceneObject : ObjectBase {
 
         public Goal Goal;
+
+        public override bool CanGenerate => !String.IsNullOrWhiteSpace(Goal.Name) && Goal.Size.x > 0 && Goal.Size.y > 0 && Goal.Size.z > 0;
         
         protected override IPromise<GenerateGrammarResponse> GenerateCallback() => MichelangeloSession.GenerateScene(Goal.ToCode());
 
