@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{101BAAF3-E18B-4098-B5B8-4C91758946BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Michelangelo</RootNamespace>
+    <AssemblyName>Michelangelo</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>lib\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>lib\Michelangelo.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>lib\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>lib\Michelangelo.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MessagePack, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>packages\MessagePack.1.7.3.4\lib\net47\MessagePack.dll</HintPath>
+    </Reference>
+    <Reference Include="RSG.Promise, Version=3.0.1.0, Culture=neutral, PublicKeyToken=7019fe0722eef3a4, processorArchitecture=MSIL">
+      <HintPath>packages\RSG.Promise.3.0.1\lib\net35\RSG.Promise.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\Program Files\Unity\Hub\Editor\2018.3.1f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\Program Files\Unity\Hub\Editor\2018.3.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Michelangelo\Editor\GrammarObjectEditor.cs" />
+    <Compile Include="Assets\Michelangelo\Editor\MichelangeloEditorWindow.cs" />
+    <Compile Include="Assets\Michelangelo\Editor\ObjectBaseEditor.cs" />
+    <Compile Include="Assets\Michelangelo\Editor\ParseTreeNodeEditor.cs" />
+    <Compile Include="Assets\Michelangelo\Editor\ReconnectGrammarPopup.cs" />
+    <Compile Include="Assets\Michelangelo\Editor\SceneObjectEditor.cs" />
+    <Compile Include="Assets\Michelangelo\MessagePackGenerated.cs" />
+    <Compile Include="Assets\Michelangelo\MichelangeloSession.cs" />
+    <Compile Include="Assets\Michelangelo\Model\GenerateGrammarResponse.cs" />
+    <Compile Include="Assets\Michelangelo\Model\Grammar.cs" />
+    <Compile Include="Assets\Michelangelo\Model\GrammarSource.cs" />
+    <Compile Include="Assets\Michelangelo\Model\Handlers\Goal.cs" />
+    <Compile Include="Assets\Michelangelo\Model\Handlers\IHandler.cs" />
+    <Compile Include="Assets\Michelangelo\Model\Handlers\RestrictSource.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MeshGizmoData.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\AxiomPostModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\GeometricModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\MaterialModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\NormalizedParseTreeModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\ParseTree.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\ParseTreeModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\PostResponseModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\RuleExtraInfo.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\SceneEnvironment.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\SemanticModel.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\SkyMaterial.cs" />
+    <Compile Include="Assets\Michelangelo\Model\MichelangeloApi\TriangularMesh.cs" />
+    <Compile Include="Assets\Michelangelo\Model\Primitives.cs" />
+    <Compile Include="Assets\Michelangelo\Model\UserInfo.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\GrammarObject.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\MichelangeloSingleton.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\ObjectBase.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\ParseTreeData.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\ParseTreeNode.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\ParseTreeView.cs" />
+    <Compile Include="Assets\Michelangelo\Scripts\SceneObject.cs" />
+    <Compile Include="Assets\Michelangelo\Session\URLConstants.cs" />
+    <Compile Include="Assets\Michelangelo\Session\WebAPI.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\CenterPopup.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\Constants.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\Extensions.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\JsonArray.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\LinkLabel.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\MeshUtilities.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\RequestErrorMessage.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\SimpleJSON.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\WebRequestException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Michelangelo\GrammarSources\MorphingWallsGrammar.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

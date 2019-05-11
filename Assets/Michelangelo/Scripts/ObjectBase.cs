@@ -47,7 +47,10 @@ namespace Michelangelo.Scripts {
         /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
         public IPromise<GenerateGrammarResponse> Generate() => !CanGenerate 
             ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate request error:\nThis object can't be generated right now.")) 
-            : GenerateCallback().Then(response => { CreateMesh(response.ParseTree, response.Materials); });
+            : GenerateCallback().Then(response => {
+                CreateMesh(response.ParseTree, response.Materials);
+                return response;
+            });
 
         /// <summary>
         /// Instantiates new GameObject at the pivot of node specified by id.

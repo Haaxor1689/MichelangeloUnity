@@ -37,7 +37,6 @@ namespace Michelangelo.Model {
                 Debug.LogWarning($"Replacing old code file for \"{name}\".");
             }
 
-            File.Copy(Path.Combine(Constants.GrammarCodeFolder, "_empty_Grammar.cs"), SourceFilePath, true);
             File.WriteAllText(SourceFilePath, code);
             AssetDatabase.Refresh();
         }

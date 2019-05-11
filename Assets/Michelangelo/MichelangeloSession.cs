@@ -90,6 +90,7 @@ namespace Michelangelo {
                          .Then(grammar => {
                              grammarList.Add(grammar.id, grammar);
                              SaveGrammarList();
+                             return grammar;
                          });
         }
 
@@ -105,6 +106,7 @@ namespace Michelangelo {
                          .Then(newUser => {
                              user = newUser;
                              EditorPrefs.SetString(UserInfoPrefsKey, JsonUtility.ToJson(user));
+                             return newUser;
                          });
         }
 
@@ -118,19 +120,22 @@ namespace Michelangelo {
         public static IPromise<IReadOnlyDictionary<string, Grammar>> UpdateGrammarList() {
             grammarList = new Dictionary<string, Grammar>();
 
-            Action<Grammar[]> appendGrammars = retrievedGrammars => {
+            Func<Grammar[], Grammar[]> appendGrammars = retrievedGrammars => {
                 foreach (var grammar in retrievedGrammars) {
                     if (grammar.SourceCode != null) {
                         grammar.code = grammar.SourceCode.text;
                     }
                     grammarList.Add(grammar.id, grammar);
                 }
+                return retrievedGrammars;
             };
             return Promise<Grammar[]>.All(WebAPI.GetMyGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load own grammars.", x); }),
                                          WebAPI.GetSharedGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load shared grammars.", x); }),
                                          WebAPI.GetTutorialGrammarArray().Then(appendGrammars).Catch(x => { throw new Exception("Could not load tutorial grammars.", x); }))
-                                     .Then(_ => SaveGrammarList())
-                                     .Then<IReadOnlyDictionary<string, Grammar>>(_ => grammarList);
+                                     .Then<IReadOnlyDictionary<string, Grammar>>(_ => {
+                                         SaveGrammarList();
+                                         return grammarList;
+                                     });
         }
 
         /// <summary>
@@ -156,12 +161,17 @@ namespace Michelangelo {
             return !GrammarList.ContainsKey(grammarId)
                 ? Promise<GenerateGrammarResponse>.Rejected(new ApplicationException("Generate grammar request error:\nRequested grammar not found."))
                 : WebAPI.GenerateGrammar(GrammarList[grammarId])
-                        .Then(_ => { UpdateUserInfo(); });
+                        .Then(_ => { 
+                            UpdateUserInfo();
+                            return _;
+                        });
         }
 
         internal static IPromise<GenerateGrammarResponse> GenerateScene(string code) {
             return WebAPI.GenerateScene(code)
-                         .Then(_ => { UpdateUserInfo(); });
+                         .Then(_ => { 
+                             UpdateUserInfo();
+                             return _; });
         }
 
         /// <summary>
@@ -199,12 +209,14 @@ namespace Michelangelo {
                              .Then(grammar => {
                                  grammarList[grammarId] = grammar;
                                  SaveGrammarList();
+                                 return grammar;
                              });
             }
             return WebAPI.GetGrammar(grammarId)
                          .Then(grammar => {
                              grammarList[grammarId] = grammar;
                              SaveGrammarList();
+                             return grammar;
                          });
         }
     }

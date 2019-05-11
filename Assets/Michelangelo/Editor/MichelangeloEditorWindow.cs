@@ -118,7 +118,7 @@ namespace Michelangelo.Editor {
         }
 
         private void Refresh() {
-            MichelangeloSession.UpdateUserInfo().Catch(OnRejected);
+            MichelangeloSession.UpdateUserInfo().Catch(e => OnRejected(e));
             MichelangeloSession.UpdateGrammarList();
         }
 
