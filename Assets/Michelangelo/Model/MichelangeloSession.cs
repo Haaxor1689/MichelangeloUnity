@@ -32,7 +32,9 @@ namespace Michelangelo.Model {
         public static IPromise LogOut() {
             return WebAPI.Logout().Then(() => {
                 EditorPrefs.SetString(UserInfoPrefsKey, "");
+                EditorPrefs.SetString(GrammarListPrefsKey, "");
                 user = null;
+                grammarList = null;
             });
         }
 
