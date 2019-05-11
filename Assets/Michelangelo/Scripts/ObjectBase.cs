@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Michelangelo.Model;
 using Michelangelo.Model.MichelangeloApi;
@@ -43,9 +42,9 @@ namespace Michelangelo.Scripts {
         /// Generates new mesh for Michelangelo object asynchronously.
         /// </summary>
         /// <returns><see cref="IPromise"/> that contains mesh info and response message from server.</returns>
-        public IPromise<GenerateGrammarResponse> Generate() {
-            return GenerateCallback().Then(response => CreateMesh(response.ParseTree, response.Materials));
-        }
+        public IPromise<GenerateGrammarResponse> Generate() => GenerateCallback().Then(response => {
+            CreateMesh(response.ParseTree, response.Materials);
+        });
 
         /// <summary>
         /// Instantiates new GameObject at the pivot of node specified by id.
@@ -66,10 +65,10 @@ namespace Michelangelo.Scripts {
             parseTreeData = GetParseTreeData();
             parseTreeData.ParseTree = parseTree;
             Materials = materials.Select(m => MeshUtilities.MaterialFromModel(m.Value)).ToArray();
-
-            var nodes = parseTree.GetMeshNodes();
+            
+            var nodes = ParseTree.GetMeshNodes();
             foreach (var node in nodes) {
-                ParseTreeNode.Construct(transform, parseTree, node, Materials);
+                ParseTreeNode.Construct(transform, ParseTree, node, Materials);
             }
         }
 

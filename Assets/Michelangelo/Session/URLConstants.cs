@@ -3,6 +3,8 @@ namespace Michelangelo.Session {
         public static readonly string MainPage = @"https://michelangelo.graphics";
         public static readonly string LogInAPI = $@"{MainPage}/Account/Login";
         public static readonly string LogOutAPI = $@"{MainPage}/Account/LogOff";
+        public static readonly string ForgottenPasswordAPI = $@"{MainPage}/Account/ForgotPassword";
+        public static readonly string RegisterAPI = $@"{MainPage}/Account/Register";
         public static readonly string MeAPI = $@"{MainPage}/api/Me";
         public static readonly string GrammarAPI = $@"{MainPage}/api/Grammar";
         public static readonly string SceneAPI = $@"{MainPage}/api/Scene";

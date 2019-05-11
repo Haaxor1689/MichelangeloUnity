@@ -300,7 +300,7 @@ namespace Michelangelo.Session {
             request.isHttpError ? (Exception) new WebRequestException(message, request.responseCode) : new ApplicationException(message + request.error);
 
         private static void DeleteCookies() {
-            VerificationTokenCookie = null;
+            VerificationTokenCookie = "";
         }
 
         private static Action Wrap(Action action) => () => { IsLoading = false; action(); };

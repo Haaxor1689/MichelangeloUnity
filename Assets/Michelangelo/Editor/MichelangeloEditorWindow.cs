@@ -63,17 +63,6 @@ namespace Michelangelo.Editor {
             }
         }
 
-        private void DrawErrorMessage() {
-            if (string.IsNullOrEmpty(errorMessage)) {
-                return;
-            }
-            GUILayout.Space(20.0f);
-            EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
-            if (GUILayout.Button("Clear error message")) {
-                errorMessage = null;
-            }
-        }
-
         private void LoggedIn() {
             EditorGUILayout.LabelField("User:", MichelangeloSession.User.username, EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Energy:", MichelangeloSession.User.energyAvailable + "/" + MichelangeloSession.User.energyCapacity, EditorStyles.boldLabel);
@@ -90,10 +79,19 @@ namespace Michelangelo.Editor {
 
         private void NotLoggedIn() {
             EditorGUILayout.LabelField("Log In", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
             loginEmail = EditorGUILayout.TextField("User name or Email", loginEmail);
             loginPassword = EditorGUILayout.PasswordField("Password", loginPassword);
+            EditorGUILayout.Space();
             if (GUILayout.Button("Log In")) {
                 LogIn();
+            }
+            EditorGUILayout.Space();
+            if (LinkLabel.Draw("Register as a new user.")) {
+                Application.OpenURL(URLConstants.RegisterAPI);
+            }
+            if (LinkLabel.Draw("Forgot your password?")) {
+                Application.OpenURL(URLConstants.ForgottenPasswordAPI);
             }
         }
 
