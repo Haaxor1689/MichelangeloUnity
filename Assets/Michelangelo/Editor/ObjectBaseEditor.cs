@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
 using Michelangelo.Utility;
@@ -38,6 +39,13 @@ namespace Michelangelo.Editor {
 
             RenderBody();
             
+            EditorGUILayout.Space();
+            GUI.enabled = GUI.enabled && CanGenerate;
+            if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
+                Generate();
+            }
+            EditorGUILayout.Space();
+            
             parseTreeFoldout = EditorGUILayout.Foldout(parseTreeFoldout, "Parse tree");
             if (parseTreeFoldout) {
                 EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
@@ -54,12 +62,6 @@ namespace Michelangelo.Editor {
                 }
             }
 
-            EditorGUILayout.Space();
-            GUI.enabled = GUI.enabled && CanGenerate;
-            if (GUILayout.Button(new GUIContent("Generate new mesh", GenerateButtonTooltip), GUILayout.Height(40.0f))) {
-                Generate();
-            }
-
             RenderCompilationOutput();
         }
 
@@ -69,7 +71,7 @@ namespace Michelangelo.Editor {
             if (string.IsNullOrEmpty(compilationOutput)) {
                 return;
             }
-
+            
             if (RequestErrorMessage.IsRequestError(compilationOutput)) {
                 RequestErrorMessage.Draw(ref compilationOutput);
                 return;
@@ -82,29 +84,29 @@ namespace Michelangelo.Editor {
                 return;
             }
             EditorGUILayout.EndHorizontal();
-
+            
             if (!compilationFoldout) {
                 return;
             }
-
-            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+            
+            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true), GUILayout.MinHeight(200));
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-            var lines = compilationOutput.Split('\n');
+            var lines = compilationOutput.Split(new[] { "\t\n" }, StringSplitOptions.None);
             foreach (var line in lines) {
                 var split = line.Split('\t');
-
-                EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(EditorGUIUtility.currentViewWidth));
+            
+                EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
                 EditorGUILayout.LabelField(split[0], new GUIStyle {
                     normal = { textColor = GetOutputNoteColor(split[0]) },
                     alignment = TextAnchor.MiddleRight,
                     fontStyle = FontStyle.Bold
                 }, GUILayout.Width(70));
-
+            
                 EditorGUILayout.BeginVertical();
                 EditorGUILayout.LabelField(split[1], EditorStyles.boldLabel);
-                EditorGUILayout.LabelField(split[2], EditorStyles.wordWrappedLabel);
+                EditorGUI.LabelField(GUILayoutUtility.GetRect(new GUIContent(split[2]), "label"), split[2]);
                 EditorGUILayout.EndVertical();
-
+            
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.Space();
             }

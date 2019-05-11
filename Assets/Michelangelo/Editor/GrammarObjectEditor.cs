@@ -8,6 +8,8 @@ namespace Michelangelo.Editor {
     public class GrammarObjectEditor : ObjectBaseEditor {
         private GrammarObject Object => (GrammarObject) target;
 
+        protected override bool CanGenerate => !string.IsNullOrEmpty(Object.Grammar.code);
+
         protected override void RenderBody() {
             if (Object.Grammar == Grammar.Placeholder) {
                 EditorGUILayout.HelpBox("You must first connect this object to a grammar.", MessageType.Info);
@@ -18,9 +20,9 @@ namespace Michelangelo.Editor {
             }
 
             Object.Grammar.Draw(Repaint, OnRejected);
-            EditorGUILayout.Space();
             
             if (string.IsNullOrEmpty(Object.Grammar.code)) {
+                EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("Grammar source code missing. Please download it first.", MessageType.Info);
             }
         }

@@ -13,7 +13,7 @@ namespace Michelangelo.Model {
         public GeometricModel Model;
 
         private Mesh mesh;
-        public Mesh Mesh => mesh ?? (mesh = MeshUtilities.MeshFromGeometricModel(Model));
+        public Mesh Mesh => mesh ? mesh : (mesh = MeshUtilities.MeshFromGeometricModel(Model));
 
     }
 }

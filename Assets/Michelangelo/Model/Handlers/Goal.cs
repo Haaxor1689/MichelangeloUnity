@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +8,7 @@ namespace Michelangelo.Model.Handlers {
         public string Name;
         public RestrictSource RestrictSources;
         public Vector3 Size = Vector3.one;
-        public bool CenterOnPivot = false;
+        public bool CenterOnPivot;
 
         public void Draw() {
             EditorGUILayout.BeginVertical("Box");
