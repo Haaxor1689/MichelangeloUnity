@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Models.MichelangeloApi;
 using Michelangelo.Utility;
 using UnityEngine;
 

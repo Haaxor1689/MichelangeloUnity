@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using Michelangelo.Model;
-using Michelangelo.Session;
+using Michelangelo.Models;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
-    public class MichelangeloEditorWindow : EditorWindow {
+    internal class MichelangeloEditorWindow : EditorWindow {
         private const string ForgottenPasswordUrl = @"https://michelangelo.graphics/Account/ForgotPassword";
         private const string RegisterUrl = @"https://michelangelo.graphics/Account/Register";
 
@@ -28,7 +27,7 @@ namespace Michelangelo.Editor {
         private GrammarSource sourceFilter;
 
         [MenuItem("Michelangelo/Michelangelo", false, 0)]
-        public static void ShowWindow() => GetWindow<MichelangeloEditorWindow>("Michelangelo");
+        internal static void ShowWindow() => GetWindow<MichelangeloEditorWindow>("Michelangelo");
 
         public static void OpenMichelangeloWindowButton() {
             if (GUILayout.Button("Open Michelangelo window", GUILayout.Height(40.0f))) {

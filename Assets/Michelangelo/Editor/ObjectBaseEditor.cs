@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace Michelangelo.Editor {
     [CustomEditor(typeof(ObjectBase))]
-    public class ObjectBaseEditor : UnityEditor.Editor {
+    internal class ObjectBaseEditor : UnityEditor.Editor {
         private string compilationOutput;
         private bool parseTreeFoldout = true;
         private bool compilationFoldout = true;
         private Vector2 scrollPos;
-        public ParseTreeView TreeView { get; private set; }
+        private ParseTreeView TreeView { get; set; }
 
         protected virtual string GenerateButtonTooltip => "Sends a request to Michelangelo API to generate new mesh. This will replace current mesh of the object if it has any.";
 
@@ -128,7 +128,7 @@ namespace Michelangelo.Editor {
             }
         }
 
-        protected void Generate() {
+        private void Generate() {
             Object.Generate()
                   .Then(response => {
                       compilationOutput = response.ErrorMessage;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Michelangelo.Model;
-using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Models;
+using Michelangelo.Models.MichelangeloApi;
 using UnityEngine;
 
 namespace Michelangelo.Utility {

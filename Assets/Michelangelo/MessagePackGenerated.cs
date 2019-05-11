@@ -8,7 +8,7 @@ namespace MessagePack.Resolvers
     using System;
     using MessagePack;
 
-    public class GeneratedResolver : global::MessagePack.IFormatterResolver
+    internal class GeneratedResolver : global::MessagePack.IFormatterResolver
     {
         public static readonly global::MessagePack.IFormatterResolver Instance = new GeneratedResolver();
 
@@ -48,29 +48,29 @@ namespace MessagePack.Resolvers
                 {typeof(global::System.Collections.Generic.Dictionary<string, double>), 0 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, double[]>), 1 },
                 {typeof(string[][]), 2 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]), 3 },
-                {typeof(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>), 4 },
-                {typeof(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>), 5 },
-                {typeof(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>), 6 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.GeometricModel[]), 3 },
+                {typeof(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>), 4 },
+                {typeof(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>), 5 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>), 6 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, long>), 7 },
-                {typeof(global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>), 8 },
+                {typeof(global::System.Collections.Generic.List<global::Michelangelo.Models.MichelangeloApi.AxiomPostModel>), 8 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, string>), 9 },
                 {typeof(global::System.Collections.Generic.IList<string>), 10 },
                 {typeof(global::MessagePack.MessagePackType), 11 },
-                {typeof(global::Michelangelo.Model.GrammarSource), 12 },
-                {typeof(global::Michelangelo.Model.Handlers.SourceType), 13 },
+                {typeof(global::Michelangelo.Models.GrammarSource), 12 },
+                {typeof(global::Michelangelo.Models.Handlers.SourceType), 13 },
                 {typeof(global::SimpleJSON.JSONNodeType), 14 },
                 {typeof(global::SimpleJSON.JSONTextMode), 15 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.AxiomPostModel), 16 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.TriangularMesh), 17 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.GeometricModel), 18 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.MaterialModel), 19 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.ParseTreeModel), 20 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo), 21 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.SkyMaterial), 22 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.SceneEnvironment), 23 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.PostResponseModel), 24 },
-                {typeof(global::Michelangelo.Model.MichelangeloApi.SemanticModel), 25 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.AxiomPostModel), 16 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.TriangularMesh), 17 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.GeometricModel), 18 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.MaterialModel), 19 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.ParseTreeModel), 20 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo), 21 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.SkyMaterial), 22 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.SceneEnvironment), 23 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.PostResponseModel), 24 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.SemanticModel), 25 },
             };
         }
 
@@ -84,12 +84,12 @@ namespace MessagePack.Resolvers
                 case 0: return new global::MessagePack.Formatters.DictionaryFormatter<string, double>();
                 case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, double[]>();
                 case 2: return new global::MessagePack.Formatters.ArrayFormatter<string[]>();
-                case 3: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Model.MichelangeloApi.GeometricModel>();
-                case 4: return new global::MessagePack.Formatters.DictionaryFormatter<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>();
-                case 5: return new global::MessagePack.Formatters.DictionaryFormatter<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>();
-                case 6: return new global::MessagePack.Formatters.DictionaryFormatter<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>();
+                case 3: return new global::MessagePack.Formatters.ArrayFormatter<global::Michelangelo.Models.MichelangeloApi.GeometricModel>();
+                case 4: return new global::MessagePack.Formatters.DictionaryFormatter<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>();
+                case 5: return new global::MessagePack.Formatters.DictionaryFormatter<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>();
+                case 6: return new global::MessagePack.Formatters.DictionaryFormatter<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>();
                 case 7: return new global::MessagePack.Formatters.DictionaryFormatter<string, long>();
-                case 8: return new global::MessagePack.Formatters.ListFormatter<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>();
+                case 8: return new global::MessagePack.Formatters.ListFormatter<global::Michelangelo.Models.MichelangeloApi.AxiomPostModel>();
                 case 9: return new global::MessagePack.Formatters.DictionaryFormatter<string, string>();
                 case 10: return new global::MessagePack.Formatters.InterfaceListFormatter<string>();
                 case 11: return new MessagePack.Formatters.MessagePack.MessagePackTypeFormatter();
@@ -158,16 +158,16 @@ namespace MessagePack.Formatters.Michelangelo.Model
     using System;
     using MessagePack;
 
-    public sealed class GrammarSourceFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.GrammarSource>
+    public sealed class GrammarSourceFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.GrammarSource>
     {
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.GrammarSource value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.GrammarSource value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             return MessagePackBinary.WriteInt32(ref bytes, offset, (Int32)value);
         }
         
-        public global::Michelangelo.Model.GrammarSource Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.GrammarSource Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
-            return (global::Michelangelo.Model.GrammarSource)MessagePackBinary.ReadInt32(bytes, offset, out readSize);
+            return (global::Michelangelo.Models.GrammarSource)MessagePackBinary.ReadInt32(bytes, offset, out readSize);
         }
     }
 
@@ -188,16 +188,16 @@ namespace MessagePack.Formatters.Michelangelo.Model.Handlers
     using System;
     using MessagePack;
 
-    public sealed class SourceTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.Handlers.SourceType>
+    public sealed class SourceTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.Handlers.SourceType>
     {
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.Handlers.SourceType value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.Handlers.SourceType value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             return MessagePackBinary.WriteInt32(ref bytes, offset, (Int32)value);
         }
         
-        public global::Michelangelo.Model.Handlers.SourceType Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.Handlers.SourceType Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
-            return (global::Michelangelo.Model.Handlers.SourceType)MessagePackBinary.ReadInt32(bytes, offset, out readSize);
+            return (global::Michelangelo.Models.Handlers.SourceType)MessagePackBinary.ReadInt32(bytes, offset, out readSize);
         }
     }
 
@@ -264,7 +264,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     using MessagePack;
 
 
-    public sealed class AxiomPostModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>
+    public sealed class AxiomPostModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.AxiomPostModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -287,7 +287,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.AxiomPostModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.AxiomPostModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -303,7 +303,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.AxiomPostModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.AxiomPostModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -348,7 +348,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.AxiomPostModel();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.AxiomPostModel();
             ____result.AxiomID = __AxiomID__;
             ____result.ParseTreeIndex = __ParseTreeIndex__;
             return ____result;
@@ -356,7 +356,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class TriangularMeshFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.TriangularMesh>
+    public sealed class TriangularMeshFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -381,7 +381,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.TriangularMesh value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.TriangularMesh value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -399,7 +399,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.TriangularMesh Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.TriangularMesh Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -448,7 +448,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.TriangularMesh();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.TriangularMesh();
             ____result.Indexed = __Indexed__;
             ____result.Indices = __Indices__;
             ____result.Points = __Points__;
@@ -457,7 +457,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class GeometricModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.GeometricModel>
+    public sealed class GeometricModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.GeometricModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -486,7 +486,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.GeometricModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.GeometricModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -504,11 +504,11 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
             offset += formatterResolver.GetFormatterWithVerify<float[]>().Serialize(ref bytes, offset, value.Transform, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.TriangularMesh>().Serialize(ref bytes, offset, value.Mesh, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>().Serialize(ref bytes, offset, value.Mesh, formatterResolver);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.GeometricModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.GeometricModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -524,7 +524,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var __MaterialID__ = default(int);
             var __NodeID__ = default(uint);
             var __Transform__ = default(float[]);
-            var __Mesh__ = default(global::Michelangelo.Model.MichelangeloApi.TriangularMesh);
+            var __Mesh__ = default(global::Michelangelo.Models.MichelangeloApi.TriangularMesh);
 
             for (int i = 0; i < length; i++)
             {
@@ -552,7 +552,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                         __Transform__ = formatterResolver.GetFormatterWithVerify<float[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 4:
-                        __Mesh__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.TriangularMesh>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Mesh__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -565,7 +565,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.GeometricModel();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.GeometricModel();
             ____result.Primitive = __Primitive__;
             ____result.MaterialID = __MaterialID__;
             ____result.NodeID = __NodeID__;
@@ -576,7 +576,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class MaterialModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.MaterialModel>
+    public sealed class MaterialModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.MaterialModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -601,7 +601,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.MaterialModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.MaterialModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -619,7 +619,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.MaterialModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.MaterialModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -668,7 +668,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.MaterialModel();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.MaterialModel();
             ____result.Albedo = __Albedo__;
             ____result.Scalars = __Scalars__;
             ____result.Vectors = __Vectors__;
@@ -677,7 +677,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class ParseTreeModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>
+    public sealed class ParseTreeModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -706,7 +706,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -724,11 +724,11 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Rule, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[4]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Shape, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Shape, formatterResolver);
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.ParseTreeModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.ParseTreeModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -744,7 +744,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var __ID__ = default(uint);
             var __Ontology__ = default(string[][]);
             var __Rule__ = default(string);
-            var __Shape__ = default(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]);
+            var __Shape__ = default(global::Michelangelo.Models.MichelangeloApi.GeometricModel[]);
 
             for (int i = 0; i < length; i++)
             {
@@ -772,7 +772,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                         __Rule__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 4:
-                        __Shape__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Shape__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -785,7 +785,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.ParseTreeModel();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.ParseTreeModel();
             ____result.ChildIndices = __ChildIndices__;
             ____result.ID = __ID__;
             ____result.Ontology = __Ontology__;
@@ -796,7 +796,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class RuleExtraInfoFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>
+    public sealed class RuleExtraInfoFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -827,7 +827,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -851,7 +851,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -912,7 +912,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo();
             ____result.CallsCount = __CallsCount__;
             ____result.FulfillsAttributes = __FulfillsAttributes__;
             ____result.FulfillsGoals = __FulfillsGoals__;
@@ -924,7 +924,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class SkyMaterialFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.SkyMaterial>
+    public sealed class SkyMaterialFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.SkyMaterial>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -977,7 +977,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.SkyMaterial value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.SkyMaterial value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -1023,7 +1023,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.SkyMaterial Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.SkyMaterial Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -1128,7 +1128,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.SkyMaterial();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.SkyMaterial();
             ____result.ActiveSky = __ActiveSky__;
             ____result.ActiveSun = __ActiveSun__;
             ____result.Albedo = __Albedo__;
@@ -1151,7 +1151,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class SceneEnvironmentFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.SceneEnvironment>
+    public sealed class SceneEnvironmentFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.SceneEnvironment>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -1218,7 +1218,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.SceneEnvironment value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.SceneEnvironment value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -1264,7 +1264,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[17]);
             offset += MessagePackBinary.WriteInt32(ref bytes, offset, value.SamplesPower);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[18]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SkyMaterial>().Serialize(ref bytes, offset, value.Sky, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.SkyMaterial>().Serialize(ref bytes, offset, value.Sky, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[19]);
             offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, long>>().Serialize(ref bytes, offset, value.Statistics, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[20]);
@@ -1278,7 +1278,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.SceneEnvironment Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.SceneEnvironment Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -1308,7 +1308,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var __RR__ = default(int);
             var __RulesCount__ = default(int);
             var __SamplesPower__ = default(int);
-            var __Sky__ = default(global::Michelangelo.Model.MichelangeloApi.SkyMaterial);
+            var __Sky__ = default(global::Michelangelo.Models.MichelangeloApi.SkyMaterial);
             var __Statistics__ = default(global::System.Collections.Generic.Dictionary<string, long>);
             var __StepsCount__ = default(ulong);
             var __TimeLimit__ = default(int);
@@ -1383,7 +1383,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                         __SamplesPower__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
                         break;
                     case 18:
-                        __Sky__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SkyMaterial>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Sky__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.SkyMaterial>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 19:
                         __Statistics__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, long>>().Deserialize(bytes, offset, formatterResolver, out readSize);
@@ -1411,7 +1411,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.SceneEnvironment();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.SceneEnvironment();
             ____result.Ambient = __Ambient__;
             ____result.AnimFps = __AnimFps__;
             ____result.AnimStart = __AnimStart__;
@@ -1441,7 +1441,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class PostResponseModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.PostResponseModel>
+    public sealed class PostResponseModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.PostResponseModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -1488,7 +1488,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.PostResponseModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.PostResponseModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -1498,9 +1498,9 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var startOffset = offset;
             offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 14);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>>().Serialize(ref bytes, offset, value.Materials, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>>().Serialize(ref bytes, offset, value.Materials, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Objects, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.GeometricModel[]>().Serialize(ref bytes, offset, value.Objects, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Errors, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
@@ -1510,17 +1510,17 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[5]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Info, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[6]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>>().Serialize(ref bytes, offset, value.ParseTree, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>>().Serialize(ref bytes, offset, value.ParseTree, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[7]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>>().Serialize(ref bytes, offset, value.Rules, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>>().Serialize(ref bytes, offset, value.Rules, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[8]);
             offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.RootLocks, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[9]);
             offset += formatterResolver.GetFormatterWithVerify<uint[]>().Serialize(ref bytes, offset, value.LeafLocks, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[10]);
-            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SceneEnvironment>().Serialize(ref bytes, offset, value.ENV, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.SceneEnvironment>().Serialize(ref bytes, offset, value.ENV, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[11]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>>().Serialize(ref bytes, offset, value.Models, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Models.MichelangeloApi.AxiomPostModel>>().Serialize(ref bytes, offset, value.Models, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[12]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.DL, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[13]);
@@ -1528,7 +1528,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.PostResponseModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.PostResponseModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -1540,18 +1540,18 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __Materials__ = default(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>);
-            var __Objects__ = default(global::Michelangelo.Model.MichelangeloApi.GeometricModel[]);
+            var __Materials__ = default(global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>);
+            var __Objects__ = default(global::Michelangelo.Models.MichelangeloApi.GeometricModel[]);
             var __Errors__ = default(string);
             var __IMG__ = default(string);
             var __Parsed__ = default(string);
             var __Info__ = default(string);
-            var __ParseTree__ = default(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>);
-            var __Rules__ = default(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>);
+            var __ParseTree__ = default(global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>);
+            var __Rules__ = default(global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>);
             var __RootLocks__ = default(uint[]);
             var __LeafLocks__ = default(uint[]);
-            var __ENV__ = default(global::Michelangelo.Model.MichelangeloApi.SceneEnvironment);
-            var __Models__ = default(global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>);
+            var __ENV__ = default(global::Michelangelo.Models.MichelangeloApi.SceneEnvironment);
+            var __Models__ = default(global::System.Collections.Generic.List<global::Michelangelo.Models.MichelangeloApi.AxiomPostModel>);
             var __DL__ = default(string);
             var __HasAnim__ = default(bool);
 
@@ -1569,10 +1569,10 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                 switch (key)
                 {
                     case 0:
-                        __Materials__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Model.MichelangeloApi.MaterialModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Materials__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 1:
-                        __Objects__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Objects__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.GeometricModel[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 2:
                         __Errors__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
@@ -1587,10 +1587,10 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                         __Info__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 6:
-                        __ParseTree__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Model.MichelangeloApi.ParseTreeModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __ParseTree__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 7:
-                        __Rules__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Model.MichelangeloApi.RuleExtraInfo>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Rules__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 8:
                         __RootLocks__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
@@ -1599,10 +1599,10 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
                         __LeafLocks__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 10:
-                        __ENV__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Model.MichelangeloApi.SceneEnvironment>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __ENV__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.SceneEnvironment>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 11:
-                        __Models__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Model.MichelangeloApi.AxiomPostModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Models__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Michelangelo.Models.MichelangeloApi.AxiomPostModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 12:
                         __DL__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
@@ -1621,7 +1621,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.PostResponseModel();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.PostResponseModel();
             ____result.Materials = __Materials__;
             ____result.Objects = __Objects__;
             ____result.Errors = __Errors__;
@@ -1641,7 +1641,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
     }
 
 
-    public sealed class SemanticModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Model.MichelangeloApi.SemanticModel>
+    public sealed class SemanticModelFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.SemanticModel>
     {
 
         readonly global::MessagePack.Internal.AutomataDictionary ____keyMapping;
@@ -1668,7 +1668,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
         }
 
 
-        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Model.MichelangeloApi.SemanticModel value, global::MessagePack.IFormatterResolver formatterResolver)
+        public int Serialize(ref byte[] bytes, int offset, global::Michelangelo.Models.MichelangeloApi.SemanticModel value, global::MessagePack.IFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -1688,7 +1688,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
             return offset - startOffset;
         }
 
-        public global::Michelangelo.Model.MichelangeloApi.SemanticModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
+        public global::Michelangelo.Models.MichelangeloApi.SemanticModel Deserialize(byte[] bytes, int offset, global::MessagePack.IFormatterResolver formatterResolver, out int readSize)
         {
             if (global::MessagePack.MessagePackBinary.IsNil(bytes, offset))
             {
@@ -1741,7 +1741,7 @@ namespace MessagePack.Formatters.Michelangelo.Model.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Model.MichelangeloApi.SemanticModel();
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.SemanticModel();
             ____result.At = __At__;
             ____result.Go = __Go__;
             ____result.On = __On__;

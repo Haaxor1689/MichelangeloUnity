@@ -1,11 +1,11 @@
-using Michelangelo.Model;
+using Michelangelo.Models;
 using Michelangelo.Scripts;
 using UnityEditor;
 using UnityEngine;
 
 namespace Michelangelo.Editor {
     [CustomEditor(typeof(GrammarObject))]
-    public class GrammarObjectEditor : ObjectBaseEditor {
+    internal class GrammarObjectEditor : ObjectBaseEditor {
         private GrammarObject Object => (GrammarObject) target;
 
         protected override void RenderBody() {

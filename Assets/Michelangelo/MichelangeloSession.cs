@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Michelangelo.Model;
+using Michelangelo.Models;
 using Michelangelo.Scripts;
 using Michelangelo.Session;
 using Michelangelo.Utility;

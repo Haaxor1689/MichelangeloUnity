@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Michelangelo.Model;
-using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Models;
+using Michelangelo.Models.MichelangeloApi;
 using Michelangelo.Utility;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;

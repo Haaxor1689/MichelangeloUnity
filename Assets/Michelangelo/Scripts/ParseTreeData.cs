@@ -1,5 +1,5 @@
 ﻿using System;
-using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Models.MichelangeloApi;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {

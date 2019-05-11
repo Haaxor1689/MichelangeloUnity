@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Michelangelo.Model;
 using Michelangelo.Scripts;
 using Michelangelo.Utility;
 using RSG;
@@ -10,7 +9,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using MessagePack;
-using Michelangelo.Model.MichelangeloApi;
+using Michelangelo.Models;
+using Michelangelo.Models.MichelangeloApi;
 
 namespace Michelangelo.Session {
     internal static class WebAPI {
