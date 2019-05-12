@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Michelangelo.Utility;
 using UnityEditor;
@@ -9,6 +10,7 @@ namespace Michelangelo.Models {
     /// Class containing info and metadata about a Michelangelo grammar.
     /// </summary>
     [Serializable]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class Grammar {
         private static readonly string GrammarCodeFolderRelative = Path.Combine("Michelangelo", "GrammarSources");
         private static readonly string GrammarCodeFolder = Path.Combine(Application.dataPath, GrammarCodeFolderRelative);
@@ -42,10 +44,11 @@ namespace Michelangelo.Models {
         /// True if the grammar is publicly shared in cloud.
         /// </summary>
         public bool shared;
-
+        
         /// <summary>
         /// Tags of grammar. Not implemented.
         /// </summary>
+        /// ReSharper disable once NotAccessedField.Global
         public string[] tags;
 
         /// <summary>

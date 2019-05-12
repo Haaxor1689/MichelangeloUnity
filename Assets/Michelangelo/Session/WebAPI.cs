@@ -214,7 +214,7 @@ namespace Michelangelo.Session {
             form.AddField("ID", grammar.id);
             form.AddField("Name", grammar.name);
             form.AddField("Type", grammar.type);
-            form.AddField("Code", grammar.SourceCode?.text ?? grammar.code);
+            form.AddField("Code", grammar.SourceCode ? grammar.SourceCode.text : grammar.code);
             form.AddField("OnlyNID", uint.MaxValue.ToString());
             form.AddField("Render", "false");
 
@@ -271,10 +271,11 @@ namespace Michelangelo.Session {
                     }
                     response = MessagePackSerializer.Deserialize<PostResponseModel>(getRequest.downloadHandler.data);
                     isGenerating = response.ParseTree == null || response.ParseTree?.Count == 0;
-                    if (isGenerating && !String.IsNullOrEmpty(response.Errors)) {
-                        reject(new ApplicationException(Regex.Replace(response.Errors, "<br\\/>", "\n")));
-                        yield break;
+                    if (!isGenerating || string.IsNullOrEmpty(response.Errors)) {
+                        continue;
                     }
+                    reject(new ApplicationException(Regex.Replace(response.Errors, "<br\\/>", "\n")));
+                    yield break;
                 }
             } while (isGenerating);
             resolve(new GenerateGrammarResponse(
@@ -299,10 +300,11 @@ namespace Michelangelo.Session {
             }
             Debug.LogError(request.Info());
 
-            if (request.responseCode == 401) {
-                DeleteCookies();
-                Debug.LogError("Unauthorized response code received. Deleting cookies...");
+            if (request.responseCode != 401) {
+                return true;
             }
+            DeleteCookies();
+            Debug.LogError("Unauthorized response code received. Deleting cookies...");
             return true;
         }
 
@@ -321,7 +323,7 @@ namespace Michelangelo.Session {
         }
 
         private static Action Wrap(Action action) => () => { IsLoading = false; action(); };
-        private static Action<T1> Wrap<T1>(Action<T1> action) => (t1) => { IsLoading = false; action(t1); };
+        private static Action<T1> Wrap<T1>(Action<T1> action) => t1 => { IsLoading = false; action(t1); };
         #endregion
     }
 }

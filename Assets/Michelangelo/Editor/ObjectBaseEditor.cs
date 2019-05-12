@@ -1,12 +1,12 @@
 ﻿using System;
-using Michelangelo.Editor.Utility;
 using Michelangelo.Scripts;
+using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo {
     [CustomEditor(typeof(ObjectBase))]
-    internal class ObjectBaseEditor : UnityEditor.Editor {
+    internal class ObjectBaseEditor : Editor {
         private bool compilationFoldout = true;
         private string compilationOutput;
         private bool parseTreeFoldout = true;

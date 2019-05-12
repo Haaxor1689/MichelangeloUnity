@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Michelangelo.Editor.Draw;
+using Michelangelo.Draw;
 using Michelangelo.Scripts;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor.Utility {
+namespace Michelangelo.Utility {
     internal class ReconnectGrammarPopup : EditorWindow {
         private GrammarObject grammar;
         private bool hasChangedNameFilter;

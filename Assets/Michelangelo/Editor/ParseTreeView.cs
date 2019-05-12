@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Michelangelo.Models;
-using Michelangelo.Utility;
+using Michelangelo.Scripts;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace Michelangelo.Scripts {
-    public class ParseTreeView : TreeView {
+namespace Michelangelo {
+    internal class ParseTreeView : TreeView {
         private readonly ObjectBase parentObject;
 
         private ParseTree ParseTree => parentObject.ParseTree;
@@ -42,19 +41,20 @@ namespace Michelangelo.Scripts {
             return rows;
         }
 
-        private void AddChildrenRecursive(Michelangelo.Models.ParseTreeNode node, TreeViewItem item, ICollection<TreeViewItem> rows) {
+        private void AddChildrenRecursive(ParseTreeNode node, TreeViewItem item, ICollection<TreeViewItem> rows) {
             item.children = new List<TreeViewItem>(node.Children.Length);
             foreach (var child in node.GetChildren(ParseTree)) {
                 var childItem = new TreeViewItem { id = (int) child.Id, displayName = child.Name };
 
                 item.AddChild(childItem);
                 rows.Add(childItem);
-                if (!child.IsLeaf) {
-                    if (IsExpanded(childItem.id)) {
-                        AddChildrenRecursive(ParseTree[child.Id], childItem, rows);
-                    } else {
-                        childItem.children = CreateChildListForCollapsedParent();
-                    }
+                if (child.IsLeaf) {
+                    continue;
+                }
+                if (IsExpanded(childItem.id)) {
+                    AddChildrenRecursive(ParseTree[child.Id], childItem, rows);
+                } else {
+                    childItem.children = CreateChildListForCollapsedParent();
                 }
             }
         }
@@ -94,16 +94,7 @@ namespace Michelangelo.Scripts {
 
         protected override void SelectionChanged(IList<int> selectedIds) {
             base.SelectionChanged(selectedIds);
-            parentObject.MeshHighlights = selectedIds.Where(id => ParseTree[(uint) id].Rule != "ROOT").Select(id => {
-                var node = ParseTree[(uint) id];
-                var matrix = MeshUtilities.MatrixFromArray(node.Shape.Transform);
-                return new MeshGizmoData {
-                    Position = matrix.ExtractPosition(),
-                    Rotation = matrix.ExtractRotation(),
-                    Scale = matrix.ExtractScale() + new Vector3(0.05f, 0.05f, 0.05f),
-                    Model = node.Shape
-                };
-            }).ToList();
+            parentObject.UpdateNodeHighlights();
         }
 
         protected override void RowGUI(RowGUIArgs args) {

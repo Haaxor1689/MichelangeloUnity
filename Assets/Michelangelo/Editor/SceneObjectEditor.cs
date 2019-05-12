@@ -1,8 +1,8 @@
-﻿using Michelangelo.Editor.Draw;
+﻿using Michelangelo.Draw;
 using Michelangelo.Scripts;
 using UnityEditor;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo {
     [CustomEditor(typeof(SceneObject))]
     internal class SceneObjectEditor : ObjectBaseEditor {
         private SceneObject Object => (SceneObject) target;

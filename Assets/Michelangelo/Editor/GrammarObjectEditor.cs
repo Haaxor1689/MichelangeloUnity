@@ -1,12 +1,11 @@
-using System;
-using Michelangelo.Editor.Draw;
-using Michelangelo.Editor.Utility;
+using Michelangelo.Draw;
 using Michelangelo.Models;
 using Michelangelo.Scripts;
+using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo {
     [CustomEditor(typeof(GrammarObject))]
     internal class GrammarObjectEditor : ObjectBaseEditor {
         private GrammarObject Object => (GrammarObject) target;
@@ -22,7 +21,7 @@ namespace Michelangelo.Editor {
 
             Object.Grammar.Draw(Repaint, OnRejected);
 
-            if (!String.IsNullOrEmpty(Object.Grammar.code)) {
+            if (!string.IsNullOrEmpty(Object.Grammar.code)) {
                 return;
             }
             EditorGUILayout.Space();

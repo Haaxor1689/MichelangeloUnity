@@ -112,7 +112,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimpleJSON {
+namespace Michelangelo.Utility {
     internal enum JSONNodeType {
         Array = 1,
         Object = 2,

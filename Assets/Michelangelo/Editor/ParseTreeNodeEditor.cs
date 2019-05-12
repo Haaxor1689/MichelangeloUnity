@@ -2,9 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo {
     [CustomEditor(typeof(ParseTreeScript))]
-    internal class ParseTreeNodeEditor : UnityEditor.Editor {
+    internal class ParseTreeNodeEditor : Editor {
 
         private ParseTreeScript Script => (ParseTreeScript) target;
 

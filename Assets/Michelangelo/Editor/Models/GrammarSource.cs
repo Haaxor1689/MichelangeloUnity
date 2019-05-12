@@ -1,4 +1,4 @@
-﻿namespace Michelangelo.Editor.Models {
+﻿namespace Michelangelo.Models {
     internal enum GrammarSource {
         Mine,
         Shared, 

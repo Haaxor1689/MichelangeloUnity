@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace Michelangelo.Models {
@@ -6,6 +7,7 @@ namespace Michelangelo.Models {
     /// Holds information about Michelangelo user.
     /// </summary>
     [Serializable]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class UserInfo {
         /// <summary>
         /// Energy available to the user.

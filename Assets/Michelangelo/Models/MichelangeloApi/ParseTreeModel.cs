@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 
 namespace Michelangelo.Models.MichelangeloApi {
@@ -6,6 +7,7 @@ namespace Michelangelo.Models.MichelangeloApi {
     ///   Backed model of parse tree node.
     /// </summary>
     [MessagePackObject(true)]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class ParseTreeModel {
         /// <summary>
         ///   Child nodes.
@@ -32,7 +34,9 @@ namespace Michelangelo.Models.MichelangeloApi {
         /// </summary>
         public readonly IReadOnlyList<GeometricModel> Shape;
 
-        /// <inheritdoc />
+        /// <summary>
+        ///   Default constructor that initializes all class fields.
+        /// </summary>
         public ParseTreeModel(uint id, string rule, uint[] childIndices, IReadOnlyList<string[]> ontology, IReadOnlyList<GeometricModel> shape) {
             ID = id;
             Rule = rule;

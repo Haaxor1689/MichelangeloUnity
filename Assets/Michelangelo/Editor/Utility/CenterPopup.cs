@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor.Utility {
+namespace Michelangelo.Utility {
     internal static class CenterPopup {
         private static IEnumerable<Type> GetAllDerivedTypes(this AppDomain aAppDomain, Type aType) {
             return aAppDomain.GetAssemblies()

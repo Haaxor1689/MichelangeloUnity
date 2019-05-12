@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Michelangelo.Utility {
-    internal static class Extensions {
+    internal static partial class Extensions {
         public static UnityWebRequest NoRedirect(this UnityWebRequest request) {
             request.redirectLimit = 0;
             return request;

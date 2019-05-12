@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 // Disable warning for unused array variable
@@ -20,6 +21,7 @@ namespace Michelangelo.Utility {
         }
         
         [Serializable]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private class Wrapper<T> {
             public T[] array;
         }

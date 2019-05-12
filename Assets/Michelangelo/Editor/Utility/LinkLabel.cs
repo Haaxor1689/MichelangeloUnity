@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor.Utility {
+namespace Michelangelo.Utility {
     internal static class LinkLabel {
         private static GUIStyle LinkStyle { get; }
 

@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Michelangelo.Utility {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     internal static class Primitives {
         public static readonly Mesh Box = _box();
         public static readonly Mesh Sphere = _sphere();
@@ -10,18 +12,12 @@ namespace Michelangelo.Utility {
         public static readonly Mesh Icosahedron = new Mesh(); // Not implemented
         public static readonly Mesh Empty = new Mesh();
 
-        // Old Shapes
-        // public static readonly Mesh Torus = _torus();
-        // public static readonly Mesh Pyramid = _cone(0.0f, 4);
-        // public static readonly Mesh Plane = _plane();
-
         public static uint GetVertexCount(string primitive) {
             switch (primitive) {
                 case "Box": return 3 * 4 * 6;
                 case "Sphere": return 25 * 16 * 3 + 6;
                 case "Cylinder":
-                case "Cone": 
-                    return 76 * 3;
+                case "Cone": return 76 * 3;
                 case "Empty": return 0;
                 default:
                     Debug.LogError("Unknown primitive type " + primitive);
@@ -134,47 +130,47 @@ namespace Michelangelo.Utility {
             #endregion
 
             #region UVs
-            var _00 = new Vector2(0f, 0f);
-            var _10 = new Vector2(1f, 0f);
-            var _01 = new Vector2(0f, 1f);
-            var _11 = new Vector2(1f, 1f);
+            var v00 = new Vector2(0f, 0f);
+            var v10 = new Vector2(1f, 0f);
+            var v01 = new Vector2(0f, 1f);
+            var v11 = new Vector2(1f, 1f);
 
             Vector2[] uvs = {
                 // Bottom
-                _11,
-                _01,
-                _00,
-                _10,
+                v11,
+                v01,
+                v00,
+                v10,
 
                 // Left
-                _11,
-                _01,
-                _00,
-                _10,
+                v11,
+                v01,
+                v00,
+                v10,
 
                 // Front
-                _11,
-                _01,
-                _00,
-                _10,
+                v11,
+                v01,
+                v00,
+                v10,
 
                 // Back
-                _11,
-                _01,
-                _00,
-                _10,
+                v11,
+                v01,
+                v00,
+                v10,
 
                 // Right
-                _11,
-                _01,
-                _00,
-                _10,
+                v11,
+                v01,
+                v00,
+                v10,
 
                 // Top
-                _11,
-                _01,
-                _00,
-                _10
+                v11,
+                v01,
+                v00,
+                v10
             };
             #endregion
 
@@ -250,16 +246,15 @@ namespace Michelangelo.Utility {
 
             #region Vertices
             var vertices = new Vector3[(nbLong + 1) * nbLat + 2];
-            var _pi = Mathf.PI;
 
             vertices[0] = Vector3.up * radius;
             for (var lat = 0; lat < nbLat; lat++) {
-                var a1 = _pi * (lat + 1) / (nbLat + 1);
+                var a1 = Mathf.PI * (lat + 1) / (nbLat + 1);
                 var sin1 = Mathf.Sin(a1);
                 var cos1 = Mathf.Cos(a1);
 
                 for (var lon = 0; lon <= nbLong; lon++) {
-                    var a2 = _pi * 2f * (lon == nbLong ? 0 : lon) / nbLong;
+                    var a2 = Mathf.PI * 2f * (lon == nbLong ? 0 : lon) / nbLong;
                     var sin2 = Mathf.Sin(a2);
                     var cos2 = Mathf.Cos(a2);
 
@@ -334,97 +329,12 @@ namespace Michelangelo.Utility {
             return mesh;
         }
 
-        private static Mesh _torus() {
-            var mesh = new Mesh();
-
-            var radius1 = 0.5f;
-            var radius2 = .2f;
-            var nbRadSeg = 24;
-            var nbSides = 18;
-
-            #region Vertices		
-            var vertices = new Vector3[(nbRadSeg + 1) * (nbSides + 1)];
-            var _2pi = Mathf.PI * 2f;
-            for (var seg = 0; seg <= nbRadSeg; seg++) {
-                var currentSeg = seg == nbRadSeg ? 0 : seg;
-
-                var t1 = (float) currentSeg / nbRadSeg * _2pi;
-                var r1 = new Vector3(Mathf.Cos(t1) * radius1, 0f, Mathf.Sin(t1) * radius1);
-
-                for (var side = 0; side <= nbSides; side++) {
-                    var currentSide = side == nbSides ? 0 : side;
-
-                    var t2 = (float) currentSide / nbSides * _2pi;
-                    var r2 = Quaternion.AngleAxis(-t1 * Mathf.Rad2Deg, Vector3.up) * new Vector3(Mathf.Sin(t2) * radius2, Mathf.Cos(t2) * radius2);
-
-                    vertices[side + seg * (nbSides + 1)] = r1 + r2;
-                }
-            }
-            #endregion
-
-            #region Normales		
-            var normals = new Vector3[vertices.Length];
-            for (var seg = 0; seg <= nbRadSeg; seg++) {
-                var currentSeg = seg == nbRadSeg ? 0 : seg;
-
-                var t1 = (float) currentSeg / nbRadSeg * _2pi;
-                var r1 = new Vector3(Mathf.Cos(t1) * radius1, 0f, Mathf.Sin(t1) * radius1);
-
-                for (var side = 0; side <= nbSides; side++) {
-                    normals[side + seg * (nbSides + 1)] = (vertices[side + seg * (nbSides + 1)] - r1).normalized;
-                }
-            }
-            #endregion
-
-            #region UVs
-            var uvs = new Vector2[vertices.Length];
-            for (var seg = 0; seg <= nbRadSeg; seg++) {
-                for (var side = 0; side <= nbSides; side++) {
-                    uvs[side + seg * (nbSides + 1)] = new Vector2((float) seg / nbRadSeg, (float) side / nbSides);
-                }
-            }
-            #endregion
-
-            #region Triangles
-            var nbFaces = vertices.Length;
-            var nbTriangles = nbFaces * 2;
-            var nbIndexes = nbTriangles * 3;
-            var triangles = new int[nbIndexes];
-
-            var i = 0;
-            for (var seg = 0; seg <= nbRadSeg; seg++) {
-                for (var side = 0; side <= nbSides - 1; side++) {
-                    var current = side + seg * (nbSides + 1);
-                    var next = side + (seg < nbRadSeg ? (seg + 1) * (nbSides + 1) : 0);
-
-                    if (i < triangles.Length - 6) {
-                        triangles[i++] = current;
-                        triangles[i++] = next;
-                        triangles[i++] = next + 1;
-
-                        triangles[i++] = current;
-                        triangles[i++] = next + 1;
-                        triangles[i++] = current + 1;
-                    }
-                }
-            }
-            #endregion
-
-            mesh.vertices = vertices;
-            mesh.normals = normals;
-            mesh.uv = uvs;
-            mesh.triangles = triangles;
-
-            mesh.RecalculateBounds();
-            return mesh;
-        }
-
         private static Mesh _cone(float topRadius = 0.0f, int nbSides = 18) {
             var mesh = new Mesh();
 
-            var height = 1f;
-            var bottomRadius = 0.5f;
-            var nbHeightSeg = 1; // Not implemented yet
+            const float height = 1f;
+            const float bottomRadius = 0.5f;
+            const int nbHeightSeg = 1; // Not implemented yet
 
             var nbVerticesCap = nbSides + 1;
 
@@ -432,12 +342,12 @@ namespace Michelangelo.Utility {
             // bottom + top + sides
             var vertices = new Vector3[nbVerticesCap + nbVerticesCap + nbSides * nbHeightSeg * 2 + 2];
             var vertex = 0;
-            var _2pi = Mathf.PI * 2f;
+            const float pi2 = Mathf.PI * 2f;
 
             // Bottom cap
             vertices[vertex++] = new Vector3(0f, 0f, 0f);
             while (vertex <= nbSides) {
-                var rad = (float) vertex / nbSides * _2pi;
+                var rad = (float) vertex / nbSides * pi2;
                 vertices[vertex] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
                 vertex++;
             }
@@ -445,7 +355,7 @@ namespace Michelangelo.Utility {
             // Top cap
             vertices[vertex++] = new Vector3(0f, height / 2.0f, 0f);
             while (vertex <= nbSides * 2 + 1) {
-                var rad = (float) (vertex - nbSides - 1) / nbSides * _2pi;
+                var rad = (float) (vertex - nbSides - 1) / nbSides * pi2;
                 vertices[vertex] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
                 vertex++;
             }
@@ -453,7 +363,7 @@ namespace Michelangelo.Utility {
             // Sides
             var v = 0;
             while (vertex <= vertices.Length - 4) {
-                var rad = (float) v / nbSides * _2pi;
+                var rad = (float) v / nbSides * pi2;
                 vertices[vertex] = new Vector3(Mathf.Cos(rad) * topRadius, height / 2.0f, Mathf.Sin(rad) * topRadius);
                 vertices[vertex + 1] = new Vector3(Mathf.Cos(rad) * bottomRadius, -height / 2.0f, Mathf.Sin(rad) * bottomRadius);
                 vertex += 2;
@@ -481,7 +391,7 @@ namespace Michelangelo.Utility {
             // Sides
             v = 0;
             while (vertex <= vertices.Length - 4) {
-                var rad = (float) v / nbSides * _2pi;
+                var rad = (float) v / nbSides * pi2;
                 var cos = Mathf.Cos(rad);
                 var sin = Mathf.Sin(rad);
 
@@ -502,7 +412,7 @@ namespace Michelangelo.Utility {
             var u = 0;
             uvs[u++] = new Vector2(0.5f, 0.5f);
             while (u <= nbSides) {
-                var rad = (float) u / nbSides * _2pi;
+                var rad = (float) u / nbSides * pi2;
                 uvs[u] = new Vector2(Mathf.Cos(rad) * .5f + .5f, Mathf.Sin(rad) * .5f + .5f);
                 u++;
             }
@@ -510,7 +420,7 @@ namespace Michelangelo.Utility {
             // Top cap
             uvs[u++] = new Vector2(0.5f, 0.5f);
             while (u <= nbSides * 2 + 1) {
-                var rad = (float) u / nbSides * _2pi;
+                var rad = (float) u / nbSides * pi2;
                 uvs[u] = new Vector2(Mathf.Cos(rad) * .5f + .5f, Mathf.Sin(rad) * .5f + .5f);
                 u++;
             }
@@ -578,70 +488,6 @@ namespace Michelangelo.Utility {
                 triangles[i + 2] = tri + 0;
                 tri++;
                 i += 3;
-            }
-            #endregion
-
-            mesh.vertices = vertices;
-            mesh.normals = normals;
-            mesh.uv = uvs;
-            mesh.triangles = triangles;
-
-            mesh.RecalculateBounds();
-            return mesh;
-        }
-
-        private static Mesh _plane() {
-            var mesh = new Mesh();
-
-            var length = 1f;
-            var width = 1f;
-            var resX = 2; // 2 minimum
-            var resZ = 2;
-
-            #region Vertices		
-            var vertices = new Vector3[resX * resZ];
-            for (var z = 0; z < resZ; z++) {
-                // [ -length / 2, length / 2 ]
-                var zPos = ((float) z / (resZ - 1) - .5f) * length;
-                for (var x = 0; x < resX; x++) {
-                    // [ -width / 2, width / 2 ]
-                    var xPos = ((float) x / (resX - 1) - .5f) * width;
-                    vertices[x + z * resX] = new Vector3(xPos, 0f, zPos);
-                }
-            }
-            #endregion
-
-            #region Normales
-            var normals = new Vector3[vertices.Length];
-            for (var n = 0; n < normals.Length; n++) {
-                normals[n] = Vector3.up;
-            }
-            #endregion
-
-            #region UVs		
-            var uvs = new Vector2[vertices.Length];
-            for (var v = 0; v < resZ; v++) {
-                for (var u = 0; u < resX; u++) {
-                    uvs[u + v * resX] = new Vector2((float) u / (resX - 1), (float) v / (resZ - 1));
-                }
-            }
-            #endregion
-
-            #region Triangles
-            var nbFaces = (resX - 1) * (resZ - 1);
-            var triangles = new int[nbFaces * 6];
-            var t = 0;
-            for (var face = 0; face < nbFaces; face++) {
-                // Retrieve lower left corner from face ind
-                var i = face % (resX - 1) + face / (resZ - 1) * resX;
-
-                triangles[t++] = i + resX;
-                triangles[t++] = i + 1;
-                triangles[t++] = i;
-
-                triangles[t++] = i + resX;
-                triangles[t++] = i + resX + 1;
-                triangles[t++] = i + 1;
             }
             #endregion
 

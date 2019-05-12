@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using Michelangelo.Editor.Draw;
-using Michelangelo.Editor.Models;
-using Michelangelo.Editor.Utility;
+using Michelangelo.Draw;
 using Michelangelo.Models;
+using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor {
+namespace Michelangelo {
     internal class MichelangeloEditorWindow : EditorWindow {
         private const string ForgottenPasswordUrl = @"https://michelangelo.graphics/Account/ForgotPassword";
         private const string RegisterUrl = @"https://michelangelo.graphics/Account/Register";

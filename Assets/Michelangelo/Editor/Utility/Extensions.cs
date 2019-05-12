@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Michelangelo.Editor.Utility {
-    internal static class Extensions {
+namespace Michelangelo.Utility {
+    internal static partial class Extensions {
         public static T[] RemoveAt<T>(this T[] source, int index) {
             var dest = new T[source.Length - 1];
             if (index > 0) {
@@ -16,7 +16,7 @@ namespace Michelangelo.Editor.Utility {
             return dest;
         }
 
-        public static T[] Add<T>(this T[] source, T value) {
+        public static T[] Add<T>(this IEnumerable<T> source, T value) {
             return new List<T>(source) { value }.ToArray();
         }
     }

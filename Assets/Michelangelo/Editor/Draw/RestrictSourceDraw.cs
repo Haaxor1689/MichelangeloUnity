@@ -1,9 +1,9 @@
 ﻿using Michelangelo.Models.Handlers;
-using Michelangelo.Editor.Utility;
+using Michelangelo.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Michelangelo.Editor.Draw {
+namespace Michelangelo.Draw {
     internal static class RestrictSourceDraw {
         private const int ButtonWidth = 40;
 

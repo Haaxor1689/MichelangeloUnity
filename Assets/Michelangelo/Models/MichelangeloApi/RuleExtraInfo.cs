@@ -1,10 +1,12 @@
-﻿using MessagePack;
+﻿using System.Diagnostics.CodeAnalysis;
+using MessagePack;
 
 namespace Michelangelo.Models.MichelangeloApi {
     /// <summary>
     /// Info about a rule.
     /// </summary>
     [MessagePackObject(true)]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class RuleExtraInfo {
         /// <summary>
         /// 

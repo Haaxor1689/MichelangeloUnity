@@ -6,6 +6,9 @@ using Michelangelo.Utility;
 using UnityEngine;
 
 namespace Michelangelo.Scripts {
+    /// <summary>
+    /// Unity component that holds all mesh data of child nodes combined into single mesh instance that is used by connected <see cref="MeshRenderer"/>.
+    /// </summary>
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
     public class ParseTreeScript : MonoBehaviour {
@@ -15,7 +18,7 @@ namespace Michelangelo.Scripts {
         private MeshFilter MeshFilter => GetComponent<MeshFilter>();
         private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
 
-        private void CreateMesh(ParseTree parseTree, Models.ParseTreeNode node, IReadOnlyList<Material> grammarMaterials) {
+        private void CreateMesh(ParseTree parseTree, ParseTreeNode node, IReadOnlyList<Material> grammarMaterials) {
             var submeshes = new List<Tuple<Mesh, int>>();
             foreach (var pair in node.GetLeafNodes(parseTree).Select(n => n.Shape)
                                      .GroupBy(p => p.MaterialID, p => p, (key, p) => new { Material = key, GeometricModel = p })) {
@@ -38,8 +41,8 @@ namespace Michelangelo.Scripts {
             MeshRenderer.sharedMaterials = materials.ToArray();
             transform.localPosition = new Vector3(0, 0, 0);
         }
-
-        public static GameObject Construct(Transform parent, ParseTree parseTree, Models.ParseTreeNode node, Material[] grammarMaterials) {
+        
+        internal static void Construct(Transform parent, ParseTree parseTree, ParseTreeNode node, Material[] grammarMaterials) {
             var newObject = new GameObject(node.Name);
             newObject.transform.SetParent(parent);
             newObject.hideFlags = HideFlags.NotEditable;
@@ -48,8 +51,6 @@ namespace Michelangelo.Scripts {
             nodeScript.MeshRenderer.hideFlags = HideFlags.HideInInspector;
 
             nodeScript.CreateMesh(parseTree, node, grammarMaterials);
-            
-            return newObject;
         }
     }
 }

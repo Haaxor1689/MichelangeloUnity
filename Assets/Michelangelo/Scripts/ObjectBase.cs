@@ -26,7 +26,10 @@ namespace Michelangelo.Scripts {
         [HideInInspector]
         private TreeViewState treeViewState;
 
-        internal TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
+        /// <summary>
+        /// State of parse tree view.
+        /// </summary>
+        public TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
 
         /// <summary>
         ///   Parse tree of this object.
@@ -47,6 +50,22 @@ namespace Michelangelo.Scripts {
             newObject.transform.SetParent(transform);
             newObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
             return newObject.AddComponent<ParseTreeData>();
+        }
+
+        /// <summary>
+        /// Updates highlights of selected parse tree nodes visible in scene view.
+        /// </summary>
+        public void UpdateNodeHighlights() {
+            MeshHighlights = treeViewState.selectedIDs.Where(id => ParseTree[(uint) id].Rule != "ROOT").Select(id => {
+                var node = ParseTree[(uint) id];
+                var matrix = MeshUtilities.MatrixFromArray(node.Shape.Transform);
+                return new MeshGizmoData {
+                    Position = matrix.ExtractPosition(),
+                    Rotation = matrix.ExtractRotation(),
+                    Scale = matrix.ExtractScale() + new Vector3(0.05f, 0.05f, 0.05f),
+                    Model = node.Shape
+                };
+            }).ToList();
         }
 
         /// <summary>
@@ -96,10 +115,11 @@ namespace Michelangelo.Scripts {
         private void DeleteOldMeshes() {
             for (var i = 0; i < transform.childCount; ++i) {
                 var child = transform.GetChild(i);
-                if (child.GetComponent<ParseTreeScript>()) {
-                    DestroyImmediate(child.gameObject);
-                    --i;
+                if (!child.GetComponent<ParseTreeScript>()) {
+                    continue;
                 }
+                DestroyImmediate(child.gameObject);
+                --i;
             }
         }
 

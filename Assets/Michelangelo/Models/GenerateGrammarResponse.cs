@@ -21,6 +21,9 @@ namespace Michelangelo.Models {
         /// </summary>
         public readonly ParseTree ParseTree;
 
+        /// <summary>
+        /// Default constructor that initializes all class fields.
+        /// </summary>
         public GenerateGrammarResponse(string errorMessage, IReadOnlyDictionary<int, MaterialModel> materials, ParseTree parseTree) {
             ErrorMessage = errorMessage;
             Materials = materials;

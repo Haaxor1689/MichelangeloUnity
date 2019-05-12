@@ -17,7 +17,7 @@ namespace Michelangelo.Utility {
         internal static Mesh MeshFromGeometricModel(GeometricModel model) => MeshFromData(model.Mesh) ?? MeshFromPrimitive(model.Primitive);
 
         private static Mesh MeshFromData(TriangularMesh v) {
-            if (v == null || v.Points == null || v.Points.Length == 0) {
+            if (v?.Points == null || v.Points.Length == 0) {
                 return null;
             }
             var mesh = new Mesh();

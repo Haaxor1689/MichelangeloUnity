@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 
 namespace Michelangelo.Models.MichelangeloApi {
@@ -6,6 +7,7 @@ namespace Michelangelo.Models.MichelangeloApi {
     ///   Backend model of generate request response.
     /// </summary>
     [MessagePackObject(true)]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class PostResponseModel {
         /// <summary>
         ///   Errors from grammar compilation.
@@ -37,7 +39,9 @@ namespace Michelangelo.Models.MichelangeloApi {
         /// </summary>
         public readonly IReadOnlyDictionary<string, RuleExtraInfo> Rules;
 
-        /// <inheritdoc />
+        /// <summary>
+        ///   Default constructor that initializes all class fields.
+        /// </summary>
         public PostResponseModel(IReadOnlyDictionary<string, RuleExtraInfo> rules, IReadOnlyDictionary<uint, ParseTreeModel> parseTree, IReadOnlyDictionary<int, MaterialModel> materials, string info, string img, string errors) {
             Rules = rules;
             ParseTree = parseTree;

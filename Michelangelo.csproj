@@ -92,7 +92,7 @@
     <Compile Include="Assets\Michelangelo\Scripts\ObjectBase.cs" />
     <Compile Include="Assets\Michelangelo\Scripts\ParseTreeData.cs" />
     <Compile Include="Assets\Michelangelo\Scripts\ParseTreeScript.cs" />
-    <Compile Include="Assets\Michelangelo\Scripts\ParseTreeView.cs" />
+    <Compile Include="Assets\Michelangelo\Editor\ParseTreeView.cs" />
     <Compile Include="Assets\Michelangelo\Scripts\SceneObject.cs" />
     <Compile Include="Assets\Michelangelo\Session\URLConstants.cs" />
     <Compile Include="Assets\Michelangelo\Session\WebAPI.cs" />
@@ -107,9 +107,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Michelangelo\GrammarSources\MorphingWallsGrammar.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

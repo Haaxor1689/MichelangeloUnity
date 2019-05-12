@@ -1,12 +1,11 @@
-﻿using System;
-using Michelangelo.Models.Handlers;
+﻿using Michelangelo.Models.Handlers;
 using UnityEditor;
 
-namespace Michelangelo.Editor.Draw {
+namespace Michelangelo.Draw {
     internal static class ModelDraw {
         public static void Draw(this Model model) {
             EditorGUILayout.BeginVertical("Box");
-            EditorGUILayout.LabelField(String.IsNullOrEmpty(model.Goal) ? "Invalid goal" : $"Goal: {model.Goal}", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(string.IsNullOrEmpty(model.Goal) ? "Invalid goal" : $"Goal: {model.Goal}", EditorStyles.boldLabel);
             model.Goal = EditorGUILayout.TextField("Goal", model.Goal);
             model.Size = EditorGUILayout.Vector3Field("Size", model.Size);
             model.CenterOnPivot = EditorGUILayout.Toggle("Center on pivot", model.CenterOnPivot);
