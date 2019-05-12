@@ -1,15 +1,12 @@
-﻿using System;
-using System;
-using System;
-using MessagePack;
-using MessagePack;
-using MessagePack;
+﻿#pragma warning disable 618
+#pragma warning disable 612
+#pragma warning disable 414
+#pragma warning disable 168
 
-namespace Michelangelo {
-    #pragma warning disable 618
-    #pragma warning disable 612
-    #pragma warning disable 414
-    #pragma warning disable 168
+namespace MessagePack.Resolvers
+{
+    using System;
+    using MessagePack;
 
     public class GeneratedResolver : global::MessagePack.IFormatterResolver
     {
@@ -74,36 +71,42 @@ namespace Michelangelo {
 
             switch (key)
             {
-            case 0: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<float>();
-            case 1: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<double>();
-            case 2: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double>();
-            case 3: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double[]>();
-            case 4: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<string[]>();
-            case 5: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<global::Michelangelo.Models.MichelangeloApi.GeometricModel>();
-            case 6: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>();
-            case 7: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>();
-            case 8: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>();
-            case 9: return new SourceTypeFormatter();
-            case 10: return new TriangularMeshFormatter();
-            case 11: return new GeometricModelFormatter();
-            case 12: return new MaterialModelFormatter();
-            case 13: return new ParseTreeModelFormatter();
-            case 14: return new RuleExtraInfoFormatter();
-            case 15: return new PostResponseModelFormatter();
-            default: return null;
+                case 0: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<float>();
+                case 1: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<double>();
+                case 2: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double>();
+                case 3: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double[]>();
+                case 4: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<string[]>();
+                case 5: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<global::Michelangelo.Models.MichelangeloApi.GeometricModel>();
+                case 6: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>();
+                case 7: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>();
+                case 8: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>();
+                case 9: return new MessagePack.Formatters.Michelangelo.Models.Handlers.SourceTypeFormatter();
+                case 10: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.TriangularMeshFormatter();
+                case 11: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.GeometricModelFormatter();
+                case 12: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.MaterialModelFormatter();
+                case 13: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.ParseTreeModelFormatter();
+                case 14: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.RuleExtraInfoFormatter();
+                case 15: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.PostResponseModelFormatter();
+                default: return null;
             }
         }
     }
+}
 
-    #pragma warning disable 168
-    #pragma warning restore 414
-    #pragma warning restore 618
-    #pragma warning restore 612
+#pragma warning disable 168
+#pragma warning restore 414
+#pragma warning restore 618
+#pragma warning restore 612
 
-    #pragma warning disable 618
-    #pragma warning disable 612
-    #pragma warning disable 414
-    #pragma warning disable 168
+#pragma warning disable 618
+#pragma warning disable 612
+#pragma warning disable 414
+#pragma warning disable 168
+
+namespace MessagePack.Formatters.Michelangelo.Models.Handlers
+{
+    using System;
+    using MessagePack;
 
     public sealed class SourceTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.Handlers.SourceType>
     {
@@ -118,16 +121,25 @@ namespace Michelangelo {
         }
     }
 
-    #pragma warning disable 168
-    #pragma warning restore 414
-    #pragma warning restore 618
-    #pragma warning restore 612
+
+}
+
+#pragma warning disable 168
+#pragma warning restore 414
+#pragma warning restore 618
+#pragma warning restore 612
 
 
-    #pragma warning disable 618
-    #pragma warning disable 612
-    #pragma warning disable 414
-    #pragma warning disable 168
+#pragma warning disable 618
+#pragma warning disable 612
+#pragma warning disable 414
+#pragma warning disable 168
+
+namespace MessagePack.Formatters.Michelangelo.Models.MichelangeloApi
+{
+    using System;
+    using MessagePack;
+
 
     public sealed class TriangularMeshFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>
     {
@@ -201,18 +213,18 @@ namespace Michelangelo {
 
                 switch (key)
                 {
-                case 0:
-                    __Indexed__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
-                    break;
-                case 1:
-                    __Indices__ = formatterResolver.GetFormatterWithVerify<int[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 2:
-                    __Points__ = formatterResolver.GetFormatterWithVerify<double[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                default:
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    break;
+                    case 0:
+                        __Indexed__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
+                        break;
+                    case 1:
+                        __Indices__ = formatterResolver.GetFormatterWithVerify<int[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __Points__ = formatterResolver.GetFormatterWithVerify<double[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
                 }
                 
                 NEXT_LOOP:
@@ -240,18 +252,18 @@ namespace Michelangelo {
         {
             this.____keyMapping = new global::MessagePack.Internal.AutomataDictionary()
             {
-                { "Primitive", 0},
-                { "MaterialID", 1},
-                { "Transform", 2},
-                { "Mesh", 3},
+                { "MaterialID", 0},
+                { "Mesh", 1},
+                { "Primitive", 2},
+                { "Transform", 3},
             };
 
             this.____stringByteKeys = new byte[][]
             {
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Primitive"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("MaterialID"),
-                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Transform"),
                 global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Mesh"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Primitive"),
+                global::MessagePack.MessagePackBinary.GetEncodedStringBytes("Transform"),
                 
             };
         }
@@ -267,13 +279,13 @@ namespace Michelangelo {
             var startOffset = offset;
             offset += global::MessagePack.MessagePackBinary.WriteFixedMapHeaderUnsafe(ref bytes, offset, 4);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[0]);
-            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Primitive, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
             offset += MessagePackBinary.WriteInt32(ref bytes, offset, value.MaterialID);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<float>>().Serialize(ref bytes, offset, value.Transform, formatterResolver);
-            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[1]);
             offset += formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>().Serialize(ref bytes, offset, value.Mesh, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
+            offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Primitive, formatterResolver);
+            offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
+            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<float>>().Serialize(ref bytes, offset, value.Transform, formatterResolver);
             return offset - startOffset;
         }
 
@@ -289,10 +301,10 @@ namespace Michelangelo {
             var length = global::MessagePack.MessagePackBinary.ReadMapHeader(bytes, offset, out readSize);
             offset += readSize;
 
-            var __Primitive__ = default(string);
             var __MaterialID__ = default(int);
-            var __Transform__ = default(global::System.Collections.Generic.IReadOnlyList<float>);
             var __Mesh__ = default(global::Michelangelo.Models.MichelangeloApi.TriangularMesh);
+            var __Primitive__ = default(string);
+            var __Transform__ = default(global::System.Collections.Generic.IReadOnlyList<float>);
 
             for (int i = 0; i < length; i++)
             {
@@ -307,21 +319,21 @@ namespace Michelangelo {
 
                 switch (key)
                 {
-                case 0:
-                    __Primitive__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 1:
-                    __MaterialID__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
-                    break;
-                case 2:
-                    __Transform__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<float>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 3:
-                    __Mesh__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                default:
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    break;
+                    case 0:
+                        __MaterialID__ = MessagePackBinary.ReadInt32(bytes, offset, out readSize);
+                        break;
+                    case 1:
+                        __Mesh__ = formatterResolver.GetFormatterWithVerify<global::Michelangelo.Models.MichelangeloApi.TriangularMesh>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __Primitive__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 3:
+                        __Transform__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<float>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
                 }
                 
                 NEXT_LOOP:
@@ -408,18 +420,18 @@ namespace Michelangelo {
 
                 switch (key)
                 {
-                case 0:
-                    __Albedo__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<double>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 1:
-                    __Scalars__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<string, double>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 2:
-                    __Vectors__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<string, double[]>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                default:
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    break;
+                    case 0:
+                        __Albedo__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<double>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 1:
+                        __Scalars__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<string, double>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __Vectors__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<string, double[]>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
                 }
                 
                 NEXT_LOOP:
@@ -516,24 +528,24 @@ namespace Michelangelo {
 
                 switch (key)
                 {
-                case 0:
-                    __ChildIndices__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 1:
-                    __ID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
-                    break;
-                case 2:
-                    __Ontology__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<string[]>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 3:
-                    __Rule__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 4:
-                    __Shape__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<global::Michelangelo.Models.MichelangeloApi.GeometricModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                default:
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    break;
+                    case 0:
+                        __ChildIndices__ = formatterResolver.GetFormatterWithVerify<uint[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 1:
+                        __ID__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        break;
+                    case 2:
+                        __Ontology__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<string[]>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 3:
+                        __Rule__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 4:
+                        __Shape__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<global::Michelangelo.Models.MichelangeloApi.GeometricModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
                 }
                 
                 NEXT_LOOP:
@@ -635,27 +647,27 @@ namespace Michelangelo {
 
                 switch (key)
                 {
-                case 0:
-                    __CallsCount__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
-                    break;
-                case 1:
-                    __FulfillsAttributes__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 2:
-                    __FulfillsGoals__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 3:
-                    __Local__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
-                    break;
-                case 4:
-                    __RUID__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 5:
-                    __TypeStr__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                default:
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    break;
+                    case 0:
+                        __CallsCount__ = MessagePackBinary.ReadUInt32(bytes, offset, out readSize);
+                        break;
+                    case 1:
+                        __FulfillsAttributes__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __FulfillsGoals__ = formatterResolver.GetFormatterWithVerify<string[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 3:
+                        __Local__ = MessagePackBinary.ReadBoolean(bytes, offset, out readSize);
+                        break;
+                    case 4:
+                        __RUID__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 5:
+                        __TypeStr__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
                 }
                 
                 NEXT_LOOP:
@@ -763,27 +775,27 @@ namespace Michelangelo {
 
                 switch (key)
                 {
-                case 0:
-                    __Errors__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 1:
-                    __IMG__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 2:
-                    __Info__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 3:
-                    __Materials__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 4:
-                    __ParseTree__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                case 5:
-                    __Rules__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>>().Deserialize(bytes, offset, formatterResolver, out readSize);
-                    break;
-                default:
-                    readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
-                    break;
+                    case 0:
+                        __Errors__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 1:
+                        __IMG__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 2:
+                        __Info__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 3:
+                        __Materials__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 4:
+                        __ParseTree__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    case 5:
+                        __Rules__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        break;
+                    default:
+                        readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
+                        break;
                 }
                 
                 NEXT_LOOP:
@@ -797,8 +809,9 @@ namespace Michelangelo {
         }
     }
 
-    #pragma warning disable 168
-    #pragma warning restore 414
-    #pragma warning restore 618
-    #pragma warning restore 612
 }
+
+#pragma warning disable 168
+#pragma warning restore 414
+#pragma warning restore 618
+#pragma warning restore 612
