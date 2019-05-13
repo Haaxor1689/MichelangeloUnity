@@ -13,7 +13,11 @@ namespace Michelangelo.Models {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class Grammar {
         private static readonly string GrammarCodeFolderRelative = Path.Combine("Michelangelo", "GrammarSources");
-        private static readonly string GrammarCodeFolder = Path.Combine(Application.dataPath, GrammarCodeFolderRelative);
+
+        /// <summary>
+        /// File path to the folder containing grammar sources.
+        /// </summary>
+        public static readonly string GrammarCodeFolder = Path.Combine(Application.dataPath, GrammarCodeFolderRelative);
 
         /// <summary>
         /// Placeholder grammar that is used instead of null.

@@ -4,6 +4,7 @@ using System.IO;
 using Michelangelo.Models;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.WSA;
 
 namespace Michelangelo.Draw {
     internal static class GrammarDraw {
@@ -63,6 +64,10 @@ namespace Michelangelo.Draw {
         }
 
         private static void SaveSourceCodeFile(this Grammar grammar) {
+            if (!Directory.Exists(Grammar.GrammarCodeFolder)) {
+                Directory.CreateDirectory(Grammar.GrammarCodeFolder);
+            }
+
             if (File.Exists(grammar.SourceFilePath)) {
                 Debug.LogWarning($"Replacing old code file for \"{grammar.name}\".");
             }
