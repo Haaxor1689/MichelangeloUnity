@@ -22,6 +22,12 @@ This package brings Michelangelo service to Unity editor with many features that
 
 Extract provided [`.unitypackage`](https://github.com/Haaxor1689/MichelangeloUnity/releases/download/v1.0/MichelangeloUnity.unitypackage) into you project. This package uses dependencies [MessagePack](https://github.com/neuecc/MessagePack-CSharp) library, [RSG.Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) library. You can either use provided `.dll`s in `Michelangelo/Libs/` folder or install them yourself from NuGet using [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640) package.
 
+**NuGet**
+
+This package is also available through NuGet package manager and can be downloaded using [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640). Open editor tab **NuGet** and then select **Manage NuGet Packages**. Then search for **`MichelangeloUnity`** and select **Install**.
+
+> Currently there is a bug in NuGet for Unity, that it doesn't download NuGet packages targeted at .net 4.x. Because of this, MessagePack's source won't be downloaded correctly through the Unity's NuGet interface. This can be solved by installing the package from VisualStudio's NuGet manager and then moving downloaded packages from `{projectRoot}/Packages/` to `{projectRoot}/Assets/Packages/`.
+
 ## Quick Start
 
 After importing this package into your Unity project you should see a new tab in your editor called Michelangelo. In this tab you will find everything related to this package.
