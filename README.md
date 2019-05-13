@@ -20,7 +20,7 @@ This package brings Michelangelo service to Unity editor with many features that
 
 ## Installation
 
-Extract provided `.unitypackage` into you project. This package uses dependencies [MessagePack](https://github.com/neuecc/MessagePack-CSharp) library, [RSG.Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) library and [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640) package that are all outside of Michelangelo's main folder so they can be potentially shared with other packages.
+Extract provided [`.unitypackage`](https://github.com/Haaxor1689/MichelangeloUnity/releases/download/v1.0/MichelangeloUnity.unitypackage) into you project. This package uses dependencies [MessagePack](https://github.com/neuecc/MessagePack-CSharp) library, [RSG.Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) library. You can either use provided `.dll`s in `Michelangelo/Libs/` folder or install them yourself from NuGet using [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640) package.
 
 ## Quick Start
 
