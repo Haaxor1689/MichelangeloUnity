@@ -24,7 +24,7 @@ Extract provided [`.unitypackage`](https://github.com/Haaxor1689/MichelangeloUni
 
 **NuGet**
 
-This package is also available through NuGet package manager and can be downloaded using [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640). Open editor tab **NuGet** and then select **Manage NuGet Packages**. Then search for **`MichelangeloUnity`** and select **Install**.
+This package is also available as a [NuGet package](https://www.nuget.org/packages/MichelangeloUnity) and can be downloaded using [NuGet for Unity](https://assetstore.unity.com/packages/tools/utilities/nuget-for-unity-104640). Open editor tab **NuGet** and then select **Manage NuGet Packages**. Then search for **`MichelangeloUnity`** and select **Install**.
 
 > Currently there is a bug in NuGet for Unity, that it doesn't download NuGet packages targeted at .net 4.x. Because of this, MessagePack's source won't be downloaded correctly through the Unity's NuGet interface. This can be solved by installing the package from VisualStudio's NuGet manager and then moving downloaded packages from `{projectRoot}/Packages/` to `{projectRoot}/Assets/Packages/`.
 
