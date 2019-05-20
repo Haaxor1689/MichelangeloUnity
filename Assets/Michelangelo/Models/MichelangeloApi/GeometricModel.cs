@@ -15,32 +15,22 @@ namespace Michelangelo.Models.MichelangeloApi {
         /// <summary>
         ///   Material id of the object.
         /// </summary>
-        public readonly int MaterialID;
+        public int MaterialID;
 
         /// <summary>
         ///   Raw mesh of the object.
         /// </summary>
-        public readonly TriangularMesh Mesh;
+        public TriangularMesh Mesh;
 
         /// <summary>
         ///   Geometry type of the object.
         /// </summary>
-        public readonly string Primitive;
+        public string Primitive;
 
         /// <summary>
         ///   Transformation matrix of the object.
         /// </summary>
-        public readonly IReadOnlyList<float> Transform;
-
-        /// <summary>
-        ///   Default constructor that initializes all class fields.
-        /// </summary>
-        public GeometricModel(string primitive, int materialId, IReadOnlyList<float> transform, TriangularMesh mesh) {
-            Primitive = primitive;
-            MaterialID = materialId;
-            Transform = transform;
-            Mesh = mesh;
-        }
+        public float[] Transform;
 
         internal uint GetVertexCount() => Mesh != null ? (uint) Mesh.Indices.Length : Primitives.GetVertexCount(Primitive);
     }

@@ -43,24 +43,23 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(16)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(15)
             {
-                {typeof(global::System.Collections.Generic.IReadOnlyList<float>), 0 },
-                {typeof(global::System.Collections.Generic.IReadOnlyList<double>), 1 },
-                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<string, double>), 2 },
-                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<string, double[]>), 3 },
-                {typeof(global::System.Collections.Generic.IReadOnlyList<string[]>), 4 },
-                {typeof(global::System.Collections.Generic.IReadOnlyList<global::Michelangelo.Models.MichelangeloApi.GeometricModel>), 5 },
-                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>), 6 },
-                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>), 7 },
-                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>), 8 },
-                {typeof(global::Michelangelo.Models.Handlers.SourceType), 9 },
-                {typeof(global::Michelangelo.Models.MichelangeloApi.TriangularMesh), 10 },
-                {typeof(global::Michelangelo.Models.MichelangeloApi.GeometricModel), 11 },
-                {typeof(global::Michelangelo.Models.MichelangeloApi.MaterialModel), 12 },
-                {typeof(global::Michelangelo.Models.MichelangeloApi.ParseTreeModel), 13 },
-                {typeof(global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo), 14 },
-                {typeof(global::Michelangelo.Models.MichelangeloApi.PostResponseModel), 15 },
+                {typeof(global::System.Collections.Generic.IReadOnlyList<double>), 0 },
+                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<string, double>), 1 },
+                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<string, double[]>), 2 },
+                {typeof(global::System.Collections.Generic.IReadOnlyList<string[]>), 3 },
+                {typeof(global::System.Collections.Generic.IReadOnlyList<global::Michelangelo.Models.MichelangeloApi.GeometricModel>), 4 },
+                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>), 5 },
+                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>), 6 },
+                {typeof(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>), 7 },
+                {typeof(global::Michelangelo.Models.Handlers.SourceType), 8 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.TriangularMesh), 9 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.GeometricModel), 10 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.MaterialModel), 11 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.ParseTreeModel), 12 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo), 13 },
+                {typeof(global::Michelangelo.Models.MichelangeloApi.PostResponseModel), 14 },
             };
         }
 
@@ -71,22 +70,21 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<float>();
-                case 1: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<double>();
-                case 2: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double>();
-                case 3: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double[]>();
-                case 4: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<string[]>();
-                case 5: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<global::Michelangelo.Models.MichelangeloApi.GeometricModel>();
-                case 6: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>();
-                case 7: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>();
-                case 8: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>();
-                case 9: return new MessagePack.Formatters.Michelangelo.Models.Handlers.SourceTypeFormatter();
-                case 10: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.TriangularMeshFormatter();
-                case 11: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.GeometricModelFormatter();
-                case 12: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.MaterialModelFormatter();
-                case 13: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.ParseTreeModelFormatter();
-                case 14: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.RuleExtraInfoFormatter();
-                case 15: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.PostResponseModelFormatter();
+                case 0: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<double>();
+                case 1: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double>();
+                case 2: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, double[]>();
+                case 3: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<string[]>();
+                case 4: return new global::MessagePack.Formatters.InterfaceReadOnlyListFormatter<global::Michelangelo.Models.MichelangeloApi.GeometricModel>();
+                case 5: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<int, global::Michelangelo.Models.MichelangeloApi.MaterialModel>();
+                case 6: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<uint, global::Michelangelo.Models.MichelangeloApi.ParseTreeModel>();
+                case 7: return new global::MessagePack.Formatters.InterfaceReadOnlyDictionaryFormatter<string, global::Michelangelo.Models.MichelangeloApi.RuleExtraInfo>();
+                case 8: return new MessagePack.Formatters.Michelangelo.Models.Handlers.SourceTypeFormatter();
+                case 9: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.TriangularMeshFormatter();
+                case 10: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.GeometricModelFormatter();
+                case 11: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.MaterialModelFormatter();
+                case 12: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.ParseTreeModelFormatter();
+                case 13: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.RuleExtraInfoFormatter();
+                case 14: return new MessagePack.Formatters.Michelangelo.Models.MichelangeloApi.PostResponseModelFormatter();
                 default: return null;
             }
         }
@@ -285,7 +283,7 @@ namespace MessagePack.Formatters.Michelangelo.Models.MichelangeloApi
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[2]);
             offset += formatterResolver.GetFormatterWithVerify<string>().Serialize(ref bytes, offset, value.Primitive, formatterResolver);
             offset += global::MessagePack.MessagePackBinary.WriteRaw(ref bytes, offset, this.____stringByteKeys[3]);
-            offset += formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<float>>().Serialize(ref bytes, offset, value.Transform, formatterResolver);
+            offset += formatterResolver.GetFormatterWithVerify<float[]>().Serialize(ref bytes, offset, value.Transform, formatterResolver);
             return offset - startOffset;
         }
 
@@ -304,7 +302,7 @@ namespace MessagePack.Formatters.Michelangelo.Models.MichelangeloApi
             var __MaterialID__ = default(int);
             var __Mesh__ = default(global::Michelangelo.Models.MichelangeloApi.TriangularMesh);
             var __Primitive__ = default(string);
-            var __Transform__ = default(global::System.Collections.Generic.IReadOnlyList<float>);
+            var __Transform__ = default(float[]);
 
             for (int i = 0; i < length; i++)
             {
@@ -329,7 +327,7 @@ namespace MessagePack.Formatters.Michelangelo.Models.MichelangeloApi
                         __Primitive__ = formatterResolver.GetFormatterWithVerify<string>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     case 3:
-                        __Transform__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.IReadOnlyList<float>>().Deserialize(bytes, offset, formatterResolver, out readSize);
+                        __Transform__ = formatterResolver.GetFormatterWithVerify<float[]>().Deserialize(bytes, offset, formatterResolver, out readSize);
                         break;
                     default:
                         readSize = global::MessagePack.MessagePackBinary.ReadNextBlock(bytes, offset);
@@ -342,7 +340,11 @@ namespace MessagePack.Formatters.Michelangelo.Models.MichelangeloApi
 
             readSize = offset - startOffset;
 
-            var ____result = new global::Michelangelo.Models.MichelangeloApi.GeometricModel(__Primitive__, __MaterialID__, __Transform__, __Mesh__);
+            var ____result = new global::Michelangelo.Models.MichelangeloApi.GeometricModel();
+            ____result.MaterialID = __MaterialID__;
+            ____result.Mesh = __Mesh__;
+            ____result.Primitive = __Primitive__;
+            ____result.Transform = __Transform__;
             return ____result;
         }
     }

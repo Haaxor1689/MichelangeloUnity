@@ -1,8 +1,9 @@
 ﻿using System;
 using Michelangelo.Models.MichelangeloApi;
+using Michelangelo.Utility;
 using UnityEngine;
 
-namespace Michelangelo.Utility {
+namespace Michelangelo.Models {
     [Serializable]
     internal class MeshGizmoData {
         public Vector3 Position;

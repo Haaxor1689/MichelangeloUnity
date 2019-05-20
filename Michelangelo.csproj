@@ -78,7 +78,7 @@
     <Compile Include="Assets\Michelangelo\Models\Handlers\Model.cs" />
     <Compile Include="Assets\Michelangelo\Models\Handlers\IHandler.cs" />
     <Compile Include="Assets\Michelangelo\Models\Handlers\RestrictSource.cs" />
-    <Compile Include="Assets\Michelangelo\Utility\MeshGizmoData.cs" />
+    <Compile Include="Assets\Michelangelo\Models\MeshGizmoData.cs" />
     <Compile Include="Assets\Michelangelo\Models\MichelangeloApi\GeometricModel.cs" />
     <Compile Include="Assets\Michelangelo\Models\MichelangeloApi\MaterialModel.cs" />
     <Compile Include="Assets\Michelangelo\Models\ParseTreeNode.cs" />

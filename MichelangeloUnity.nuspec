@@ -3,7 +3,7 @@
   <metadata>
     <id>MichelangeloUnity</id>
     <title>Michelangelo for Unity</title>
-    <version>1.0</version>
+    <version>1.0.2</version>
     <authors>Haaxor1689</authors>
     <owners>Haaxor1689</owners>
     <license type="expression">MIT</license>
@@ -11,12 +11,13 @@
     <repository url="https://github.com/Haaxor1689/MichelangeloUnity" type="git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This package brings Michelangelo service to Unity editor with many features that make it easier for developers to integrate procedural models into their projects.</description>
-    <releaseNotes>First version.</releaseNotes>
+    <releaseNotes>Fixed serialization problems caused by readonly attributes.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>Unity Michelangelo</tags>
     <dependencies>
       <dependency id="MessagePack" version="1.7.3.4" />
       <dependency id="RSG.Promise" version="3.0.1" />
+      <dependency id="System.Threading.Tasks.Extensions" version="4.3.0" />
     </dependencies>
   </metadata>
   <files>

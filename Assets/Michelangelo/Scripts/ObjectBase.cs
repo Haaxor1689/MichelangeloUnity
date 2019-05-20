@@ -17,7 +17,7 @@ namespace Michelangelo.Scripts {
         private Material[] materials;
 
         [SerializeField]
-        internal IReadOnlyList<MeshGizmoData> MeshHighlights;
+        internal List<MeshGizmoData> MeshHighlights;
 
         [SerializeField]
         private ParseTreeData parseTreeData;
