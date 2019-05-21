@@ -36,6 +36,7 @@ namespace Michelangelo.Scripts {
             var newObject = new GameObject(model.Goal);
             var michelangeloObject = newObject.AddComponent<SceneObject>();
             michelangeloObject.Model = model;
+            michelangeloObject.Construct();
             return newObject;
         }
     }

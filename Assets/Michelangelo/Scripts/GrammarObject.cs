@@ -45,6 +45,7 @@ namespace Michelangelo.Scripts {
             var newObject = new GameObject(grammar.name);
             var michelangeloObject = newObject.AddComponent<GrammarObject>();
             michelangeloObject.id = grammar.id;
+            michelangeloObject.Construct();
             return newObject;
         }
     }

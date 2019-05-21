@@ -12,6 +12,7 @@ namespace Michelangelo.Scripts {
     /// <summary>
     ///   Base class for all Michelangelo objects.
     /// </summary>
+    [RequireComponent(typeof(ParseTreeData))]
     public abstract class ObjectBase : MonoBehaviour {
         [SerializeField]
         private Material[] materials;
@@ -19,53 +20,46 @@ namespace Michelangelo.Scripts {
         [SerializeField]
         internal List<MeshGizmoData> MeshHighlights;
 
-        [SerializeField]
         private ParseTreeData parseTreeData;
+        private ParseTreeData ParseTreeData => parseTreeData ? parseTreeData : parseTreeData = GetComponent<ParseTreeData>();
 
         [SerializeField]
         [HideInInspector]
         private TreeViewState treeViewState;
 
         /// <summary>
-        /// State of parse tree view.
+        ///   State of parse tree view.
         /// </summary>
         public TreeViewState TreeViewState => treeViewState ?? (treeViewState = new TreeViewState());
 
         /// <summary>
         ///   Parse tree of this object.
         /// </summary>
-        public ParseTree ParseTree => (parseTreeData ? parseTreeData : parseTreeData = GetParseTreeData()).ParseTree;
+        public ParseTree ParseTree => ParseTreeData.ParseTree;
 
         /// <summary>
         ///   Returns true if object can be sent for generation.
         /// </summary>
         public virtual bool CanGenerate => true;
 
-        private ParseTreeData GetParseTreeData() {
-            var child = transform.Find("ParseTreeData");
-            if (child) {
-                return child.GetComponent<ParseTreeData>();
-            }
-            var newObject = new GameObject("ParseTreeData");
-            newObject.transform.SetParent(transform);
-            newObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
-            return newObject.AddComponent<ParseTreeData>();
+        /// <summary>
+        ///   Runs common construct code for all ObjectBase deriving scripts.
+        /// </summary>
+        protected void Construct() {
+            ParseTreeData.hideFlags = HideFlags.HideInInspector;
         }
 
         /// <summary>
-        /// Updates highlights of selected parse tree nodes visible in scene view.
+        ///   Updates highlights of selected parse tree nodes visible in scene view.
         /// </summary>
         public void UpdateNodeHighlights() {
-            MeshHighlights = treeViewState.selectedIDs.Where(id => ParseTree[(uint) id].Rule != "ROOT").Select(id => {
-                var node = ParseTree[(uint) id];
-                var matrix = MeshUtilities.MatrixFromArray(node.Shape.Transform);
-                return new MeshGizmoData {
-                    Position = matrix.ExtractPosition(),
-                    Rotation = matrix.ExtractRotation(),
-                    Scale = matrix.ExtractScale() + new Vector3(0.05f, 0.05f, 0.05f),
-                    Model = node.Shape
-                };
-            }).ToList();
+            MeshHighlights = treeViewState.selectedIDs.Where(id => ParseTree[(uint) id].Rule != "ROOT")
+                                          .Select(id => {
+                                              var node = ParseTree[(uint) id];
+                                              var matrix = MeshUtilities.MatrixFromArray(node.Shape.Transform);
+                                              return new MeshGizmoData { Position = matrix.ExtractPosition(), Rotation = matrix.ExtractRotation(), Scale = matrix.ExtractScale() + new Vector3(0.05f, 0.05f, 0.05f), Model = node.Shape };
+                                          })
+                                          .ToList();
         }
 
         /// <summary>
@@ -102,8 +96,7 @@ namespace Michelangelo.Scripts {
         private void CreateMesh(ParseTree parseTree, IReadOnlyDictionary<int, MaterialModel> materialsDictionary) {
             DeleteOldMeshes();
 
-            parseTreeData = GetParseTreeData();
-            parseTreeData.ParseTree = parseTree;
+            ParseTreeData.ParseTree = parseTree;
             materials = materialsDictionary.Select(m => MeshUtilities.MaterialFromModel(m.Value)).ToArray();
 
             var nodes = ParseTree.GetMeshNodes();
