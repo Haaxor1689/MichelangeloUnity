@@ -46,7 +46,7 @@ namespace Michelangelo {
             parseTreeFoldout = EditorGUILayout.Foldout(parseTreeFoldout, "Parse tree");
             if (parseTreeFoldout) {
                 EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
-                TreeView.OnGUI(GUILayoutUtility.GetRect(0, 100, 100, 2000));
+                TreeView.OnGUI(GUILayoutUtility.GetRect(100, 400, GUILayout.ExpandHeight(true)));
                 EditorGUILayout.EndVertical();
 
                 using (new EditorGUILayout.HorizontalScope()) {
@@ -86,7 +86,7 @@ namespace Michelangelo {
                 return;
             }
 
-            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true), GUILayout.MaxHeight(2000));
+            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             var lines = compilationOutput.Split(new[] { "\t\n" }, StringSplitOptions.None);
             foreach (var line in lines) {
