@@ -3,7 +3,7 @@
   <metadata>
     <id>MichelangeloUnity</id>
     <title>Michelangelo for Unity</title>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <authors>Haaxor1689</authors>
     <owners>Haaxor1689</owners>
     <license type="expression">MIT</license>
@@ -11,7 +11,7 @@
     <repository url="https://github.com/Haaxor1689/MichelangeloUnity" type="git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This package brings Michelangelo service to Unity editor with many features that make it easier for developers to integrate procedural models into their projects.</description>
-    <releaseNotes>Fixed serialization problems caused by readonly attributes.</releaseNotes>
+    <releaseNotes>Adjusted sizes of parse tree and compilation output.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>Unity Michelangelo</tags>
     <dependencies>
