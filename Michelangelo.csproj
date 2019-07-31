@@ -104,6 +104,7 @@
     <Compile Include="Assets\Michelangelo\Editor\Utility\LinkLabel.cs" />
     <Compile Include="Assets\Michelangelo\Utility\MeshUtilities.cs" />
     <Compile Include="Assets\Michelangelo\Editor\Utility\RequestErrorMessage.cs" />
+    <Compile Include="Assets\Michelangelo\Utility\PRMMaterial.cs" />
     <Compile Include="Assets\Michelangelo\Utility\SimpleJSON.cs" />
     <Compile Include="Assets\Michelangelo\Utility\WebRequestException.cs" />
   </ItemGroup>

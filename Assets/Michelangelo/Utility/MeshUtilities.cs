@@ -44,10 +44,14 @@ namespace Michelangelo.Utility {
         }
 
         internal static Material MaterialFromModel(MaterialModel model) {
-            var material = new Material(Shader.Find("Standard"));
-            material.SetColor("_Color", new Color((float) model.Albedo[0], (float) model.Albedo[1], (float) model.Albedo[2]));
-            material.SetFloat("_Metallic", (float) model.Scalars.GetValueOrDefault("gIi", 0.0));
-            material.SetFloat("_Glossiness", 1.0f - (float) model.Scalars.GetValueOrDefault("gR", 1.0));
+            var material = new Material(Shader.Find("Shader Graphs/MichelangeloShader"));
+            material.SetColor("_Albedo", new Color((float) model.Albedo[0], (float) model.Albedo[1], (float) model.Albedo[2]));
+            material.SetFloat("_gIi", (float) model.Scalars.GetValueOrDefault(PRMMaterial.GlossyEXT, 0.0));
+            material.SetFloat("_gR", (float) model.Scalars.GetValueOrDefault(PRMMaterial.GlossyRoughness, 1.0));
+            material.SetFloat("_rI", (float) model.Scalars.GetValueOrDefault(PRMMaterial.RadianceIntensity, 0.0));
+
+            var rC = model.Vectors.GetValueOrDefault(PRMMaterial.RadianceColor, (double[])model.Albedo);
+            material.SetColor("_rC", new Color((float)rC[0], (float)rC[1], (float)rC[2]));
 
             return material;
         }
